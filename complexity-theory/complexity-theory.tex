@@ -25,7 +25,7 @@ Though diagonalization led to some of these early successes of complexity theory
 
 \section{Time Hierarchy Theorem}
 \seclabel{time-hierarchy-theorem}
-Common sense suggests that giving a Turing machine more time should increase the class of problems that it can solve. For example, Turing machines should be able to decide more languages in time $n^3$ than they can in $n^2$. The \vocab{time hierarchy theorem} proves that this intuition is correct, subject to certain conditions described below. We use the term \emph{hierarchy theorem} because this theorem proves that time complexity classes aren't all the same—they form a hierarchy whereby the classes with larger bounds contain more languages than do the classes with smaller bounds.
+Common sense suggests that giving a Turing machine more time should increase the class of problems that it can solve. For example, Turing machines should be able to decide more languages in time $n^3$ than they can in $n^2$. The \vocab{time hierarchy theorem} proves that this intuition is correct, subject to certain conditions described below. We use the term \emph{hierarchy theorem} because this theorem proves that time complexity classes aren't all the same—they form a hierarchy whereby the classes with larger bounds contain more languages than the classes with smaller bounds.
 
 We begin with the following technical definition, given by Goldreich \cite{goldreich2008computational}.
 
@@ -37,7 +37,9 @@ We begin with the following technical definition, given by Goldreich \cite{goldr
   All the commonly used functions $f(n)$ are time-constructible, as long as $f(n)$ is at least $c n$ for some constant $c > 0$. No function which is $o(n)$ can be time-constructible unless it is eventually constant, since there is insufficient time to read the entire input.
 \end{example}
 
-When designing algorithms of arbitrary time complexity $f : \NN \to \NN$, we need to make sure that the algorithm does not exceed the time bound. Furthermore, when invoked on input $w$, the algorithm is not given the time bound $f(\len{w})$ explicitly. A reasonable design methodology is to have the algorithm compute this bound before doing anything else. This, in turn, requires the algorithm to read the entire input and compute $f(n)$ in $O(f(n))$ steps; otherwise, this preliminary stage already consumes too much time. The latter requirement motivates the notion of time-constructible functions.
+When designing algorithms of arbitrary time complexity $f : \NN \to \NN$, we need to make sure that the algorithm does not exceed the time bound. However, when invoked on an input $w$, we cannot assume that the algorithm is given the time bound $f(\len{w})$ explicitly. A reasonable design methodology is to have the algorithm compute this bound before doing anything else. This, in turn, requires the algorithm to read the entire input and compute $f(n)$ in $O(f(n))$ steps; otherwise, this preliminary stage already consumes too much time. The latter requirement motivates the notion of time-constructible functions.
+
+There are multiple definitions of the time hierarchy theorem. We present the following one by Sipser \cite{sipser2013introduction}, which is more intuitive.
 
 \begin{theorem}[Time hierarchy theorem]
   \thmlabel{time-hierarchy-theorem}
@@ -59,7 +61,7 @@ We present the following proof by Sipser \cite{sipser2013introduction}, with sli
 
   This description captures the essence of the proof but omits several important details. If $M$ runs in $o(f(n) / \log f(n))$ time, $D$ must guarantee that its language is different from $M$'s language. But even when $M$ runs in $o(f(n) / \log f(n))$ time, it may use more than $f(n)$ time for small $n$, when the asymptotic behavior hasn't ``kicked in'' yet. Possibly, $D$ might not have enough time to run $M$ to completion on input $\enc{M}$, and hence $D$ will miss its opportunity to avoid $M$'s language. So, if we aren't careful, $D$ might end up deciding the same language $M$ decides, and the theorem wouldn't be proved.
 
-  We can fix this problem by modifying $D$ to give it additional opportunities to avoid $M$'s language. Instead of running $M$ only when $D$ receives input $\enc{M}$, it runs $M$ whenever it receives an input of the form $\enc{M}\texttt{1}\texttt{0}^\ast$, that is, an input of the form $\enc{M}$ followed by a $\texttt{1}$ and some number of $\texttt{0}$s. In other words, we get to simulate $M$ on infinitely many $w$. Then, if $M$ really is running in $o(f(n) / \log f(n))$, we will eventually encounter a sufficiently large $w$, where $w = \enc{M}\texttt{1}\texttt{0}^k$ for some large value of $k$, and $D$ will have enough time to run it to completion because the asymptotic must eventually kick in.
+  We can fix this problem by modifying $D$ to give it additional opportunities to avoid $M$'s language. Instead of running $M$ only when $D$ receives the input $\enc{M}$, it runs $M$ whenever it receives an input of the form $\enc{M}\texttt{1}\texttt{0}^\ast$, that is, an input of the form $\enc{M}$ followed by a $\texttt{1}$ and some number of $\texttt{0}$s. Observe that by doing this, we get to simulate $M$ on infinitely many $w$, so now $D$ has infinitely many opportunities to avoid $M$'s language. Then, if $M$ really is running in $o(f(n) / \log f(n))$, we will eventually encounter a sufficiently large $w$, where $w = \enc{M}\texttt{1}\texttt{0}^k$ for some large value of $k$, and $D$ will have enough time to run it to completion because the asymptotic must eventually kick in.
 
   One last technical point. The simulation of $M$ by $D$ introduces a logarithmic factor overhead. This overhead is the reason for the appearance of the $1 / \log f(n)$ factor in the statement of this theorem. If we had a way of simulating a single-tape TM by another single-tape TM for a prespecified number of steps, using only a constant factor overhead in time, we would be able to strengthen this theorem by changing $o(f(n) / \log f(n))$ to $o(f(n))$. No such efficient simulation is known.
 \end{proofidea}
@@ -70,12 +72,12 @@ We now describe the proof formally.
   The following $O(f(n))$ time algorithm $D$ decides a language $A$ that is not decidable in $o(f(n) / \log f(n))$ time.
   \begin{align*}
     D = & \ \text{``On input $w$:} \\
-    & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
-    & \ \quad \text{2. } \text{Compute $f(n)$ using time constructibility, and store the value} \\
-    & \ \quad \phantom{\text{2. }} \text{$\ceil{f(n) / \log f(n)}$ in a binary counter. Decrement this counter} \\
-    & \ \quad \phantom{\text{2. }} \text{before each step used to carry out stages 3, 4, and 5. If the} \\
-    & \ \quad \phantom{\text{2. }} \text{counter ever hits 0, \emph{reject}.} \\
-    & \ \quad \text{3. } \text{If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.} \\
+    & \ \quad \text{1. } \text{If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.} \\
+    & \ \quad \text{2. } \text{Let $n$ be the length of $w$.} \\
+    & \ \quad \text{3. } \text{Compute $f(n)$ using time constructibility, and store the value} \\
+    & \ \quad \phantom{\text{3. }} \text{$\ceil{f(n) / \log f(n)}$ in a binary counter. Decrement this counter} \\
+    & \ \quad \phantom{\text{3. }} \text{before each step used to carry out stage 4. If the counter ever} \\
+    & \ \quad \phantom{\text{3. }} \text{hits 0, \emph{reject}.} \\
     & \ \quad \text{4. } \text{Simulate $M$ on $w$.} \\
     & \ \quad \text{5. } \text{If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}.''}
   \end{align*}
@@ -86,19 +88,30 @@ We now describe the proof formally.
 
   One of the tracks contains the information on $M$'s tape, and a second contains its current state and a copy of $M$'s transition function. During the simulation, $D$ keeps the information on the second track near the current position of $M$'s head on the first track. Every time $M$'s head position moves, $D$ shifts all the information on the second track to keep it near the head. Because the size of the information on the second track depends only on $M$ and not on the length of the input to $M$, the shifting adds only a constant factor to the simulation time. Furthermore, because the required information is kept close together, the cost of looking up $M$'s next action in its transition function and updating its tape is only a constant. Hence, if $M$ runs in $g(n)$ time, $D$ can simulate it in $O(g(n))$ time.
 
-  At every step in stages 3 and 4, $D$ must decrement the step counter originally set in stage 2. Here, $D$ can do so without adding excessively to the simulation time by keeping the counter in binary on a third track and moving it to keep it near the present head position. This counter has a magnitude of about $f(n) / \log f(n)$, so its length is $\log(f(n) / \log f(n))$, which is $O(\log f(n))$. Hence, the cost of updating and moving at each step adds a $\log f(n)$ factor to the simulation time, thus brining the total running time to $O(f(n))$. Therefore, $A$ is decidable in time $O(f(n))$.
+  At every step in stage 4, $D$ must decrement the step counter originally set in stage 3. Here, $D$ can do so without adding excessively to the simulation time by keeping the counter in binary on a third track and moving it to keep it near the present head position. This counter has a magnitude of about $f(n) / \log f(n)$, so its length is $\log(f(n) / \log f(n))$, which is $O(\log f(n))$. Hence, the cost of updating and moving at each step adds a $\log f(n)$ factor to the simulation time, thus brining the total running time to $O(f(n))$. Therefore, $A$ is decidable in time $O(f(n))$.
 
   Now, we show that $A$ is not decidable in $o(f(n) / \log f(n))$ time. Assume the contrary that some TM $M$ decides $A$ in time $g(n)$, where $g(n)$ is $o(f(n) / \log f(n))$. Here, $D$ can simulate $M$, using time $d \cdot g(n)$ for some constant $d$. If the total simulation time (not counting the time to update the step counter) is at most $f(n) / \log f(n)$, the simulation will run to completion. Because $g(n)$ is $o(f(n) / \log f(n))$, some constant $n_0$ exists where $d \cdot g(n) < f(n) / \log f(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on input $\enc{M}\texttt{1}\texttt{0}^{n_0}$. This input is longer than $n_0$ so the simulation in stage 4 will complete. Therefore, $D$ will do the opposite of $M$ on the same input. Hence, $M$ doesn't decide $A$, which contradicts our assumption. Therefore, $A$ is not decidable in $o(f(n) / \log f(n))$ time.
 \end{proof}
 
+\begin{remark}
+  Actually, there is one other technical detail that we conveniently ignored in our proof, in order to keep it concise. Let us discuss the detail here. In Stage $4$ of $D$, it simulates $M$ on $w$. This simulation may require representing each cell of $M$'s tape with several cells on $D$'s tape because $M$'s tape alphabet is arbitrary while D's tape alphabet is fixed. However, initializing the simulation by converting $D$'s input $w$ to this representation involves rewriting $w$ so that its symbol are spread apart by several cells. Let $n$ be the length of $w$. If we use the obvious copying procedure for spreading $w$, this convention would involve $O(n^2)$ time and that would exceed the $O(f(n))$ time bound for small $f$. Instead, we observe that $D$ operates on an input $w$ of the form $\enc{M}\texttt{1}\texttt{0}^k$, and we only need to carry out the simulation when $k$ is sufficiently large. We consider only $k > \len{\enc{M}}^2$. We can spread out $w$ by first using the obvious copying procedure for $\enc{M}$ and then counting the trailing $\texttt{0}$s and rewriting these by using that count. The time for spreading $\enc{M}$ is $O(\len{\enc{M}}^2)$ which is $O(n)$. The time for counting the $\texttt{0}$s is $O(n \log n)$ \dubious{which is $O(f(n))$ because $f$ is time-constructible.}
+\end{remark}
+\todo{Fix this. This is only true if we use the definition of time-constructibility by Sipser. But we can't use it, since it will contradict \corref{time-hierarchy-theorem-for-the-class-P}.}
+
 \begin{corollary}
-  For any two time-constructible functions $f, g : \NN \to \NN$ where $f(n) = o(g(n) / \log g(n))$,
+  \corlabel{alternative-definition-of-time-hierarchy-theorem}
+  For any two time-constructible functions $f, g : \NN \to \NN$ where $f(n) \log f(n) = o(g(n))$,
   \[ \DTIME(f(n)) \subsetneq \DTIME(g(n)). \]
 \end{corollary}
+
+\begin{remark}
+  \corref{alternative-definition-of-time-hierarchy-theorem} is very often presented as the time hierarchy theorem in other literature.
+\end{remark}
 
 This corollary allows us to separate various deterministic time complexity classes. For example, we can show that the function $n^c$ is time-constructible for any natural number $c$. Hence, for any two natural numbers $c_1 < c_2$ we can prove that $\DTIME(n^{c_1}) \subsetneq \DTIME(n^{c_2})$. With a bit more work we can show that $n^c$ is time-constructible for any rational number $c > 1$ and thereby extend the preceding containment to hold for any rational numbers $1 \leq c_1 < c_2$. Observing that two rational numbers $c_1$ and $c_2$ always exist between any two real numbers $\epsilon_1 < \epsilon_2$ such that $\epsilon_1 < c_1 < c_2 < \epsilon_2$ we obtain the following additional corollary demonstrating a fine hierarchy within the class $\PTIME$.
 
 \begin{corollary}
+  \corlabel{time-hierarchy-theorem-for-the-class-P}
   For any two real numbers $1 \leq \epsilon_1 < \epsilon_2$,
   \[ \DTIME(n^{\epsilon_1}) \subsetneq \DTIME(n^{\epsilon_2}). \]
 \end{corollary}
@@ -118,6 +131,9 @@ We can also use the time hierarchy theorem to separate the classes $\PTIME$ and 
 
 This corollary establishes the existence of decidable problems that are decidable in principle but not in practice—that is, problems that are decidable but intractable.
 
+\subsection{Sharper Time Hierarchy Theorem}
+\todo{State the fact that our time hierarchy theorem is derived from simulating a single-tape TM with another single-tape TM. Sharper results can be achieved if we use multi-tape TMs. We explore the results here.}
+
 \section{Nondeterministic Time Hierarchy Theorem}
 \seclabel{nondeterministic-time-hierarchy-theorem}
 The following time hierarchy theorem for nondeterministic Turing machines is due to Seiferas, Fischer, and Meyer \cite{seiferas1978separating}.
@@ -127,16 +143,20 @@ The following time hierarchy theorem for nondeterministic Turing machines is due
   \[ \NTIME(f(n)) \subsetneq \NTIME(g(n)). \]
 \end{theorem}
 
+\begin{remark}
+  The effect of the term ``$+ 1$'' in $f(n + 1)$ is pretty significant. Specifically, it makes a difference to all time-constructible function $t : \NN \to \NN$ where $t(n) = \omega(2^n)$. For instance, consider the functions $f_1(n) = 2^{n^2}$ and $f_2(n) = 2^{(n + 1)^2}$. Our hierarchy theorem is not sharp enough to separate the classes $\NTIME(f_1(n))$ and $\NTIME(f_2(n))$, because $f_1(n + 1) \neq o(f_2(n))$.
+\end{remark}
+
 Our first instinct is to duplicate the proof of \thmref{time-hierarchy-theorem}, since there is a universal TM for nondeterministic computation as well. (In fact, the simulation of an NTM by another NTM is very efficient, incurring only a constant factor overhead in time \cite{arora2009computational}.) The problem, however, is that we don't know how such a construction would work on our new machine $D$. In particular, it remains unclear how we could ``flip the answer'' of $M$, i.e. to efficiently compute, given the description of an NTM $M$ and an input $w$, the value $1 - M(w)$. We give the following hypothetical (erroneous) construction of $D$ to illustrate our point.
 \begin{align*}
   D = & \ \text{``On input $w$:} \\
   & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
-  & \ \quad \text{2. } \text{Compute $f(n)$ using time constructibility, and store the value $f(n)$} \\
-  & \ \quad \phantom{\text{2. }} \text{in a binary counter. Decrement this counter before each step used} \\
-  & \ \quad \phantom{\text{2. }} \text{to carry out stages 3, 4, and 5. If the counter ever hits 0, \emph{reject}.} \\
-  & \ \quad \text{3. } \text{If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.} \\
+  & \ \quad \text{2. } \text{If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.} \\
+  & \ \quad \text{3. } \text{Compute $f(n + 1)$ using time constructibility, and store the value} \\
+  & \ \quad \phantom{\text{3. }} \text{$f(n + 1)$ in a binary counter. Decrement this counter before each} \\
+  & \ \quad \phantom{\text{3. }} \text{step used to carry out stage 4. If the counter ever hits 0, \emph{reject}.} \\
   & \ \quad \text{4. } \text{Nondeterministically simulate $M$ on $w$.} \\
-  & \ \quad \text{5. } \text{If $M$ accepts, then \emph{reject}. \incorrect{If $M$ rejects, then \emph{accept}.}''}
+  & \ \quad \text{5. } \text{If $M$ accepts, then \emph{reject}. \incorrect{If $M$ rejects, then \emph{accept}. How?}''}
 \end{align*}
 
 Ignoring other potential issues with the above construction, our main concern is that it's unclear how we could determine efficiently, whether or not $M$ rejects the input $w$. A nondeterministic Turing machine accepts if at least one path accepts; it rejects only when all paths reject. This asymmetry makes it hard to ``flip answers'' efficiently. For instance, suppose we have an NTM $M$ that has two paths for input $w$ where one accepts and the other rejects. $M$ has at least one accepting path for $w$, so it accepts. Suppose we want to produce a machine that accepts exactly the input that $M$ rejects. The obvious attempt is to take $M$ and make its accepting state reject, and its rejecting states accept. However, this new machine $M'$ has one rejecting path and one accepting path. So it still accepts $w$, which it was supposed to reject.
@@ -151,14 +171,44 @@ What now? There are two options here:
 
 We present the following proof due to Žák \cite{zak1983turing}.
 
-\begin{proof}
+\begin{proofidea}
+  \todo{Write this. Add illustrations.}
+\end{proofidea}
 
+We now describe the proof formally.
+
+\begin{proof}
+  First, we define the function $h : \NN \to \NN$ as follows:
+  \begin{align*}
+    h(k) =
+    \begin{cases}
+      2 & \text{if $k = 1$} \\
+      2^{h(k - 1)} & \text{otherwise}
+    \end{cases}
+  \end{align*}
+  For every NTM $M_k$, we associate with it an interval $I_k = (l_k, u_k]$, where $l_k = h(k)$ and $u_k = h(k + 1)$. Observe that these intervals are disjoint but contiguous.  Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on some input in the interval $I_k$. We now define $D$ as follows:
+  \begin{align*}
+    D = & \ \text{``On input $w$:} \\
+    & \ \quad \text{1. } \text{If $w$ is not of the form $\texttt{1}^\ast$, \emph{reject}.} \\
+    & \ \quad \text{2. } \text{Let $n$ be the length of $w$.} \\
+    & \ \quad \text{3. } \text{Compute $k$ such that $n$ lies in the interval $I_k = (l_k, u_k]$.} \\
+    & \ \quad \ \quad \text{3.1. } \text{If $n < u_k$, then nondeterministically simulate $M_k$ on the input} \\
+    & \ \quad \ \quad \phantom{\text{3.1. }} \text{$\texttt{1}^{n + 1}$ for up to $g(n)$ steps. If $M$ accepts, then \emph{accept}. If $M$ rejects,} \\
+    & \ \quad \ \quad \phantom{\text{3.1. }} \text{then \emph{reject}. (Observe that here we are \emph{not} diagonalizing.)} \\
+    & \ \quad \ \quad \text{3.2. } \text{If $n = u_k$, then deterministically decide if $M_k$ accepts the input} \\
+    & \ \quad \ \quad \phantom{\text{3.2. }} \text{$\texttt{1}^{l_k + 1}$ by simulating all computation paths, for up to $g(n)$ steps in} \\
+    & \ \quad \ \quad \phantom{\text{3.2. }} \text{total. If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}. (Observe} \\
+      & \ \quad \ \quad \phantom{\text{3.2. }} \text{that here we are indeed diagonalizing. But we are doing it on a} \\
+      & \ \quad \ \quad \phantom{\text{3.2. }} \text{much shorter input than the input to $D$, i.e. $\texttt{1}^{l_k + 1}$ is exponentially} \\
+    & \ \quad \ \quad \phantom{\text{3.2. }} \text{shorter than $\texttt{1}^n$.)''}
+  \end{align*}
+  \todo{Complete the rest of the proof.}
 \end{proof}
 
 We also present a different proof by Fortnow and Santhanam \cite{fortnow2011robust}.
 
 \begin{proof}
-
+  \todo{Write this.}
 \end{proof}
 
 \section{Ladner's Theorem: Existence of $\NPTIME$-Intermediate Problems}
