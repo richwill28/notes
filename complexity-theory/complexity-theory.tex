@@ -39,16 +39,14 @@ We begin with the following technical definition, given by Goldreich \cite{goldr
 
 When designing algorithms of arbitrary time complexity $f : \NN \to \NN$, we need to make sure that the algorithm does not exceed the time bound. However, when invoked on an input $w$, we cannot assume that the algorithm is given the time bound $f(\len{w})$ explicitly. A reasonable design methodology is to have the algorithm compute this bound before doing anything else. This, in turn, requires the algorithm to read the entire input and compute $f(n)$ in $O(f(n))$ steps; otherwise, this preliminary stage already consumes too much time. The latter requirement motivates the notion of time-constructible functions.
 
-There are multiple definitions of the time hierarchy theorem. We present the following one by Sipser \cite{sipser2013introduction}, which is more intuitive.
+There are multiple definitions of the time hierarchy theorem. We present the following one by Sipser \cite{sipser2013introduction}, with some correction.
 
 \begin{theorem}[Time hierarchy theorem]
   \thmlabel{time-hierarchy-theorem}
-  For any time-constructible function $f : \NN \to \NN$, a language $A$ exists that is decidable in $O(f(n))$ time but not decidable in time $o(f(n) / \log f(n))$.
+  For any time-constructible function $f : \NN \to \NN$ where $f(n) = \omega(n \log n)$, a language $A$ exists that is decidable in $O(f(n))$ time but not decidable in time $o(f(n) / \log f(n))$.
 \end{theorem}
 
-The time hierarchy theorem for deterministic multi-tape Turing machines was first proven by Stearns and Hartmanis \cite{hartmanis1965computational}. It was improved some time later when Hennie and Stearns improved the efficiency of the universal Turing machine \cite{hennie1966two}.
-
-We present the following proof by Sipser \cite{sipser2013introduction}, with slight modification.
+We present the following proof by Sipser \cite{sipser2013introduction}, with some modification.
 
 \begin{proofidea}
   We must demonstrate a language $A$ that has two properties. The first says that $A$ is decidable in $O(f(n))$ time. The second says that $A$ isn't decidable in $o(f(n) / \log f(n))$ time.
@@ -94,19 +92,29 @@ We now describe the proof formally.
 \end{proof}
 
 \begin{remark}
-  Actually, there is one other technical detail that we conveniently ignored in our proof, in order to keep it concise. Let us discuss the detail here. In Stage $4$ of $D$, it simulates $M$ on $w$. This simulation may require representing each cell of $M$'s tape with several cells on $D$'s tape because $M$'s tape alphabet is arbitrary while D's tape alphabet is fixed. However, initializing the simulation by converting $D$'s input $w$ to this representation involves rewriting $w$ so that its symbol are spread apart by several cells. Let $n$ be the length of $w$. If we use the obvious copying procedure for spreading $w$, this convention would involve $O(n^2)$ time and that would exceed the $O(f(n))$ time bound for small $f$. Instead, we observe that $D$ operates on an input $w$ of the form $\enc{M}\texttt{1}\texttt{0}^k$, and we only need to carry out the simulation when $k$ is sufficiently large. We consider only $k > \len{\enc{M}}^2$. We can spread out $w$ by first using the obvious copying procedure for $\enc{M}$ and then counting the trailing $\texttt{0}$s and rewriting these by using that count. The time for spreading $\enc{M}$ is $O(\len{\enc{M}}^2)$ which is $O(n)$. The time for counting the $\texttt{0}$s is $O(n \log n)$ \dubious{which is $O(f(n))$ because $f$ is time-constructible.}
+  Actually, there is one other technical detail that we conveniently ignored in our proof, in order to keep it concise. Let us discuss the detail here. In Stage $4$ of $D$, it simulates $M$ on $w$. This simulation may require representing each cell of $M$'s tape with several cells on $D$'s tape because $M$'s tape alphabet is arbitrary while D's tape alphabet is fixed. However, initializing the simulation by converting $D$'s input $w$ to this representation involves rewriting $w$ so that its symbol are spread apart by several cells. Let $n$ be the length of $w$. If we use the obvious copying procedure for spreading $w$, this convention would involve $O(n^2)$ time and that would exceed the $O(f(n))$ time bound for small $f$. Instead, we observe that $D$ operates on an input $w$ of the form $\enc{M}\texttt{1}\texttt{0}^k$, and we only need to carry out the simulation when $k$ is sufficiently large. We consider only $k > \len{\enc{M}}^2$. We can spread out $w$ by first using the obvious copying procedure for $\enc{M}$ and then counting the trailing $\texttt{0}$s and rewriting these by using that count. The time for spreading $\enc{M}$ is $O(\len{\enc{M}}^2)$ which is $O(n)$. The time for counting the $\texttt{0}$s is $O(n \log n)$, which is $O(f(n))$.
 \end{remark}
-\todo{Fix this. This is only true if we use the definition of time-constructibility by Sipser. But we can't use it, since it will contradict \corref{time-hierarchy-theorem-for-the-class-P}.}
+
+\begin{remark}
+  We also didn't elaborate on the fact that our function $f(n)$ is $\omega(n \log n)$ in the statement of our theorem. This is because, as we will demonstrate in \corref{alternative-definition-of-time-hierarchy-theorem}, the time hierarchy theorem can be used to distinguish between two complexity classes, e.g. $\DTIME(f(n))$ and $\DTIME(g(n))$. We require both functions $f$ and $g$ to be time-constructible.
+\end{remark}
+
+\begin{remark}
+  The time hierarchy theorem for deterministic multi-tape Turing machines was first established by Hartmanis and Stearns \cite{hartmanis1965computational}. It was improved a year later when Hennie and Stearns \cite{hennie1966two} improved the efficiency of the two-tape universal Turing machine. It's important to note that \thmref{time-hierarchy-theorem} applies only to single-tape Turing machines. This was originally proven by Hartmanis and Hopcroft \cite{hartmanis1968computational}. Curiously, their original proof did not simply rely on simulation; it distinguished between two cases:
+  \begin{enumerate}
+    \item When the running time is $\Omega(n^2)$, simulation is used, similar to what we did in our proof.
+    \item \dubious{When the running time is $o(n^2)$, a language was given directly for the separation, without using simulation. This relied on specific properties of single-tape Turing machines with sub-quadratic running times.}
+  \end{enumerate}
+\end{remark}
+\todo{Verify this. Also clarify whose running time? The machine simulating or simulated?}
+
+Now we can introduce the following important corollary, which is very frequently referred to as the time hierarchy theorem in other literature.
 
 \begin{corollary}
   \corlabel{alternative-definition-of-time-hierarchy-theorem}
   For any two time-constructible functions $f, g : \NN \to \NN$ where $f(n) \log f(n) = o(g(n))$,
   \[ \DTIME(f(n)) \subsetneq \DTIME(g(n)). \]
 \end{corollary}
-
-\begin{remark}
-  \corref{alternative-definition-of-time-hierarchy-theorem} is very often presented as the time hierarchy theorem in other literature.
-\end{remark}
 
 This corollary allows us to separate various deterministic time complexity classes. For example, we can show that the function $n^c$ is time-constructible for any natural number $c$. Hence, for any two natural numbers $c_1 < c_2$ we can prove that $\DTIME(n^{c_1}) \subsetneq \DTIME(n^{c_2})$. With a bit more work we can show that $n^c$ is time-constructible for any rational number $c > 1$ and thereby extend the preceding containment to hold for any rational numbers $1 \leq c_1 < c_2$. Observing that two rational numbers $c_1$ and $c_2$ always exist between any two real numbers $\epsilon_1 < \epsilon_2$ such that $\epsilon_1 < c_1 < c_2 < \epsilon_2$ we obtain the following additional corollary demonstrating a fine hierarchy within the class $\PTIME$.
 
@@ -132,7 +140,9 @@ We can also use the time hierarchy theorem to separate the classes $\PTIME$ and 
 This corollary establishes the existence of decidable problems that are decidable in principle but not in practice—that is, problems that are decidable but intractable.
 
 \subsection{Sharper Time Hierarchy Theorem}
-\todo{State the fact that our time hierarchy theorem is derived from simulating a single-tape TM with another single-tape TM. Sharper results can be achieved if we use multi-tape TMs. We explore the results here.}
+
+This subsection is completely optional. If you're short on time, skip it.
+\todo{State more recent time hierarchy results.}
 
 \section{Nondeterministic Time Hierarchy Theorem}
 \seclabel{nondeterministic-time-hierarchy-theorem}
