@@ -57,7 +57,7 @@ We present the following proof by Sipser \cite{sipser2013introduction}, with som
 
   Let's look at the way $D$ operates. Roughly speaking, $D$ takes its input to be the description of a TM $M$. (If the input isn't the description of any TM, then $D$'s action is inconsequential on this input, so we arbitrarily make $D$ reject.) Then, $D$ runs $M$ on the same input—namely, $\enc{M}$—within the time bound $\ceil{f(n) / \log f(n)}$. If $M$ halts within that much time, $D$ accepts iff $M$ rejects. If $M$ doesn't halt, $D$ just rejects. So if $M$ runs within time $\ceil{f(n) / \log f(n)}$, $D$ has enough time to ensure that its language is different from $M$'s. If not, $D$ doesn't have enough time to figure out what $M$ does, but fortunately $D$ has no requirement to act differently from machines that don't run in $o(f(n) / \log f(n))$ time, so $D$'s action on this input is inconsequential.
 
-  This description captures the essence of the proof but omits several important details. If $M$ runs in $o(f(n) / \log f(n))$ time, $D$ must guarantee that its language is different from $M$'s language. But even when $M$ runs in $o(f(n) / \log f(n))$ time, it may use more than $f(n)$ time for small $n$, when the asymptotic behavior hasn't ``kicked in'' yet. Possibly, $D$ might not have enough time to run $M$ to completion on input $\enc{M}$, and hence $D$ will miss its opportunity to avoid $M$'s language. So, if we aren't careful, $D$ might end up deciding the same language $M$ decides, and the theorem wouldn't be proved.
+  This description captures the essence of the proof but omits several important details. If $M$ runs in $o(f(n) / \log f(n))$ time, $D$ must guarantee that its language is different from $M$'s language. But even when $M$ runs in $o(f(n) / \log f(n))$ time, it may use more than $f(n)$ time for small $n$, when the asymptotic behavior hasn't ``kicked in'' yet. Possibly, $D$ might not have enough time to run $M$ to completion on the input $\enc{M}$, and hence $D$ will miss its opportunity to avoid $M$'s language. So, if we aren't careful, $D$ might end up deciding the same language $M$ decides, and the theorem wouldn't be proved.
 
   We can fix this problem by modifying $D$ to give it additional opportunities to avoid $M$'s language. Instead of running $M$ only when $D$ receives the input $\enc{M}$, it runs $M$ whenever it receives an input of the form $\enc{M}\texttt{1}\texttt{0}^\ast$, that is, an input of the form $\enc{M}$ followed by a $\texttt{1}$ and some number of $\texttt{0}$s. Observe that by doing this, we get to simulate $M$ on infinitely many $w$, so now $D$ has infinitely many opportunities to avoid $M$'s language. Then, if $M$ really is running in $o(f(n) / \log f(n))$, we will eventually encounter a sufficiently large $w$, where $w = \enc{M}\texttt{1}\texttt{0}^k$ for some large value of $k$, and $D$ will have enough time to run it to completion because the asymptotic must eventually kick in.
 
@@ -88,7 +88,7 @@ We now describe the proof formally.
 
   At every step in stage 4, $D$ must decrement the step counter originally set in stage 3. Here, $D$ can do so without adding excessively to the simulation time by keeping the counter in binary on a third track and moving it to keep it near the present head position. This counter has a magnitude of about $f(n) / \log f(n)$, so its length is $\log(f(n) / \log f(n))$, which is $O(\log f(n))$. Hence, the cost of updating and moving at each step adds a $\log f(n)$ factor to the simulation time, thus brining the total running time to $O(f(n))$. Therefore, $A$ is decidable in time $O(f(n))$.
 
-  Now, we show that $A$ is not decidable in $o(f(n) / \log f(n))$ time. Assume the contrary that some TM $M$ decides $A$ in time $g(n)$, where $g(n)$ is $o(f(n) / \log f(n))$. Here, $D$ can simulate $M$, using time $d \cdot g(n)$ for some constant $d$. If the total simulation time (not counting the time to update the step counter) is at most $f(n) / \log f(n)$, the simulation will run to completion. Because $g(n)$ is $o(f(n) / \log f(n))$, some constant $n_0$ exists where $d \cdot g(n) < f(n) / \log f(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on input $\enc{M}\texttt{1}\texttt{0}^{n_0}$. This input is longer than $n_0$ so the simulation in stage 4 will complete. Therefore, $D$ will do the opposite of $M$ on the same input. Hence, $M$ doesn't decide $A$, which contradicts our assumption. Therefore, $A$ is not decidable in $o(f(n) / \log f(n))$ time.
+  Now, we show that $A$ is not decidable in $o(f(n) / \log f(n))$ time. Assume the contrary that some TM $M$ decides $A$ in time $g(n)$, where $g(n)$ is $o(f(n) / \log f(n))$. Here, $D$ can simulate $M$, using time $d \cdot g(n)$ for some constant $d$. If the total simulation time (not counting the time to update the step counter) is at most $f(n) / \log f(n)$, the simulation will run to completion. Because $g(n)$ is $o(f(n) / \log f(n))$, some constant $n_0$ exists where $d \cdot g(n) < f(n) / \log f(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on the input $\enc{M}\texttt{1}\texttt{0}^{n_0}$. This input is longer than $n_0$ so the simulation in stage 4 will complete. Therefore, $D$ will do the opposite of $M$ on the same input. Hence, $M$ doesn't decide $A$, which contradicts our assumption. Therefore, $A$ is not decidable in $o(f(n) / \log f(n))$ time.
 \end{proof}
 
 \begin{remark}
@@ -100,10 +100,10 @@ We now describe the proof formally.
 \end{remark}
 
 \begin{remark}
-  The time hierarchy theorem for deterministic multi-tape Turing machines was first established by Hartmanis and Stearns \cite{hartmanis1965computational}. It was improved a year later when Hennie and Stearns \cite{hennie1966two} improved the efficiency of the two-tape universal Turing machine. It's important to note that \thmref{time-hierarchy-theorem} applies only to single-tape Turing machines. This was originally proven by Hartmanis and Hopcroft \cite{hartmanis1968computational}. Curiously, their original proof did not simply rely on simulation; it distinguished between two cases:
+  Hartmanis and Stearns \cite{hartmanis1965computational} were the first to establish the time hierarchy theorem. A year later, Hennie and Stearns \cite{hennie1966two} improved this result by demonstrating that $t$ steps on any $k$-tape TM can be simulated in $O(t \log t)$ steps on a two-tape TM. Although we managed to obtain an equally sharp time hierarchy, it's worth noting that we proved our theorem by simulating a single-tape TM with another single-tape TM. This specific approach was originally established by Hartmanis and Hopcroft \cite{hartmanis1968computational}. Curiously, their original proof did not rely solely on simulation; it distinguished between two cases:
   \begin{enumerate}
-    \item When the running time is $\Omega(n^2)$, simulation is used, similar to what we did in our proof.
-    \item \dubious{When the running time is $o(n^2)$, a language was given directly for the separation, without using simulation. This relied on specific properties of single-tape Turing machines with sub-quadratic running times.}
+    \item When the running time is $\Omega(n^2)$, simulation is used, much like what we did in our proof.
+    \item \dubious{When the running time is $o(n^2)$, they presented a language directly for the separation, without using simulation. This part of the proof depended on specific properties of single-tape TMs with sub-quadratic running times.}
   \end{enumerate}
 \end{remark}
 \todo{Verify this. Also clarify whose running time? The machine simulating or simulated?}
@@ -162,11 +162,9 @@ Our first instinct is to duplicate the proof of \thmref{time-hierarchy-theorem},
   D = & \ \text{``On input $w$:} \\
   & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
   & \ \quad \text{2. } \text{If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.} \\
-  & \ \quad \text{3. } \text{Compute $f(n + 1)$ using time constructibility, and store the value} \\
-  & \ \quad \phantom{\text{3. }} \text{$f(n + 1)$ in a binary counter. Decrement this counter before each} \\
-  & \ \quad \phantom{\text{3. }} \text{step used to carry out stage 4. If the counter ever hits 0, \emph{reject}.} \\
-  & \ \quad \text{4. } \text{Nondeterministically simulate $M$ on $w$.} \\
-  & \ \quad \text{5. } \text{If $M$ accepts, then \emph{reject}. \incorrect{If $M$ rejects, then \emph{accept}. How?}''}
+  & \ \quad \text{3. } \text{Nondeterministically simulate $M$ on $w$ for up to $g(n)$ steps.} \\
+  & \ \quad \text{4. } \text{If $M$ accepts, then \emph{reject}.} \\
+  & \ \quad \phantom{\text{4. }} \text{\incorrect{If $M$ rejects, then \emph{accept}. How?}''}
 \end{align*}
 
 Ignoring other potential issues with the above construction, our main concern is that it's unclear how we could determine efficiently, whether or not $M$ rejects the input $w$. A nondeterministic Turing machine accepts if at least one path accepts; it rejects only when all paths reject. This asymmetry makes it hard to ``flip answers'' efficiently. For instance, suppose we have an NTM $M$ that has two paths for input $w$ where one accepts and the other rejects. $M$ has at least one accepting path for $w$, so it accepts. Suppose we want to produce a machine that accepts exactly the input that $M$ rejects. The obvious attempt is to take $M$ and make its accepting state reject, and its rejecting states accept. However, this new machine $M'$ has one rejecting path and one accepting path. So it still accepts $w$, which it was supposed to reject.
@@ -176,10 +174,10 @@ One limitation of the nondeterministic Turing machine is that it can't look at a
 What now? There are two options here:
 \begin{enumerate}
   \item We admit defeat. Accept the exponential-time slowdown, but then we won't get a fine hierarchy at all.
-  \item Or, we try to come up with a better solution. Consider the following idea. Now, our new simulator is in no hurry to diagonalize, it will not try to ``flip the answer'' of a subroutine NTM on every input, but only on a crucial input out of a sufficiently large (i.e. exponentially large) interval. This technique is known as \vocab{lazy diagonalization}. We show that it does suffice to establish our hierarchy theorem.
+  \item Or, we try to come up with a better solution. Consider the following idea. Now, our new simulator is in no hurry to diagonalize, it will not try to ``flip the answer'' of a subroutine NTM on every input, but only on a crucial input out of a sufficiently large (i.e. at least exponentially large) interval. This technique is known as \vocab{lazy diagonalization}. We show that it does suffice to establish our hierarchy theorem.
 \end{enumerate}
 
-We present the following proof due to Žák \cite{zak1983turing}.
+We present the following proof, inspired by Žák \cite{zak1983turing}.
 
 \begin{proofidea}
   \todo{Write this. Add illustrations.}
@@ -188,19 +186,11 @@ We present the following proof due to Žák \cite{zak1983turing}.
 We now describe the proof formally.
 
 \begin{proof}
-  First, we define the function $h : \NN \to \NN$ as follows:
-  \begin{align*}
-    h(k) =
-    \begin{cases}
-      2 & \text{if $k = 1$} \\
-      2^{h(k - 1)} & \text{otherwise}
-    \end{cases}
-  \end{align*}
-  For every NTM $M_k$, we associate with it an interval $I_k = (l_k, u_k]$, where $l_k = h(k)$ and $u_k = h(k + 1)$. Observe that these intervals are disjoint but contiguous.  Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on some input in the interval $I_k$. We now define $D$ as follows:
+  For every NTM $M_k$, we associate with it an interval $I_k = (l_k, u_k]$, where $f(u_k) > 2^{f(l_k + 1)^2}$. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. We set the lower bound of the first interval, $l_1$, to $f(n_0)$. These intervals should be disjoint yet contiguous. Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on one input in the interval $I_k$. We define $D$ as follows:
   \begin{align*}
     D = & \ \text{``On input $w$:} \\
-    & \ \quad \text{1. } \text{If $w$ is not of the form $\texttt{1}^\ast$, \emph{reject}.} \\
-    & \ \quad \text{2. } \text{Let $n$ be the length of $w$.} \\
+    & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
+    & \ \quad \text{2. } \text{If $w$ is not of the form $\texttt{1}^n$ where $n \geq n_0$, \emph{reject}.} \\
     & \ \quad \text{3. } \text{Compute $k$ such that $n$ lies in the interval $I_k = (l_k, u_k]$.} \\
     & \ \quad \ \quad \text{3.1. } \text{If $n < u_k$, then nondeterministically simulate $M_k$ on the input} \\
     & \ \quad \ \quad \phantom{\text{3.1. }} \text{$\texttt{1}^{n + 1}$ for up to $g(n)$ steps. If $M$ accepts, then \emph{accept}. If $M$ rejects,} \\
@@ -209,10 +199,16 @@ We now describe the proof formally.
     & \ \quad \ \quad \phantom{\text{3.2. }} \text{$\texttt{1}^{l_k + 1}$ by simulating all computation paths, for up to $g(n)$ steps in} \\
     & \ \quad \ \quad \phantom{\text{3.2. }} \text{total. If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}. (Observe} \\
       & \ \quad \ \quad \phantom{\text{3.2. }} \text{that here we are indeed diagonalizing. But we are doing it on a} \\
-      & \ \quad \ \quad \phantom{\text{3.2. }} \text{much shorter input than the input to $D$, i.e. $\texttt{1}^{l_k + 1}$ is exponentially} \\
-    & \ \quad \ \quad \phantom{\text{3.2. }} \text{shorter than $\texttt{1}^n$.)''}
+    & \ \quad \ \quad \phantom{\text{3.2. }} \text{much shorter input than the input to $D$.)''}
   \end{align*}
-  \todo{Complete the rest of the proof.}
+  Now, let's analyze the running time of each stage of this algorithm. Stages 1, 2, and 3 can be performed in $O(g(n))$ time. In stage 3.1, $D$ nondeterministically simulates $M_k$ on the input $\texttt{1}^{n + 1}$. If $M_k$ really runs within $O(f(n + 1))$ time, then $D$ has sufficient time for the simulation, since $f(n + 1) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will terminate the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time. In stage 3.2, $D$ deterministically simulates every computation path of $M_k$ on the input $\texttt{1}^{l_k + 1}$. If $M_k$ really runs within $O(f(l_k + 1))$, $D$ again has sufficient time for the simulation. The deterministic simulation of each computation path requires $O(f(l_k + 1) \log f(l_k + 1))$, leading to a total time for all paths of $2^{f(l_k + 1) \log f(l_k + 1)}$. This is less than $2^{f(l_k + 1)^2} < f(u_k) = f(n) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will stop the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time.
+
+  Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M$ decides $A$ in time $f(n)$, where $f(n + 1)$ is $o(g(n))$. Here, $D$ can simulate $M$, using time $d \cdot g(n)$ for some constant $d$. The simulation will run to completion as long as the asymptotic kicks in. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on all the inputs $\texttt{1}^n$ where $n \geq n_0$, such that all these inputs correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). Stages 3.1 and 3.2 of $D$ ensure, respectively, that:
+  \begin{align}
+    \text{$M_k(\texttt{1}^{n + 1}) = D(\texttt{1}^n)$} & \qquad \text{if $l_k < n < u_k$} \\
+    \text{$M_k(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k}) = D(\texttt{1}^n)$} & \qquad \text{if $n = u_k$}
+  \end{align}
+  By our assumption, $D$ and $M_k$ agree on all inputs $\texttt{1}^n$ in the interval $I_k = (l_k, u_k]$. Together with (2.1), we have $M(\texttt{1}^{l_k + 1}) = D(\texttt{1}^{l_k + 1}) = M(\texttt{1}^{l_k + 2}) = D(\texttt{1}^{l_k + 2}) = \dots = M(\texttt{1}^{u_k - 1}) = D(\texttt{1}^{u_k - 1}) = M(\texttt{1}^{u_k}) = D(\texttt{1}^{u_k})$. This contradicts $M(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k})$ in (2.2). Hence, we conclude that $A$ cannot be decided in $O(f(n))$ time.
 \end{proof}
 
 We also present a different proof by Fortnow and Santhanam \cite{fortnow2011robust}.
