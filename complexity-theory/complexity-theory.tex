@@ -188,7 +188,7 @@ We present the following proof, inspired by Žák \cite{zak1983turing}.
   \begin{center}
     \includegraphics[width=0.7\textwidth]{media/turing_machine_intervals.jpg}
   \end{center}
-  Here's where the magic happens. Consider what happens when we run $D$ on all the inputs that correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). When $D$ receives the input $\texttt{1}^n$ where $n < u_k$, $D$ accepts $\texttt{1}^n$ iff $M_k$ accepts $\texttt{1}^{n + 1}$. Here, we refrain ourselves from diagonalizing. However, when $D$ receives the input $\texttt{1}^n$ where $n = u_k$, we diagonalize but on a much smaller input, i.e. $D$ accepts $\texttt{1}^n$ iff $M_k$ rejects $\texttt{1}^{l_k + 1}$. In this case, $D$ has sufficient time to simulate $M_k$ as we have established earlier. Furthermore, we have effectively demonstrated that no TM $M_k$ can accept the same language as $D$, since $D$ diverge from $M_k$ on exactly one input, i.e. on the input $\texttt{1}^n$ where $n = u_k$. To further illustrate this fact, consider the following graphical representation of an equivalence class that we obtain, by virtue of our construction.
+  Here's where the magic happens. Consider what happens when we run $D$ on all the inputs that correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). When $D$ receives the input $\texttt{1}^n$ where $n < u_k$, $D$ accepts $\texttt{1}^n$ iff $M_k$ accepts $\texttt{1}^{n + 1}$. Here, we refrain ourselves from diagonalizing. However, when $D$ receives the input $\texttt{1}^n$ where $n = u_k$, we diagonalize but on a much smaller input, i.e. $D$ accepts $\texttt{1}^n$ iff $M_k$ rejects $\texttt{1}^{l_k + 1}$. In this case, $D$ has sufficient time to simulate $M_k$ as we have established earlier. Furthermore, we have effectively demonstrated that no TM $M_k$ can accept the same language as $D$, since $D$ diverge from $M_k$ on exactly one input, i.e. on the input $\texttt{1}^n$ where $n = u_k$. To further illustrate this fact, consider the following graphical representation of an equivalence class and a non-equivalence relation that we obtain, by virtue of our construction.
   \begin{center}
     \includegraphics[width=0.8\textwidth]{media/lazy_diagonalization.jpg}
   \end{center}
@@ -198,7 +198,7 @@ We present the following proof, inspired by Žák \cite{zak1983turing}.
   \end{center}
   This means that we have $M(\texttt{1}^{l_k + 1}) = D(\texttt{1}^{u_k})$ by $\relbar\!\relbar\!\relbar$ and \textcolor{blue}{$\relbar\!\relbar\!\relbar$}, but $M(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k})$ by \textcolor{red}{$\relbar\!\relbar\!\relbar$}. A contradiction.
 
-  One last technical point. Just as in the proof of the deterministic time hierarchy theorem, we may encounter a similar issue where the asymptotic behavior of $f$ has not yet taken effect. To fix this problem, it suffices to simply restrict the simulation of $D$ on sufficiently long inputs. We then associate the first of these inputs to the first interval, $I_1$.
+  One last technical point. Just as in the proof of the deterministic time hierarchy theorem, we may encounter a similar issue where the asymptotic behavior of $f$ has not yet taken effect. To fix this problem, it suffices to simply restrict the simulation of $D$ on sufficiently long inputs. We then associate the first(s) of these inputs to the first interval, $I_1$.
 \end{proofidea}
 
 We now describe the proof formally.
