@@ -180,13 +180,31 @@ What now? There are two options here:
 We present the following proof, inspired by Žák \cite{zak1983turing}.
 
 \begin{proofidea}
-  \todo{Write this. Add illustrations.}
+  Remember that in our proof of the deterministic time hierarchy theorem, $D$ gets to simulate $M$ infinitely often. When the input string is long enough, $D$ accepts iff $M$ rejects. This means that $D$ exhibits different behavior from $M$ on infinitely many inputs. This diagonalization technique demonstrates that no other TM $M$ (that is significantly more efficient than $D$) can accept the same language as $D$. However, observe that this is somewhat redundant. That is, $D$ does not need to diverge from $M$ infinitely often. In fact, we only need $D$ to behave differently at least once, and our proof would have still held. This is the essence of lazy diagonalization and represents our first key observation for our proof of the nondeterministic time hierarchy theorem.
+
+  Next, our second key observation comes from the fact that we can ``feed'' $M$ with an input that is much smaller than the original input. That is, when $D$ receives the input $\texttt{1}^n$, rather than simulating $M$ on $\texttt{1}^n$, we can opt to simulate an arbitrarily smaller input, say $\texttt{1}^{\log n}$, on $M$ instead. Why would we want to do this? Currently, we have no effective means of deciding if $M$ rejects some input $w$. Our only reliable strategy for now is to exhaustively check every computation path of $M$. But $M$ may have exponentially many such paths. (Remember that this was the main roadblock that we faced earlier in proving this theorem.) This is precisely where our second key observation comes into play. Consider what happens when we simulate $\texttt{1}^{\log n}$ on $M$. If simulating one path of $M$ takes $\len{\texttt{1}^{\log n}} = O(\log n)$ time, then simulating all computation paths would require $2^{O(\log n)}$ time, which is $\poly(n)$. Notice that $\poly(n)$ is polynomial in the length of our original input string $\texttt{1}^n$. This means that $D$ won't run out of time while simulating $M$.
+
+  The set of all Turing machines is enumerable. Let $M_k$ be the $k$-th Turing machine in the enumeration. We can associate each TM $M_k$ with an interval $I_k = (l_k, u_k]$ (of natural numbers, i.e. $\NN$). These intervals should be disjoint but contiguous. Each interval $I_k$ is large, so we get to simulate $M_k$ on a lot of input words. Crucially, the upper bound of the interval, $u_k$, should at the very least be exponentially larger than the lower bound, $l_k$.
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{media/turing_machine_intervals.jpg}
+  \end{center}
+  Here's where the magic happens. Consider what happens when we run $D$ on all the inputs that correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). When $D$ receives the input $\texttt{1}^n$ where $n < u_k$, $D$ accepts $\texttt{1}^n$ iff $M_k$ accepts $\texttt{1}^{n + 1}$. Here, we refrain ourselves from diagonalizing. However, when $D$ receives the input $\texttt{1}^n$ where $n = u_k$, we diagonalize but on a much smaller input, i.e. $D$ accepts $\texttt{1}^n$ iff $M_k$ rejects $\texttt{1}^{l_k + 1}$. In this case, $D$ has sufficient time to simulate $M_k$ as we have established earlier. Furthermore, we have effectively demonstrated that no TM $M_k$ can accept the same language as $D$, since $D$ diverge from $M_k$ on exactly one input, i.e. on the input $\texttt{1}^n$ where $n = u_k$. To further illustrate this fact, consider the following graphical representation of an equivalence class that we obtain, by virtue of our construction.
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{media/lazy_diagonalization.jpg}
+  \end{center}
+  If we assume the contrary that $M_k$ accepts the same language as $D$, then we get the following new equivalence class.
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{media/lazy_diagonalization_contradiction.jpg}
+  \end{center}
+  This means that we have $M(\texttt{1}^{l_k + 1}) = D(\texttt{1}^{u_k})$ by $\relbar\!\relbar\!\relbar$ and \textcolor{blue}{$\relbar\!\relbar\!\relbar$}, but $M(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k})$ by \textcolor{red}{$\relbar\!\relbar\!\relbar$}. A contradiction.
+
+  One last technical point. Just as in the proof of the deterministic time hierarchy theorem, we may encounter a similar issue where the asymptotic behavior of $f$ has not yet taken effect. To fix this problem, it suffices to simply restrict the simulation of $D$ on sufficiently long inputs. We then associate the first of these inputs to the first interval, $I_1$.
 \end{proofidea}
 
 We now describe the proof formally.
 
 \begin{proof}
-  For every NTM $M_k$, we associate with it an interval $I_k = (l_k, u_k]$, where $f(u_k) > 2^{f(l_k + 1)^2}$. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. We set the lower bound of the first interval, $l_1$, to $f(n_0)$. These intervals should be disjoint yet contiguous. Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on one input in the interval $I_k$. We define $D$ as follows:
+  For every NTM $M_k$, we associate with it an interval $I_k = (l_k, u_k]$, where $f(u_k) > 2^{f(l_k + 1)^2}$. These intervals should be disjoint but contiguous. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. We set the lower bound of the first interval, $l_1$, to $f(n_0)$. Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on one input in the interval $I_k$. We define $D$ as follows:
   \begin{align*}
     D = & \ \text{``On input $w$:} \\
     & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
@@ -201,15 +219,35 @@ We now describe the proof formally.
       & \ \quad \ \quad \phantom{\text{3.2. }} \text{that here we are indeed diagonalizing. But we are doing it on a} \\
     & \ \quad \ \quad \phantom{\text{3.2. }} \text{much shorter input than the input to $D$.)''}
   \end{align*}
-  Now, let's analyze the running time of each stage of this algorithm. Stages 1, 2, and 3 can be performed in $O(g(n))$ time. In stage 3.1, $D$ nondeterministically simulates $M_k$ on the input $\texttt{1}^{n + 1}$. If $M_k$ really runs within $O(f(n + 1))$ time, then $D$ has sufficient time for the simulation, since $f(n + 1) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will terminate the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time. In stage 3.2, $D$ deterministically simulates every computation path of $M_k$ on the input $\texttt{1}^{l_k + 1}$. If $M_k$ really runs within $O(f(l_k + 1))$, $D$ again has sufficient time for the simulation. The deterministic simulation of each computation path requires $O(f(l_k + 1) \log f(l_k + 1))$, leading to a total time for all paths of $2^{f(l_k + 1) \log f(l_k + 1)}$. This is less than $2^{f(l_k + 1)^2} < f(u_k) = f(n) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will stop the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time.
+  Let's analyze the running time of each stage of $D$. Stage 1 and 2 clearly operate in $O(g(n))$ time. Stage 3 can also be performed in $O(g(n))$ time, since $k \ll n$. In stage 3.1, $D$ nondeterministically simulates $M_k$ on the input $\texttt{1}^{n + 1}$. If $M_k$ really runs within $O(f(n + 1))$ time, then $D$ has sufficient time for the simulation, since $f(n + 1) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will terminate the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time. In stage 3.2, $D$ deterministically simulates every computation path of $M_k$ on the input $\texttt{1}^{l_k + 1}$. If $M_k$ really runs within $O(f(l_k + 1))$, $D$ again has sufficient time for the simulation. The deterministic simulation of each computation path requires $O(f(l_k + 1) \log f(l_k + 1))$, leading to a total time for all paths of $2^{O(f(l_k + 1) \log f(l_k + 1))}$. This is less than $2^{f(l_k + 1)^2} < f(u_k) = f(n) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will stop the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time.
 
-  Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M$ decides $A$ in time $f(n)$, where $f(n + 1)$ is $o(g(n))$. Here, $D$ can simulate $M$, using time $d \cdot g(n)$ for some constant $d$. The simulation will run to completion as long as the asymptotic kicks in. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on all the inputs $\texttt{1}^n$ where $n \geq n_0$, such that all these inputs correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). Stages 3.1 and 3.2 of $D$ ensure, respectively, that:
+  Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M$ decides $A$ in time $f(n)$, where $f(n + 1)$ is $o(g(n))$. Here, $D$ can simulate $M$, using time $d \cdot g(n)$ for some constant $d$. The simulation will run to completion as long as the asymptotic ``kicks in''. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on all the inputs $\texttt{1}^n$ where $n \geq n_0$, such that all these inputs correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). Stages 3.1 and 3.2 of $D$ ensure, respectively, that:
   \begin{align}
     \text{$M_k(\texttt{1}^{n + 1}) = D(\texttt{1}^n)$} & \qquad \text{if $l_k < n < u_k$} \\
     \text{$M_k(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k}) = D(\texttt{1}^n)$} & \qquad \text{if $n = u_k$}
   \end{align}
-  By our assumption, $D$ and $M_k$ agree on all inputs $\texttt{1}^n$ in the interval $I_k = (l_k, u_k]$. Together with (2.1), we have $M(\texttt{1}^{l_k + 1}) = D(\texttt{1}^{l_k + 1}) = M(\texttt{1}^{l_k + 2}) = D(\texttt{1}^{l_k + 2}) = \dots = M(\texttt{1}^{u_k - 1}) = D(\texttt{1}^{u_k - 1}) = M(\texttt{1}^{u_k}) = D(\texttt{1}^{u_k})$. This contradicts $M(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k})$ in (2.2). Hence, we conclude that $A$ cannot be decided in $O(f(n))$ time.
+  By our assumption, $D$ and $M_k$ agree on all inputs $\texttt{1}^n$ in the interval $I_k = (l_k, u_k]$. Together with (2.1), this implies $M(\texttt{1}^{l_k + 1}) = D(\texttt{1}^{l_k + 1}) = M(\texttt{1}^{l_k + 2}) = D(\texttt{1}^{l_k + 2}) = \dots = M(\texttt{1}^{u_k - 1}) = D(\texttt{1}^{u_k - 1}) = M(\texttt{1}^{u_k}) = D(\texttt{1}^{u_k})$. This contradicts $M(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k})$ in (2.2). Hence, we conclude that $A$ cannot be decided in $O(f(n))$ time.
 \end{proof}
+
+\begin{remark}
+  Notice that the $1 / \log f(n)$ factor does not appear in our hierarchy theorem, unlike in its deterministic counterpart. This absence is due to the efficient simulation of an NTM by another NTM, which only incurs a constant factor to the time complexity \cite{arora2009computational}.
+\end{remark}
+
+\begin{remark}
+  What about the term ``$+ 1$'' in $f(n + 1)$, where does it come from? This overhead arises from the fact that we have to simulate a longer input most of the time. That is, when we receive the input $\texttt{1}^{n}$, we often simulate $\texttt{1}^{n + 1}$ on $M_k$. We require that $D$ has sufficient time to simulate $M_k$, so we need $f(n + 1)$ to be $o(g(n))$.
+\end{remark}
+
+\begin{remark}
+  In other literature, one would often find that a rapidly growing function $h : \NN \to \NN$ is introduced in the proof. For instance, in Arora and Barak \cite{arora2009computational}, the function $h$ is defined as follows:
+  \begin{align*}
+    h(n) =
+    \begin{cases}
+      2 & \text{if $n = 1$} \\
+      2^{h(n - 1)^{1.2}} & \text{otherwise}
+    \end{cases}
+  \end{align*}
+  The interval $I_k$ is then defined as $(l_k, u_k]$ where $l_k = h(k)$ and $u_k = h(k + 1)$. It's important to note that such a proof only works for specific instances of the theorem, e.g. proving that $\NTIME(n) \subsetneq \NTIME(n^{1.5})$. For the proof to work in the general case, we must define $h$ in relation to $f$, as demonstrated in our proof.
+\end{remark}
 
 We also present a different proof by Fortnow and Santhanam \cite{fortnow2011robust}.
 
