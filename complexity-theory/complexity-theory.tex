@@ -146,7 +146,7 @@ This subsection is completely optional. If you're short on time, skip it.
 
 \section{Nondeterministic Time Hierarchy Theorem}
 \seclabel{nondeterministic-time-hierarchy-theorem}
-The following time hierarchy theorem for nondeterministic Turing machines is due to Seiferas, Fischer, and Meyer \cite{seiferas1978separating}.
+The time hierarchy theorem for nondeterministic Turing machines was originally proven by Cook \cite{cook1972hierarchy}. The following tighter result is due to Seiferas, Fischer, and Meyer \cite{seiferas1978separating}.
 
 \begin{theorem}[Nondeterministic time hierarchy theorem]
   For any two time-constructible functions $f, g : \NN \to \NN$ where $f(n + 1) = o(g(n))$,
@@ -186,15 +186,15 @@ We present the following proof, inspired by Žák \cite{zak1983turing}.
 
   The set of all Turing machines is enumerable. Let $M_k$ be the $k$-th Turing machine in the enumeration. We can associate each TM $M_k$ with an interval $I_k = (l_k, u_k]$ (of natural numbers, i.e. $\NN$). These intervals should be disjoint but contiguous. Each interval $I_k$ is large, so we get to simulate $M_k$ on a lot of input words. Crucially, the upper bound of the interval, $u_k$, should at the very least be exponentially larger than the lower bound, $l_k$.
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{media/turing_machine_intervals.jpg}
+    \includegraphics[width=0.65\textwidth]{media/turing_machine_intervals.jpg}
   \end{center}
   Here's where the magic happens. Consider what happens when we run $D$ on all the inputs that correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). When $D$ receives the input $\texttt{1}^n$ where $n < u_k$, $D$ accepts $\texttt{1}^n$ iff $M_k$ accepts $\texttt{1}^{n + 1}$. Here, we refrain ourselves from diagonalizing. However, when $D$ receives the input $\texttt{1}^n$ where $n = u_k$, we diagonalize but on a much smaller input, i.e. $D$ accepts $\texttt{1}^n$ iff $M_k$ rejects $\texttt{1}^{l_k + 1}$. In this case, $D$ has sufficient time to simulate $M_k$ as we have established earlier. Furthermore, we have effectively demonstrated that no TM $M_k$ can accept the same language as $D$, since $D$ diverge from $M_k$ on exactly one input, i.e. on the input $\texttt{1}^n$ where $n = u_k$. To further illustrate this fact, consider the following graphical representation of an equivalence class and a non-equivalence relation that we obtain, by virtue of our construction.
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{media/lazy_diagonalization.jpg}
+    \includegraphics[width=0.75\textwidth]{media/lazy_diagonalization.jpg}
   \end{center}
   If we assume the contrary that $M_k$ accepts the same language as $D$, then we get the following new equivalence class.
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{media/lazy_diagonalization_contradiction.jpg}
+    \includegraphics[width=0.75\textwidth]{media/lazy_diagonalization_contradiction.jpg}
   \end{center}
   This means that we have $M(\texttt{1}^{l_k + 1}) = D(\texttt{1}^{u_k})$ by $\relbar\!\relbar\!\relbar$ and \textcolor{blue}{$\relbar\!\relbar\!\relbar$}, but $M(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k})$ by \textcolor{red}{$\relbar\!\relbar\!\relbar$}. A contradiction.
 
@@ -230,7 +230,7 @@ Now, we describe the proof formally.
 \end{proof}
 
 \begin{remark}
-  Notice that the $1 / \log f(n)$ factor does not appear in our hierarchy theorem, unlike in its deterministic counterpart. This absence is due to the efficient simulation of an NTM by another NTM, which only incurs a constant factor to the time complexity \cite{arora2009computational}.
+  Notice that the $1 / \log f(n)$ factor does not appear in our hierarchy theorem, unlike in its deterministic counterpart. This absence is due to the efficient simulation of an NTM by another NTM, which only incurs a constant factor to the time complexity (see Exercise 2.6 of Arora and Barak \cite{arora2009computational}).
 \end{remark}
 
 \begin{remark}
