@@ -201,10 +201,10 @@ We present the following proof, inspired by Žák \cite{zak1983turing}.
   One last technical point. Just as in the proof of the deterministic time hierarchy theorem, we may encounter a similar issue where the asymptotic behavior of $f$ has not yet taken effect. To fix this problem, it suffices to simply restrict the simulation of $D$ on sufficiently long inputs. We then associate the first(s) of these inputs to the first interval, $I_1$.
 \end{proofidea}
 
-We now describe the proof formally.
+Now, we describe the proof formally.
 
 \begin{proof}
-  For every NTM $M_k$, we associate with it an interval $I_k = (l_k, u_k]$, where $f(u_k) > 2^{f(l_k + 1)^2}$. These intervals should be disjoint but contiguous. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. We set the lower bound of the first interval, $l_1$, to $f(n_0)$. Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on one input in the interval $I_k$. We define $D$ as follows:
+  We know that the set of all Turing machines is enumerable. Let $M_k$ be the $k$-th Turing machine in the enumeration. We associate $M_k$ with an interval $I_k = (l_k, u_k]$, where $f(u_k) > 2^{f(l_k + 1)^2}$. These intervals should be disjoint but contiguous. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. We set the lower bound of the first interval, $l_1$, to $f(n_0)$. Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on one input in the interval $I_k$. We define $D$ as follows:
   \begin{align*}
     D = & \ \text{``On input $w$:} \\
     & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
@@ -249,7 +249,7 @@ We now describe the proof formally.
   The interval $I_k$ is then defined as $(l_k, u_k]$ where $l_k = h(k)$ and $u_k = h(k + 1)$. It's important to note that such a proof only works for specific instances of the theorem, e.g. proving that $\NTIME(n) \subsetneq \NTIME(n^{1.5})$. For the proof to work in the general case, we must define $h$ in relation to $f$, as demonstrated in our proof.
 \end{remark}
 
-We also present a different proof by Fortnow and Santhanam \cite{fortnow2011robust}.
+Next, let us present a different proof due to Fortnow and Santhanam \cite{fortnow2011robust}.
 
 \begin{proof}
   \todo{Write this.}
