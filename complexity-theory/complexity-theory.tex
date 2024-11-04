@@ -221,7 +221,7 @@ Now, we describe the proof formally.
   \end{align*}
   Let's analyze the running time of each stage of $D$. Stage 1 and 2 clearly operate in $O(g(n))$ time. Stage 3 can also be performed in $O(g(n))$ time, since $k \ll n$. In stage 3.1, $D$ nondeterministically simulates $M_k$ on the input $\texttt{1}^{n + 1}$. If $M_k$ really runs within $O(f(n + 1))$ time, then $D$ has sufficient time for the simulation, since $f(n + 1) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will terminate the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time. In stage 3.2, $D$ deterministically simulates every computation path of $M_k$ on the input $\texttt{1}^{l_k + 1}$. If $M_k$ really runs within $O(f(l_k + 1))$, $D$ again has sufficient time for the simulation. The deterministic simulation of each computation path requires $O(f(l_k + 1) \log f(l_k + 1))$, leading to a total time for all paths of $2^{O(f(l_k + 1) \log f(l_k + 1))}$. This is less than $2^{f(l_k + 1)^2} < f(u_k) = f(n) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will stop the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time.
 
-  Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M$ decides $A$ in time $f(n)$, where $f(n + 1)$ is $o(g(n))$. Here, $D$ can simulate $M$, using time $d \cdot g(n)$ for some constant $d$. The simulation will run to completion as long as the asymptotic ``kicks in''. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on all the inputs $\texttt{1}^n$ where $n \geq n_0$, such that all these inputs correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). Stages 3.1 and 3.2 of $D$ ensure, respectively, that:
+  Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M_k$ decides $A$ in time $f(n)$, where $f(n + 1)$ is $o(g(n))$. Here, $D$ can simulate $M_k$, using time $d \cdot g(n)$ for some constant $d$. The simulation will run to completion as long as the asymptotic ``kicks in''. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M_k$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on all the inputs $\texttt{1}^n$ where $n \geq n_0$, such that all these inputs correspond to the interval $I_k = (l_k, u_k]$. Stages 3.1 and 3.2 of $D$ ensure, respectively, that:
   \begin{align}
     \text{$M_k(\texttt{1}^{n + 1}) = D(\texttt{1}^n)$} & \qquad \text{if $l_k < n < u_k$} \\
     \text{$M_k(\texttt{1}^{l_k + 1}) \neq D(\texttt{1}^{u_k}) = D(\texttt{1}^n)$} & \qquad \text{if $n = u_k$}
@@ -252,8 +252,42 @@ Now, we describe the proof formally.
 Next, let us present a different proof due to Fortnow and Santhanam \cite{fortnow2011robust}.
 
 \begin{proof}
-  \todo{Write this.}
+  Once again, we define the following NTM $D$ that decides a language $A$ that is not decidable in $O(f(n))$ time.
+  \begin{align*}
+    D = & \ \text{``On input $w = (M, \texttt{1}^k, y)$:} \\
+    & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
+    & \ \quad \text{2. } \text{If $\len{y} < g(\len{M} + k)$ then simulate $M(M, \texttt{1}^k, y\texttt{0})$ and $M(M, \texttt{1}^k, y\texttt{1})$} \\
+    & \ \quad \phantom{\text{2. }} \text{for at most $g(n)$ steps each, and \emph{accept} iff they both accept.} \\
+    & \ \quad \text{3. } \text{If $\len{y} \geq g(\len{M} + k)$ then \emph{accept} iff $M(M, \texttt{1}^k, \epsilon)$ rejects using $y$ as} \\
+    & \ \quad \phantom{\text{3. }} \text{advice (i.e. nondeterministic choices). Note that if $M$ does not} \\
+    & \ \quad \phantom{\text{3. }} \text{halt on this computation path (e.g. because $y$ is not long enough),} \\
+    & \ \quad \phantom{\text{3. }} \text{then \emph{reject}.''}
+  \end{align*}
+  It is easy to see that $D$ runs within $O(g(n))$ time. Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M_A$ decides $A$ in $O(f(n))$ time. Consider an input of the form $w = (M_A, \texttt{1}^k, \epsilon)$ for sufficiently large $k$. We have:
+  \begin{align*}
+    w \in A \iff & (M_A, \texttt{1}^k, \epsilon) \in A && \text{(because $w = (M_A, \texttt{1}^k, \epsilon)$)} \\
+    \iff & M_A(M_A, \texttt{1}^k, \texttt{0}) = M_A(M_A, \texttt{1}^k, \texttt{1}) = 1 && \text{(by definition of $D$, stage 2)} \\
+    \iff & (M_A, \texttt{1}^k, \texttt{0}), (M_A, \texttt{1}^k, \texttt{1}) \in A && \text{(because $M_A$ decides $A$)} \\
+    \iff & M_A(M_A, \texttt{1}^k, \texttt{0}\texttt{0}) = M_A(M_A, \texttt{1}^k, \texttt{0}\texttt{1}) = 1 \\
+    & M_A(M_A, \texttt{1}^k, \texttt{1}\texttt{0}) = M_A(M_A, \texttt{1}^k, \texttt{1}\texttt{1}) = 1 && \text{(by definition of $D$, stage 2)}
+  \end{align*}
+  Let $t$ be the smallest integer such that $t \geq g(\len{M_A} + k)$. Continuing the above line of reasoning we get:
+  \begin{align*}
+    w \in A \iff & \forall y \in \set{\texttt{0}, \texttt{1}}^t : M_A(M_A, \texttt{1}^k, y) = 1 && \text{(by induction)} \\
+    \iff & \forall y \in \set{\texttt{0}, \texttt{1}}^t : (M_A, \texttt{1}^k, y) \in A && \text{(because $M_A$ decides $A$)} \\
+    \iff & \forall y \in \set{\texttt{0}, \texttt{1}}^t : D(M_A, \texttt{1}^k, y) = 1 && \text{(because $D$ decides $A$)} \\
+    \iff & \forall y \in \set{\texttt{0}, \texttt{1}}^t : \text{$M_A(M_A, \texttt{1}^k, \epsilon)$ rejects} \\
+    & \phantom{\forall y \in \set{\texttt{0}, \texttt{1}}^t :} \ \text{on computation path $y$} && \text{(by definition of $D$, stage 3)} \\
+    \iff & M_A(M_A, \texttt{1}^k, \epsilon) = 0 && \text{(by the reject condition of NTMs)} \\
+    \iff & (M_A, \texttt{1}^k, \epsilon) \notin A && \text{(because $M_D$ decides $A$)} \\
+    \iff & w \notin A && \text{(because $w = (M_A, \texttt{1}^k, \epsilon)$)}
+  \end{align*}
+  A contradiction. We conclude that no such $M_A$ can exist.
 \end{proof}
+
+\begin{remark}
+  One advantage of this proof over Žák's is that we don't need to define a rapidly growing function. Also note that we only need $f(n)$ steps for the diagonalization instead of exponential in $f(n)$. However, one drawback is that it's more difficult to generalize this proof to a broader set of complexity measures.
+\end{remark}
 
 \section{Ladner's Theorem: Existence of $\NPTIME$-Intermediate Problems}
 \seclabel{ladner-theorem}
