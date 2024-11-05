@@ -251,8 +251,16 @@ Now, we describe the proof formally.
 
 Next, let us present a different proof due to Fortnow and Santhanam \cite{fortnow2011robust}.
 
+\begin{proofidea}
+  Once again, we define a language $A$ by describing a machine $D$ that decides it. We begin with an input $w$ of the form $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}$, where $k$ is sufficiently large. How large? Well, large enough such that the sequence of $\texttt{1}$s acts as a padding, allowing the asymptotic behavior to ``kick in''. Just like in our previous proof, we use $D$ to simulate some TM $M$. Most of the time, we want to ``feed'' $M$ with a slightly longer input. If we receive $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}$ for instance, we simulate $M$ on the inputs $\enc{M}\texttt{0}\texttt{1}^{k}\texttt{0}\texttt{0}$ and $\enc{M}\texttt{0}\texttt{1}^{k}\texttt{0}\texttt{1}$. We're not in a rush to diagonalize here, so $D$ will only accept if $M$ accepts on both of those inputs. We can generalize this idea: for an input of the form $\enc{M}\texttt{0}\texttt{1}^{k}\texttt{0}y$ where $y = (\texttt{0} + \texttt{1})^\ast$, we simulate $M$ on $\enc{M}\texttt{0}\texttt{1}^{k}\texttt{0}y\texttt{0}$ and $\enc{M}\texttt{0}\texttt{1}^{k}\texttt{0}y\texttt{1}$. We continue this process, by simulating $M$ on longer and longer inputs, until we reach an input $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}\texttt{y}$ such that $y$ is ``long enough''. Once $y$ is long enough, instead of continuing to simulate longer inputs, we switch to simulating our initial, shorter input $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}$, using $y$ as advice—basically, treating it as the nondeterministic choices. Then, we diagonalize, so $D$ accepts $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}y$ iff $M$ rejects $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}$ with $y$ as advice.
+
+  Finally, we finish with the standard \textit{reductio ad absurdum} (i.e. proof by contradiction) arguments. To make this work, the advice $y$ must be long enough to simulate the longest computation path of $M$. Thus, it suffices to set the constraint $y \geq g(\len{\enc{M}} + k + 2)$ as a prerequisite for the diagonalization. At the end, we will discover that $\enc{M}\texttt{0}\texttt{1}^k\texttt{0} \in A$ iff $M$ rejects $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}$ on all computation paths. But $M$ is supposed to decide $A$. This is a contradiction.
+\end{proofidea}
+
+Now, we lay out the proof more formally. To make things clearer, instead of using our original encoding of the input, i.e. $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}y$, we'll rewrite it in a more mathematical way such as $(M, \texttt{1}^k, y)$. This should help make the proof easier to follow.
+
 \begin{proof}
-  Once again, we define the following NTM $D$ that decides a language $A$ that is not decidable in $O(f(n))$ time.
+  The following $O(g(n))$ time NTM $D$ decides a language $A$ that is not decidable in $O(f(n))$ time.
   \begin{align*}
     D = & \ \text{``On input $w = (M, \texttt{1}^k, y)$:} \\
     & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
@@ -263,7 +271,7 @@ Next, let us present a different proof due to Fortnow and Santhanam \cite{fortno
     & \ \quad \phantom{\text{3. }} \text{halt on this computation path (e.g. because $y$ is not long enough),} \\
     & \ \quad \phantom{\text{3. }} \text{then \emph{reject}.''}
   \end{align*}
-  It is easy to see that $D$ runs within $O(g(n))$ time. Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M_A$ decides $A$ in $O(f(n))$ time. Consider an input of the form $w = (M_A, \texttt{1}^k, \epsilon)$ for sufficiently large $k$. We have:
+  It is easy to see that $D$ runs within $O(g(n))$ time. Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some NTM $M_A$ decides $A$ in $O(f(n))$ time. Consider an input of the form $w = (M_A, \texttt{1}^k, \epsilon)$ for sufficiently large $k$. We have:
   \begin{align*}
     w \in A \iff & (M_A, \texttt{1}^k, \epsilon) \in A && \text{(because $w = (M_A, \texttt{1}^k, \epsilon)$)} \\
     \iff & M_A(M_A, \texttt{1}^k, \texttt{0}) = M_A(M_A, \texttt{1}^k, \texttt{1}) = 1 && \text{(by definition of $D$, stage 2)} \\
