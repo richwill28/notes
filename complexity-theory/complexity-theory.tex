@@ -384,7 +384,7 @@ Here's what we want to do. We want to choose $f$ so that it grows polynomially i
   \item If $A \notin \PTIME$, then $f$ grows super-polynomially, and so there is no polynomial-time mapping reduction from $C$ to $A$. Since $C$ is $\NPTIME$-complete, this implies that $A$ is not $\NPTIME$-complete. This will force $A$ to be $\NPTIME$-intermediate.
 \end{enumerate}
 
-Essentially, we've designed $f$ in a way that forces $A$ to $\NPTIME$-intermediate. If we could construct $f$ to behave like this (and ensure that $f$ is non-decreasing and time-constructible), we would be done. The problem is that the definition of $A$ depends on $f$, so this seems circular: the choice of $f$ depends on $A$, and the definition of $A$ depends on $f$. To resolve this, we will do something that essentially amounts to a diagonalization argument.
+Essentially, we've designed $f$ in a way that forces $A$ to be $\NPTIME$-intermediate. If we could construct $f$ to behave like this (and ensure that $f$ is non-decreasing and time-constructible), we would be done. The problem is that the definition of $A$ depends on $f$, so this seems circular: the choice of $f$ depends on $A$, and the definition of $A$ depends on $f$. To resolve this, we will do something that essentially amounts to a diagonalization argument.
 
 \subsubsection{The diagonalization argument}
 We now present and formalize the diagonalization argument. First, let $M_1, M_2, \dots$ be an enumeration of Turing machines. We assign a restriction to each $M_i$ such that the running time of $M_i(x)$ is bounded by $\len{x}^i + i$ steps. (The additional term ``$+ i$'' accounts for the length of the encoding for $M_i$. Recall that every natural number (in unary) $\texttt{1}^i$ can be interpreted as some TM $M_i$.) We claim that $M_1, M_2, \dots$ is an enumeration of all polynomial-time algorithms.
@@ -452,6 +452,7 @@ It is easy to see that $f(n) = \Omega(n^3)$, and hence $f$ is time-constructible
 
 \subsection{Proof by blowing holes in an $\NPTIME$-complete language}
 This proof was originally due to Ladner \cite{ladner1975structure}. The presentation below follows a later paper by Downey and Fortnow \cite{downey2003uniformly}.
+\todo{Write the rest of this.}
 
 \section{Oracle Machines and the Limits of Diagonalization}
 \seclabel{oracle-machines-and-the-limits-of-diagonalization}
