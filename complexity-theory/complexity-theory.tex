@@ -139,7 +139,7 @@ We can also use the time hierarchy theorem to separate the classes $\PTIME$ and 
 
 This corollary establishes the existence of decidable problems that are decidable in principle but not in practice—that is, problems that are decidable but intractable.
 
-\subsection{Sharper Time Hierarchy Theorem}
+\subsection{Sharper time hierarchy theorem}
 
 This subsection is completely optional. If you're short on time, skip it.
 \todo{State more recent time hierarchy results.}
@@ -257,7 +257,7 @@ Next, let us present a different proof due to Fortnow and Santhanam \cite{fortno
   Finally, we finish with the standard \textit{reductio ad absurdum} (i.e. proof by contradiction) arguments. To make this work, the advice $y$ must be long enough to simulate the longest computation path of $M$. Thus, it suffices to set the constraint $y \geq g(\len{\enc{M}} + k + 2)$ as a prerequisite for the diagonalization. At the end, we will discover that $\enc{M}\texttt{0}\texttt{1}^k\texttt{0} \in A$ iff $M$ rejects $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}$ on all computation paths. But $M$ is supposed to decide $A$. This is a contradiction.
 \end{proofidea}
 
-Now, we lay out the proof more formally. To make things clearer, instead of using our original encoding of the input, i.e. $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}y$, we'll rewrite it in a more mathematical way such as $(M, \texttt{1}^k, y)$. This should help make the proof easier to follow.
+Now, we lay out the proof more formally. To make things clearer, instead of using our original encoding of the input, i.e. $\enc{M}\texttt{0}\texttt{1}^k\texttt{0}y$, we will rewrite it in a more mathematical notation such as $(M, \texttt{1}^k, y)$. This should help make the proof easier to follow.
 
 \begin{proof}
   The following $O(g(n))$ time NTM $D$ decides a language $A$ that is not decidable in $O(f(n))$ time.
@@ -299,6 +299,159 @@ Now, we lay out the proof more formally. To make things clearer, instead of usin
 
 \section{Ladner's Theorem: Existence of $\NPTIME$-Intermediate Problems}
 \seclabel{ladner-theorem}
+One striking aspects of $\NPTIME$-completeness is that a surprisingly large number of $\NPTIME$ problems—including some that were studied for many decades—turned out to be $\NPTIME$-complete. (See the appendix of Garey and Johnson \cite{garey1979computers} for a well-curated list of 320 $\NPTIME$-complete problems.) This phenomenon suggests a bold conjecture: Every problem in $\NPTIME$ is either in $\PTIME$ or $\NPTIME$-complete. If $\PTIME = \NPTIME$, then the conjecture is trivially true but not interesting. In this section, we show that if $\PTIME \neq \NPTIME$, then this conjecture is false, i.e. there is a language $L \in \NPTIME \setminus \PTIME$ that is not $\NPTIME$-complete.
+
+\begin{definition}[$\NPTIME$-intermediate languages]
+  An \vocab{$\NPTIME$-intermediate} language is a language that is in $\NPTIME$ but is neither in $\PTIME$ nor is it $\NPTIME$-complete.
+\end{definition}
+
+\begin{theorem}[Ladner's theorem]
+  If $\PTIME \neq \NPTIME$, then there exists an $\NPTIME$-intermediate language.
+\end{theorem}
+
+\begin{remark}
+  In fact, Ladner \cite{ladner1975structure} showed a stronger result, that there is an infinite hierarchy between $\PTIME$ and $\NPTIME$-complete, assuming $\PTIME \neq \NPTIME$.
+\end{remark}
+
+Let us explore two different proofs of Ladner's Theorem. The first proof works by padding an $\NPTIME$-complete language, while the second involves ``blowing holes'' in an $\NPTIME$-complete language. We will start with the first one, because I think it's a bit more intuitive.
+
+\subsection{Proof by padding an $\NPTIME$-complete language}
+This proof is based on an unpublished proof by Russell Impagliazzo. The following presentation draws from the excellent lecture notes by Ben-David \cite{ben2021np}. Just a heads up, we will be diving deep into the intuition behind the proof, so the following exposition is going to be lengthy. We will also take some time to formalize the proof and work through the technical details. To round out our discussion, I will offer a summarized version of the proof at the end, highlighting only the key points.
+
+\subsubsection{Padding}
+To begin the proof, we will start with a language $C$ which is $\NPTIME$-complete (e.g. SAT), and then pad it to create an easier language $A$. We define $A$ to be
+\[ A = \set{x\texttt{0}\texttt{1}^{f(\len{x})} \mid x \in C} \]
+for some function $f : \NN \to \NN$. That is, $A$ contains all the strings in $C$, but with $f(n)$ additional $\texttt{1}$s appended, where $n$ is the length of the string that was in $C$.
+
+We've seen padding before. The idea of it is that the padded language $A$ is essentially equivalent to the original language $C$, but its inputs are longer. Since we measure the amount of resources we use in terms of its input size, it will be ``easier'' to compute $A$ than to compute $C$, because our time budget will be larger. For example, to show that $A \in \PTIME$, we would merely need an algorithm that decides whether $x \in C$ in time that is polynomial in $\len{x\texttt{0}\texttt{1}^{f(\len{x})}} = \len{x} + 1 + f(\len{x})$, rather than polynomial in $\len{x}$. If $f(\len{x})$ is large, solving $A$ becomes much easier than finding a polynomial-time algorithm for $C$.
+
+Our main trick for the proof is to choose $f$ in such a way that $A$ has the desired property (of being an $\NPTIME$-intermediate language). We will ensure that $f$ is non-decreasing and time-constructible, though the specific choice of $f$ will have to wait a bit.
+
+\subsubsection{The padded language is in $\NPTIME$}
+We argue that $A$ is in $\NPTIME$.
+
+\begin{proof}
+  Recall that we chose $C$ to be in $\NPTIME$, so $C$ has a polynomial-time verifier $V_C$. We now construct a polynomial-time verifier $V_A$ for $A$. On input $\enc{y, w}$, $V_A$ will check if $y$ is of the form $y = x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string $x$. Checking this requires computing $f(\len{x})$, but that takes at most $O(f(\len{x}))$ time if $f$ is time-constructible, so this is linear time in the input size. If the input is badly formatted, $V_A$ will reject.
+
+  If the input is in the right format, $V_A$ will then simulate $V_C(\enc{x, w})$, and output what $V_C$ outputs. Note that the string $\enc{x, w}$ is shorter than the input string $\enc{y, w}$ to $V_A$. Since $V_C$ runs in polynomial time, it follows that $V_A$ runs in polynomial time. Now, if $y \in A$, then $y = x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string $x \in C$, and so some witness $w$ of size polynomial in $\len{x}$ exists such that $V_C(\enc{x, w})$ accepts; in this case, $V_A(\enc{y, w})$ will accept. Conversely, if $y \notin A$, then either $y$ is not formatted like $x\texttt{0}\texttt{1}^{f(\len{x})}$ for any string $x$, or else it is formatted this way but $x$ is not in $C$. Either way, there is no witness $w$ that causes $V_A(\enc{y, w})$ to accept. We conclude that $V_A$ is a polynomial-time verifier for $A$, so $A$ is in $\NPTIME$.
+\end{proof}
+
+This proof only required that $C \in \NPTIME$ and that the function $f$ was time-constructible.
+
+\subsubsection{If $f$ is polynomial}
+What happens if we choose $f$ to be a polynomial function? In this case, we claim that $C \karp A$, that is, $C$ Karp-reduces to $A$.
+
+\begin{proof}
+  To show this, we need a polynomial-time mapping reduction from $C$ to $A$. We describe a machine $M$ to implement this reduction. Given an input $x$, the machine $M$ will compute $f(\len{x})$ and then output $x\texttt{0}\texttt{1}^{f(\len{x})}$. Since $f$ is time-constructible, this takes $O(f(\len{x}))$ time. Since we've chosen $f$ to have polynomial growth rate, the running time of $M$ is also polynomial. Also, if $x \in C$ then $x\texttt{0}\texttt{1}^{f(\len{x})} \in A$ and if $x \notin C$ then $x\texttt{0}\texttt{1}^{f(\len{x})} \notin A$ by the definition of $A$. Hence $M$ is a polynomial-time mapping reduction, so $C \karp A$.
+\end{proof}
+
+Note that we won't necessarily choose $f$ to grow polynomially, but if we do (and if it's time-constructible), it will imply that $C \karp A$.
+
+\subsubsection{If $f$ is super-polynomial}
+What happens if we choose $f$ to grow super-polynomially? That is, $f(n) = \Omega(n^k)$ for all $k \in \NN$, so $f$ grows faster than any polynomial. In this case, we claim that there is no polynomial-time mapping reduction from $C$ to $A$.
+
+\begin{proofidea}
+  To see this, we assume the contrary that we had a polynomial-time mapping reduction $g$ from $C$ to $A$. From this, we will show that we can construct another function $h'$ that serves as a polynomial-time mapping reduction from $C$ to some finite set $F$. Since every finite set is in $\PTIME$ (as a Turing machine can simply hard-code all the answers using its internal states), this implies that $C$ can be reduced in polynomial time to a language in $\PTIME$, which means $C \in \PTIME$. This contradicts our assumption that $\PTIME \neq \NPTIME$. (Because then all $\NPTIME$-complete languages such as $C$ cannot be in $\PTIME$.)
+\end{proofidea}
+
+\begin{proof}
+  Suppose we had a polynomial-time mapping reduction $g$ from $C$ to $A$. We first claim that we would also have a polynomial-time mapping reduction $g'$ from $C$ to $A$ such that for each string $y$, $g'(y)$ is of the form $x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string $x$. To see this, we define a Turing machine $M$ computing $g'$ as follows:
+  \begin{align*}
+    M(y) =
+    \begin{cases}
+      g(y) & \text{if $y \in C$} \\
+      g(y) & \text{if $y \notin C$ and $g(y)$ is correctly formatted} \\
+      z\texttt{0}\texttt{1}^{f(\len{z})} & \text{if $y \notin C$ and $g(y)$ is badly formatted}
+    \end{cases}
+  \end{align*}
+  Let us describe $M$ briefly. The first step of $M$ on input $y$ will be to compute $g(y)$ (which takes polynomial time in $\len{y}$). Next, $M$ will check $g(y)$ is formatted like $x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string $x$. This requires computing $f(\len{x})$ but $f$ is time-constructible, so that takes $O(f(\len{x}))$ and the whole check can be done in linear time. If the formatting check passes, $M$ will output $g(y)$. Otherwise, $M$ will output $z\texttt{0}\texttt{1}^f(\len{x})$, where $z$ is a fixed string not in $C$. The string $z$ will be hard-coded into $M$, and printing out $z\texttt{0}\texttt{1}^{f(\len{z})}$ will take constant time as $z$ is a fixed, constant string.
+
+  It is clear that $M$ runs in polynomial time. Moreover, if $y \in C$, then $g(y) \in A$, as $g$ is a mapping reduction from $C$ to $A$; but this means that $g(y)$ is formatted like $x\texttt{0}\texttt{1}^{f(\len{x})}$, so $M(y)$ outputs $g(y)$, which is in $A$. On the other hand, if $y \notin C$, then $g(y) \notin A$, and there are two options, either $g(y)$ is badly formatted, in which case $M(y)$ outputs $z\texttt{0}\texttt{1}^{f(\len{z})}$, or else it is correctly formatted, in which case $M(y)$ outputs $g(y) = x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string $x$ not in $C$. This confirms that $M$ computes a polynomial-time mapping reduction $g'$ that gives strings of the desired format.
+
+  Let $h$ denote the function that maps $y$ to the string $x$ for which $g'(y) = x\texttt{0}\texttt{1}^{f(\len{x})}$. Then $h$ is computable in polynomial-time, and for all strings $y$, we have $y \in C$ iff $h(y) \in C$. Next, note that since $g'$ is computable in polynomial time in $\len{y}$, the size $\len{g'(y)}$ must grow polynomially with $\len{y}$. Hence, for sufficiently large $y$, we have $f(\len{y}) > \len{g'(y)}$ (since $f$ grows faster than any polynomial). This means that there is some number $n_0 \in \NN$ such that for all strings $y$ with $\len{y} \geq n_0$, we have $\len{g'(y)} < f(\len{y})$. Since $g'(y) = x\texttt{0}\texttt{1}^f(\len{x})$ for some $x$, we must have $\len{x} + 1 + f(\len{x}) < f(\len{y})$ whenever $\len{y} \geq n_0$. This implies that when $\len{y} \geq n_0$, we have $f(\len{x}) < f(\len{y})$, and since $f$ is non-decreasing, $\len{x} < \len{y}$. In other words, for all strings $y$ with $\len{y} \geq n_0$, we have $\len{h(y)} < \len{y}$ (because $x = h(y)$).
+
+  Now consider the Turing machine which takes input $y$ and applies $h$ to $y$ repeatedly, for a total of $\len{y}$ times. Since each application of $h$ results in a shorter string if $\len{y} \geq n_0$, or else results in a string of length at most $n_0$ if $\len{y} < n_0$, we conclude that each application of $h$ can be computed in polynomial time in $\len{y}$ (since $n_0$ is a constant). Moreover, we are doing only $\len{y}$ such computations. Hence this Turing machine runs in polynomial time in the input size $\len{y}$. Let $h'$ be the function computed by this Turing machine.
+
+  Then for every string $y$, we have $h'(y) \in C$ iff $y \in C$. Moreover, since each application of $h$ decreases the size of $y$ by at least one unless $\len{y} < n_0$, it must be the case that $\len{h'(y)} \leq n_0$ for all $y$. Therefore, in polynomial time, we can compute a function $h'(y)$ which maps $y$ to a string of length of at most $n_0$ such that $h'(y)$ is in $C$ if and only if $y \in C$. In other words, $h'$ is a polynomial-time mapping reduction from $C$ to $C \cap \set{y \mid \len{y} \leq n_0}$. But the latter is a finite set! Every finite set is in $\PTIME$ because we can create a Turing machine that has all the answers hard-coded using the internal states. So we have a polynomial-time mapping reduction from $C$ to a language in $\PTIME$, and hence $C \in P$. This contradicts our assumption that $\PTIME \neq \NPTIME$. Hence, there is no polynomial-time mapping reduction from $C$ to $A$.
+\end{proof}
+
+This proof only required that $f$ is non-decreasing, time-constructible, and grows faster than any polynomial.
+
+\subsubsection{The desired choice of $f$}
+Here's what we want to do. We want to choose $f$ so that it grows polynomially if $A \in \PTIME$ and super-polynomially if $A \notin \PTIME$. Why? Consider the following arguments. There are only two possibilities, either $A \in \PTIME$ or $A \notin \PTIME$.
+\begin{enumerate}
+  \item If $A \in \PTIME$, then $f$ grows polynomially, and so $C \karp A$. This implies that $C \in \PTIME$, giving a contradiction under our assumption that $\PTIME \neq \NPTIME$. This will therefore mean that $A \notin \PTIME$.
+  \item If $A \notin \PTIME$, then $f$ grows super-polynomially, and so there is no polynomial-time mapping reduction from $C$ to $A$. Since $C$ is $\NPTIME$-complete, this implies that $A$ is not $\NPTIME$-complete. This will force $A$ to be $\NPTIME$-intermediate.
+\end{enumerate}
+
+Essentially, we've designed $f$ in a way that forces $A$ to $\NPTIME$-intermediate. If we could construct $f$ to behave like this (and ensure that $f$ is non-decreasing and time-constructible), we would be done. The problem is that the definition of $A$ depends on $f$, so this seems circular: the choice of $f$ depends on $A$, and the definition of $A$ depends on $f$. To resolve this, we will do something that essentially amounts to a diagonalization argument.
+
+\subsubsection{The diagonalization argument}
+We now present and formalize the diagonalization argument. First, let $M_1, M_2, \dots$ be an enumeration of Turing machines. We assign a restriction to each $M_i$ such that the running time of $M_i(x)$ is bounded by $\len{x}^i + i$ steps. (The additional term ``$+ i$'' accounts for the length of the encoding for $M_i$. Recall that every natural number (in unary) $\texttt{1}^i$ can be interpreted as some TM $M_i$.) We claim that $M_1, M_2, \dots$ is an enumeration of all polynomial-time algorithms.
+
+\begin{proof}
+  Let $p : \NN \to \NN$ be an arbitrary polynomial function, i.e. $p(n) = O(n^k)$ for some $k \in \NN$. It is easy to see that there exists a smallest $i \in \NN$ such that $n^i + i \geq p(n)$. This implies that for any $j \geq i$, the machine $M_j$ in the enumeration will have a running time that is at least as large as $p(n)$, and thus can represent the polynomial function $p$.
+\end{proof}
+
+We define $f$ by describing a Turing machine $M_f$ that computes it. To be time-constructible, we want $M_f(\texttt{1}^n)$ to output $f(n)$ in $O(f(n))$ time. $M_f$ is a recursive algorithm\footnote{From the familiar notion of recursion in programming that we all adore.}, meaning $f(n)$ is defined inductively, so that $f(n)$ depends on the values of $f(k)$ for $k < n$. We start by setting some base cases such as $f(0) = 0$ and $f(1) = 1$. Next, on input $\texttt{1}^n$, the machine will go through the first $n$ Turing machines $M_1, M_2, \dots, M_n$ (from our enumeration) in order. For each machine $M_i$, $M_f$ will attempt to disprove the claim ``$M_i$ decides $A$ in polynomial time''. (We will soon discuss how $M_f$ will do this.) Then $M_f$ keep track of the smallest $i$ for which this claim was not disproven, and it will output $n^{i + 3}$. The idea is that if some Turing machine $M$ decides $A$ in polynomial time, then for some integer $i$ we will have $M_i = M$, and hence for all $n \geq i$, the machine $M_f$ will fail to disprove that $M_i$ decides $A$, meaning that $M_f(\texttt{1}^n)$ will return $n^{i + 3}$ for all sufficiently large $n$; this will cause $f$ to grow polynomially if $A$ is in $\PTIME$. On the other hand, if no Turing machine decides $A$ in polynomial time, then eventually, $M_f$ should disprove the claim ``$M_i$ decides $A$ in polynomial time'' for every given $i$, and hence $f$ will grow faster than $n^{i + 3}$ for every $i \in \NN$; this will cause $f$ to grow super-polynomially if $A$ is not in $\PTIME$.
+
+Before we describe $M_f$ in more detail, we will introduce the machine $M_C$ which decides $C$ in exponential time. This machine exists since $\NPTIME \subseteq \EXPTIME$, which means that since $C \in \NPTIME$ we have $C \in \EXPTIME$. In particular, we have $C \in \DTIME(2^{n^k})$ for some $k \in \NN$. We let $M_C$ be a Turing machine which decides $C$ and has running time $O(2^{n^k})$. Back to $M_f$. On input $\texttt{1}^n$, its first step is to calculate $l = (\log n)^{1 / (k + 1)}$. This number $l$ is sufficiently small that simulating $M_C$ on an input string of size at most $l$ can be done in $O(n)$ time. This calculation of $l$ can actually be done in $O(n)$ time (first $M_f$ calculates $n$ in binary from its input $\texttt{1}^n$, and then it can perform computations on $n$ that are even allowed to take exponential time, and these will still take only $O(n)$ time because the binary representation of $n$ takes $O(\log n)$ space). Note that there are also only at most $O(n)$ strings of length at most $l$.
+
+Next, $M_f$ will write down the values of $f(k)$ for all $k \leq l$ by recursively calling itself on smaller inputs. We will soon show that $M_f$ will only take $O(n^3)$ time for all its calculations other than this recursive step; by using dynamic programming (e.g. computing $f(0)$, then $f(1)$, then $f(2)$, etc., and looking these up in memory instead of making recursive calls), we only make $l$ total calls to $M_f$ on such inputs $k \leq l$, each with input $\texttt{1}^l$ or less. This means the total time to compute all the values of $f(k)$ for $k \leq l$ will be $O(l^4)$, which is smaller than $O(n)$.
+
+The next step of $M_f$ will be to iterate over all strings $s$ of length at most $l$; recall that there are at most $O(n)$ such strings. For each such string $s$, $M_f$ will decide whether $s$ is in $A$. To do so, $M_f$ will need to check if $s$ looks like $x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string $x$; luckily, $M_f$ already wrote down the values of $f(k)$ for all $k \leq l$, so this check is easy and can be done in linear time in $l$. If the formatting check passes, $M_f$ will also need to check whether $x$ is in $C$, which it can do by simulating $M_C(x)$; recall this can be done in $O(n)$ steps. Therefore, after $O(n^2)$ total steps, $M_f$ will produce a table that lists, for each string $s$ of length at most $l$, whether $s$ is in $A$.
+
+The next step of $M_f$ will be to iterate over the first $n$ Turing machines $M_1, M_2, \dots, M_n$ in order. It takes only $O(n)$ time to list them. For each machine, $M$ will again iterate over all strings of length at most $l$. Then for each pair of machine $M_i$ and string $s$ with $\len{s} \leq l$, the machine $M_f$ will simulate $M_i(s)$ for $n$ steps. If $M_i(s)$ halts in that time, $M_f$ will check whether it correctly decides if $s \in A$ (by consulting the table). $M_f$ will then find the smallest number $j$ such that some machine $M_i$ for $i \leq j$ correctly decided if $s \in A$ for all strings $s$ of length at most $l$. The running time of $M_i$ on each string $s$ was at most $\len{s}^i + i \leq \len{s}^j + j$. If there is no such $j$ (either because none of the $M_i$ gave the correct answers, or this property wasn't properly checked due to time constraint of $n$ steps), $M_f$ will set $j = n$. Then $M_f$ will output $n^{j + 3}$.
+
+Since there are $n$ machines and at most $O(n)$ strings, all simulations together will take $O(n^3)$ steps, and hence $M_f$ runs in $O(n^3)$ time. Additionally, it should be clear that $f$ is increasing, because the value of $j$ that $M_f$ finds can only increase. It is also clear that $f(n) = \Omega(n^3)$, and hence $f$ is time-constructible, since $M_f$ outputs $f(n)$ in at most $O(f(n))$ time.
+
+Now, we show that our construction of $M_f$ forces $A$ to be $\NPTIME$-intermediate.
+
+\begin{proof}
+  If $A \in \PTIME$, it means that there are some Turing machine $M_i$ that decides $A$ in polynomial time. The running time of $M_i$ is polynomial, so for sufficiently large $j$, it takes $M_i$ fewer than $\len{s}^j + j$ steps to halt on each string $s$. Since $M_i$ decides $A$, it therefore follows that for all sufficiently large $n \in \NN$, we will have $f(n) = n^{\max(i, j) + 3}$. Hence, $f$ grows polynomially if $A \in \PTIME$, and as we've seen, that causes $C \karp A$ to hold, so $C \in \PTIME$, which gives a contradiction. From this we conclude that $A \notin \PTIME$.
+
+  Next, if $A \notin \PTIME$, then for every machine $M_i$ and every $j \in \NN$, there will be some string $s$ such that either $M_i(s)$ gives the wrong answer as to whether $s \in A$, or else $M_i(s)$ takes more than $\len{s}^j + j$ steps. This means that there will not be any $j \in \NN$ such that $f(n) \leq n^j + j$ for all $n \in \NN$. From this it follows that $f(n)$ cannot be upper bounded by any polynomial function, since every polynomial function can be upper bounded by a function of the form $n^j + j$. In other words, $f(n)$ grows super-polynomially, and as we've seen, this implies that there is no polynomial-time mapping reduction from $C$ to $A$. Since $C$ is $\NPTIME$-complete, it follows that $A$ is not $\NPTIME$-complete, so it is $\NPTIME$-intermediate, as desired.
+\end{proof}
+
+\subsubsection{A summary of the proof}
+Let us summarize the key points of our proof here. We start with a language $C$ which is $\NPTIME$-complete. Let $M_C$ be a Turing machine which decides $M_C$ and has running time $O(2^{n^k})$ for some $k \in \NN$. Now, we pad $C$ to create an easier language $A$. We define $A$ to be
+\[ A = \set{x\texttt{0}\texttt{1}^{f(\len{x})} \mid x \in C} \]
+for some function $f : \NN \to \NN$. The choice of $f$ is crucial. Here, we want $f$ to grow polynomially if $A \in \PTIME$ and super-polynomially if $A \notin \PTIME$. This behavior of $f$ forces $A$ to be $\NPTIME$-intermediate. Why? There are only two possibilities, either $A \in \PTIME$ or $A \notin \PTIME$.
+\begin{enumerate}
+  \item If $A \in \PTIME$, then $f$ grows polynomially, and so $C \karp A$. This implies that $C \in \PTIME$, giving a contradiction under our assumption that $\PTIME \neq \NPTIME$. This will therefore mean that $A \notin \PTIME$.
+  \item If $A \notin \PTIME$, then $f$ grows super-polynomially, and so there is no polynomial-time mapping reduction from $C$ to $A$. Since $C$ is $\NPTIME$-complete, this implies that $A$ is not $\NPTIME$-complete. This will force $A$ to be $\NPTIME$-intermediate.
+\end{enumerate}
+Let $M_1, M_2, \dots$ be an enumeration of polynomial-time Turing machines, where each machine $M_i$ runs for at most $\len{x}^i + i$ steps on input $x$. Such an enumeration can be constructed quite easily.
+
+We define $f$ by giving a Turing machine $M_f$ that computes it.
+\begin{align*}
+  M_f = & \ \text{``On input $\texttt{1}^n$:} \\
+  & \ \quad \text{1. } \text{Compute $l = (\log n)^{1 / (k + 1)}$, where $k$ is from the definition of $M_C$.} \\
+  & \ \quad \text{2. } \text{Compute the values $f(0), f(1), \dots, f(i)$ where $i \leq l$. This can be done} \\
+  & \ \quad \phantom{\text{2. }} \text{efficiently by calling $M_f(\texttt{1}^i)$ in order from $i = 0$ to $i = l$, and storing} \\
+  & \ \quad \phantom{\text{2. }} \text{all the values in memory.} \\
+  & \ \quad \text{3. } \text{Iterate over all strings $s$ of length at most $l$. For each string $s$, decide} \\
+  & \ \quad \phantom{\text{3. }} \text{whether $s$ is in $A$. To do so, check if $s$ looks like $x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string} \\
+  & \ \quad \phantom{\text{3. }} \text{$x$. We already have the values of $f(k)$ for all $k \leq l$, so this formatting} \\
+  & \ \quad \phantom{\text{3. }} \text{check is easy. Then, to check if $x$ is in $C$, simulate $M_C(x)$. At the end,} \\
+  & \ \quad \phantom{\text{3. }} \text{produce a table that lists, for each string $s$ of length at most $l$, whether} \\
+  & \ \quad \phantom{\text{3. }} \text{$s$ is in $A$.} \\
+  & \ \quad \text{4. } \text{Iterate over the first $n$ Turing machines $M_1, \dots, M_n$ in order. For each} \\
+  & \ \quad \phantom{\text{4. }} \text{machine $M_i$, iterate over all strings of length at most $l$. For each pair} \\
+  & \ \quad \phantom{\text{4. }} \text{of machine $M_i$ and string $s$ with $\len{s} \leq l$, simulate $M_i(s)$ for $n$ steps. If} \\
+  & \ \quad \phantom{\text{4. }} \text{$M_i(s)$ halts in that time, check whether $M_i$ correctly decides if $s \in A$ by} \\
+  & \ \quad \phantom{\text{4. }} \text{consulting the table. Find the smallest $j$ such that some $M_i$ for $i \leq j$} \\
+  & \ \quad \phantom{\text{4. }} \text{gives the correct answers for all strings $s$. If there is no such $j$, set $j$ to $n$.} \\
+  & \ \quad \text{5. } \text{Output $n^{j + 3}$.''}
+\end{align*}
+It is easy to see that $f(n) = \Omega(n^3)$, and hence $f$ is time-constructible, since $M_f$ outputs $f(n)$ in at most $O(f(n))$ time. We now show that $M_f$ computes a function $f$ that exhibit our desired property, thus showing that $A \in \NPTIME$-intermediate.
+
+\begin{proof}
+  If $A \in \PTIME$, there must exist some Turing machine $M_j$ (where $j \in \NN$) that decides $A$ in polynomial time. In this case, $M_f$ will output a function $f$ that is ``fixed'' with respect to $j$. Specifically, for all sufficiently large $n \in \NN$, $f(n) = n^{j + 3}$ where $j$ is some fixed constant. This shows that $f$ grows polynomially. However, this leads to a contradiction, as we've previously shown. Therefore, we conclude that $A \notin \PTIME$. As a result, there cannot be any $M_j$ that decides $A$ in polynomial time. This forces $M_f$ to compute a function $f$ such that $f(n)$ cannot be bounded by any $n^j + j$ for some fixed constant $j$. This is because, as $n$ increases, $j$ must also increase—in fact, $j$ increases linearly with $n$ by definition of $M_f$. Therefore, $f$ grows faster than any polynomial, which as we've already established, places $A$ in the $\NPTIME$-intermediate class.
+\end{proof}
+
+\subsection{Proof by blowing holes in an $\NPTIME$-complete language}
+This proof was originally due to Ladner \cite{ladner1975structure}. The presentation below follows a later paper by Downey and Fortnow \cite{downey2003uniformly}.
 
 \section{Oracle Machines and the Limits of Diagonalization}
 \seclabel{oracle-machines-and-the-limits-of-diagonalization}
