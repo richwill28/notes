@@ -124,6 +124,7 @@ This corollary allows us to separate various deterministic time complexity class
 We can also use the time hierarchy theorem to separate the classes $\PTIME$ and $\EXPTIME$.
 
 \begin{corollary}
+  \corlabel{ptime-strict-subset-of-exptime}
   $\PTIME \subsetneq \EXPTIME$.
 \end{corollary}
 
@@ -135,6 +136,22 @@ We can also use the time hierarchy theorem to separate the classes $\PTIME$ and 
 \end{proof}
 
 This corollary establishes the existence of decidable problems that are decidable in principle but not in practice—that is, problems that are decidable but intractable.
+
+\begin{remark}
+  In fact, we can show that $\PTIME$ is strictly contained within $\EXPTIME$ without explicitly relying on the time hierarchy theorem. Instead, we'll provide a direct proof using—you guessed it—diagonalization!
+
+  \begin{proof}
+    Let
+    \[ L = \set{(\enc{M}, x, \texttt{1}^n) \mid \text{$M(x)$ halts in at most $2^n$ steps}}. \]
+    Clearly $L \in \EXPTIME$. On the other hand, suppose by contradiction that $L \in \PTIME$. Then there's some polynomial-time Turing machine $A$ such that $A(w)$ accepts if and only if $w \in L$. Let $A$ runs in $p(n + \len{\enc{M}} + \len{x})$ on input $(\enc{M}, x, \texttt{1}^n)$, for some polynomial function $p$. Then using $A$, we can easily produce another machine $B$ that does the following.
+
+    \begin{turing}{$B$}{On input $w = (\enc{M}, \texttt{1}^n)$:}
+    \item Runs forever if $M(\enc{M}, \texttt{1}^n)$ halts in at most $2^n$ steps; otherwise halts.
+    \end{turing}
+
+    Note that, if $B$ halts at all, then it halts after only $p(2n + 2 \enc{M}) = n^{O(1)}$ steps. Now consider what happens when $B$ is run on input $(\enc{B}, \texttt{1}^n)$. If $B(\enc{B}, \texttt{1}^n)$ runs forever, then $B(\enc{B}, \texttt{1}^n)$ halts. Conversely, if $B(\enc{B}, \texttt{1}^n)$ halts, then for all sufficiently large $n$, it halts in fewer than $2^n$ steps, but that means that $B(\enc{B}, \texttt{1}^n)$ runs forever. So we conclude that $B$, and hence $A$, cannot exist.
+  \end{proof}
+\end{remark}
 
 \subsection{Sharper time hierarchy theorem}
 
@@ -181,9 +198,7 @@ We present the following proof, inspired by Žák \cite{zak1983turing}.
   Next, our second key observation comes from the fact that we can ``feed'' $M$ with an input that is much smaller than the original input. That is, when $D$ receives the input $\texttt{1}^n$, rather than simulating $M$ on $\texttt{1}^n$, we can opt to simulate an arbitrarily smaller input, say $\texttt{1}^{\log n}$, on $M$ instead. Why would we want to do this? Currently, we have no effective means of deciding if $M$ rejects some input $w$. Our only reliable strategy for now is to exhaustively check every computation path of $M$. But $M$ may have exponentially many such paths. (Remember that this was the main roadblock that we faced earlier in proving this theorem.) This is precisely where our second key observation comes into play. Consider what happens when we simulate $\texttt{1}^{\log n}$ on $M$. If simulating one path of $M$ takes $\len{\texttt{1}^{\log n}} = O(\log n)$ time, then simulating all computation paths would require $2^{O(\log n)}$ time, which is $\poly(n)$. Notice that $\poly(n)$ is polynomial in the length of our original input string $\texttt{1}^n$. This means that $D$ won't run out of time while simulating $M$.
 
   The set of all Turing machines is enumerable. Let $M_k$ be the $k$-th Turing machine in the enumeration. We can associate each TM $M_k$ with an interval $I_k = (l_k, u_k]$ (of natural numbers, i.e. $\NN$). These intervals should be disjoint but contiguous. Each interval $I_k$ is large, so we get to simulate $M_k$ on a lot of input words. Crucially, the upper bound of the interval, $u_k$, should at the very least be exponentially larger than the lower bound, $l_k$.
-  \begin{center}
-    \includegraphics[width=0.65\textwidth]{media/turing_machine_intervals.jpg}
-  \end{center}
+
   Here's where the magic happens. Consider what happens when we run $D$ on all the inputs that correspond to a single interval $I_k = (l_k, u_k]$ (thus, a single TM $M_k$). When $D$ receives the input $\texttt{1}^n$ where $n < u_k$, $D$ accepts $\texttt{1}^n$ iff $M_k$ accepts $\texttt{1}^{n + 1}$. Here, we refrain ourselves from diagonalizing. However, when $D$ receives the input $\texttt{1}^n$ where $n = u_k$, we diagonalize but on a much smaller input, i.e. $D$ accepts $\texttt{1}^n$ iff $M_k$ rejects $\texttt{1}^{l_k + 1}$. In this case, $D$ has sufficient time to simulate $M_k$ as we have established earlier. Furthermore, we have effectively demonstrated that no TM $M_k$ can accept the same language as $D$, since $D$ diverge from $M_k$ on exactly one input, i.e. on the input $\texttt{1}^n$ where $n = u_k$. To further illustrate this fact, consider the following graphical representation of an equivalence class and a non-equivalence relation that we obtain, by virtue of our construction.
   \begin{center}
     \includegraphics[width=0.75\textwidth]{media/lazy_diagonalization.jpg}
@@ -306,7 +321,7 @@ One striking aspects of $\NPTIME$-completeness is that a surprisingly large numb
 Let us explore two different proofs of Ladner's Theorem. The first proof works by padding an $\NPTIME$-complete language, while the second involves ``blowing holes'' in an $\NPTIME$-complete language. We will start with the first one, because I think it's a bit more intuitive.
 
 \subsection{Proof by padding an $\NPTIME$-complete language}
-This proof is based on an unpublished proof by Russell Impagliazzo. The following presentation draws from the excellent lecture notes by Ben-David \cite{ben2021np}. Just a heads up, we will be diving deep into the intuition behind the proof, so the following exposition is going to be lengthy. We will also take some time to formalize the proof and work through the technical details. To round out our discussion, I will offer a summarized version of the proof at the end, highlighting only the key points.
+This proof is based on an unpublished manuscript by Russell Impagliazzo. The following presentation draws from the excellent lecture notes by Ben-David \cite{ben2021np}. Just a heads up, we will be diving deep into the intuition behind the proof, so the following exposition is going to be lengthy. We will also take some time to formalize the proof and work through the technical details. To round out our discussion, I will offer a summarized version of the proof at the end, highlighting only the key points.
 
 \subsubsection{Padding}
 To begin the proof, we will start with a language $C$ which is $\NPTIME$-complete (e.g. SAT), and then pad it to create an easier language $A$. We define $A$ to be
@@ -433,8 +448,28 @@ It is easy to see that $f(n) = \Omega(n^3)$, and hence $f$ is time-constructible
 This proof was originally due to Ladner \cite{ladner1975structure}. The presentation below follows a later paper by Downey and Fortnow \cite{downey2003uniformly}.
 \todo{Write the rest of this.}
 
+\subsection{Natural candidates for $\NPTIME$-intermediate}
+If $\PTIME \neq \NPTIME$, Ladner's theorem demonstrates the existence of $\NPTIME$-intermediate sets, one that lie strictly between $\PTIME$ and the $\NPTIME$-complete sets. Indeed, by applying the construction of the proof iteratively, it is possible to show that there is an entire infinite chain of $\NPTIME$-intermediate sets, each irreducible to the next, yet all in $\NPTIME \setminus \PTIME$. However, these sets are somewhat contrived, and it is reasonable to ask if we can point to any practically-motivated sets that might be $\NPTIME$-intermediate.
+
+Ladner \cite{ladner1975structure} mentions three sets that were candidates for being $\NPTIME$-intermediate at the time he proved his theorem: PRIME (is $x$ prime?), LINEAR INEQUALITIES (is a given linear program feasible?), and GRAPH ISOMORPHISM (are the two graphs $G$ and $H$ isomorphic?). All of these were known to be in $\NPTIME$ as of 1975, and none of them were known to be in $\PTIME$ or $\NPTIME$-complete, but there was no argument that any of them in particular were $\NPTIME$-intermediate if $\PTIME \neq \NPTIME$. Since then, two of them (PRIME \cite{agrawal2004primes} and LINEAR INEQUALITIES \cite{khachiyan1980polynomial}) have been shown to be in $\PTIME$. The status of GRAPH ISOMORPHISM is still open, with the best known algorithm running in quasi-polynomial time \cite{babai2016graph}.
+
 \section{Oracle Machines and the Limits of Diagonalization}
 \seclabel{oracle-machines-and-the-limits-of-diagonalization}
+Complexity theory is unusual as a field of mathematics in having a rich collection of barrier results that show that certain proof techniques cannot be used to solve core problems like $\PTIME$ vs $\NPTIME$. One such technique is diagonalization. The magic of diagonalization is how abstract and general it is: it never requires us to ``get our hands dirty'' by understanding the inner workings of algorithms. But as was recognized early in the history of complexity theory, the price of generality is that the logical techniques are extremely limited in scope.
+
+Often the best way to understand the limits of a proposed approach for proving a statement $S$, is to examine what else besides $S$ the approach would prove if it worked, i.e. which stronger statements $S'$ the approach ``fails to differentiate'' from $S$. If any of the stronger statements are false, then the approach can't prove $S$ either.
+
+That is exactly what Baker, Gill, and Solovay \cite{baker1975relativizations} did for diagonalization in 1975, when they articulated the \vocab{relativization barrier}. The central insight was that almost all the techniques we have for proving statements in complexity theory—such as $C \subseteq D$ or $C \not\subseteq D$, where $C$ and $D$ are two complexity classes—are so general that, if they work at all, then they can actually prove $C^A \subseteq D^A$ or $C^A \not\subseteq D^A$ for all possible \vocab{oracles} $A$. In other words, if all the machines that appear in the proof are enhanced in the same way, by being given an access to the same oracle, the proof is completely oblivious to that change, and goes through just as before. A proof with this property is said to ``relativize'', or to hold ``in all possible relativized worlds'' or ``relative to any oracle.''
+
+Why do so many proofs relativize? Intuitively, because the proofs, as with the case of diagonalization, only do things like using one Turing machine $M_1$ to simulate a second Turing machine $M_2$ step-by-step, without examining either machine's internal structure. In that case, if $M_2$ is given access to an oracle $A$, then $M_1$ can still simulate $M_2$ just fine, provided that $M_1$ is also given access to $A$, in order to simulate $M_2$'s oracle calls. To illustrate, you might want to check that the alternative proof of \corref{ptime-strict-subset-of-exptime} can be easily modified to show that $\PTIME^A \neq \EXPTIME^A$ for all oracles $A$.
+
+Alas, Baker, Gill, and Solovay then observed that no relativizing technique can possibly resolve the $\PTIME$ vs $\NPTIME$ question. For, unlike $\PTIME$ vs $\EXPTIME$, or the unsolvability of the halting problem, $\PTIME$ vs $\NPTIME$ admits ``contradictory relativizations.'' That is, there are some oracle worlds where $\PTIME = \NPTIME$, and others where $\PTIME \neq \NPTIME$. For this reason, any proof of $\PTIME \neq \NPTIME$ will need to ``notice'', at some point, that there are no oracles in ``our'' world: it will have to use techniques that \emph{fail} relative to certain oracles.
+
+We will discuss the main result of Baker, Gill, and Solovay. But before we do that, let us first formalize the notion of oracle machines.
+
+\subsection{Oracle machines}
+
+\subsection{The theorem of Baker, Gill, and Solovay}
 
 \printbibliography[nottype=image]
 
