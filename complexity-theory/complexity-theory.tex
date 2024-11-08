@@ -68,17 +68,14 @@ We now describe the proof formally.
 
 \begin{proof}
   The following $O(f(n))$ time algorithm $D$ decides a language $A$ that is not decidable in $o(f(n) / \log f(n))$ time.
-  \begin{align*}
-    D = & \ \text{``On input $w$:} \\
-    & \ \quad \text{1. } \text{If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.} \\
-    & \ \quad \text{2. } \text{Let $n$ be the length of $w$.} \\
-    & \ \quad \text{3. } \text{Compute $f(n)$ using time constructibility, and store the value} \\
-    & \ \quad \phantom{\text{3. }} \text{$\ceil{f(n) / \log f(n)}$ in a binary counter. Decrement this counter} \\
-    & \ \quad \phantom{\text{3. }} \text{before each step used to carry out stage 4. If the counter ever} \\
-    & \ \quad \phantom{\text{3. }} \text{hits 0, \emph{reject}.} \\
-    & \ \quad \text{4. } \text{Simulate $M$ on $w$.} \\
-    & \ \quad \text{5. } \text{If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}.''}
-  \end{align*}
+
+  \begin{turing}{$D$}{On input $w$:}
+  \item If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.
+  \item Let $n$ be the length of $w$.
+  \item Compute $f(n)$ using time constructibility, and store the value $\ceil{f(n) / \log f(n)}$ in a binary counter. Decrement this counter before each step used to carry out stage 4. If the counter ever hits 0, \emph{reject}.
+  \item Simulate $M$ on $w$.
+  \item If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}.
+  \end{turing}
 
   We examine each of the stages of this algorithm to determine the running time. Obviously, stages 1, 2, and 3 can be performed within $O(f(n))$ time. In stage 4, every time $D$ simulates one step of $M$, it takes $M$'s current state together with the tape symbol under $M$'s tape head and looks up $M$'s next action in its transition function so that it can update $M$'s tape appropriately. All three of these objects (state, tape symbol, and transition function) are stored on $D$'s tape somewhere. If they are stored far from each other, $D$ will need many steps to gather this information each time it simulates one of $M$'s steps. Instead, $D$ always keep this information close together.
 
@@ -158,14 +155,13 @@ The time hierarchy theorem for nondeterministic Turing machines was originally p
 \end{remark}
 
 Our first instinct is to duplicate the proof of \thmref{time-hierarchy-theorem}, since there is a universal TM for nondeterministic computation as well. (In fact, the simulation of an NTM by another NTM is very efficient, incurring only a constant factor overhead in time \cite{arora2009computational}.) The problem, however, is that we don't know how such a construction would work on our new machine $D$. In particular, it remains unclear how we could ``flip the answer'' of $M$, i.e. to efficiently compute, given the description of an NTM $M$ and an input $w$, the value $1 - M(w)$. We give the following hypothetical (erroneous) construction of $D$ to illustrate our point.
-\begin{align*}
-  D = & \ \text{``On input $w$:} \\
-  & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
-  & \ \quad \text{2. } \text{If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.} \\
-  & \ \quad \text{3. } \text{Nondeterministically simulate $M$ on $w$ for up to $g(n)$ steps.} \\
-  & \ \quad \text{4. } \text{If $M$ accepts, then \emph{reject}.} \\
-  & \ \quad \phantom{\text{4. }} \text{\incorrect{If $M$ rejects, then \emph{accept}. How?}''}
-\end{align*}
+
+\begin{turing}{$D$}{On input $w$:}
+\item Let $n$ be the length of $w$.
+\item If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.
+\item Nondeterministically simulate $M$ on $w$ for up to $g(n)$ steps.
+\item If $M$ accepts, then \emph{reject}. \incorrect{If $M$ rejects, then \emph{accept}. How?}
+\end{turing}
 
 Ignoring other potential issues with the above construction, our main concern is that it's unclear how we could determine efficiently, whether or not $M$ rejects the input $w$. A nondeterministic Turing machine accepts if at least one path accepts; it rejects only when all paths reject. This asymmetry makes it hard to ``flip answers'' efficiently. For instance, suppose we have an NTM $M$ that has two paths for input $w$ where one accepts and the other rejects. $M$ has at least one accepting path for $w$, so it accepts. Suppose we want to produce a machine that accepts exactly the input that $M$ rejects. The obvious attempt is to take $M$ and make its accepting state reject, and its rejecting states accept. However, this new machine $M'$ has one rejecting path and one accepting path. So it still accepts $w$, which it was supposed to reject.
 
@@ -205,20 +201,17 @@ Now, we describe the proof formally.
 
 \begin{proof}
   We know that the set of all Turing machines is enumerable. Let $M_k$ be the $k$-th Turing machine in the enumeration. We associate $M_k$ with an interval $I_k = (l_k, u_k]$, where $f(u_k) > 2^{f(l_k + 1)^2}$. These intervals should be disjoint but contiguous. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. We set the lower bound of the first interval, $l_1$, to $f(n_0)$. Our NTM $D$ will try to ``flip the answer'' of $M_k$ only on one input in the interval $I_k$. We define $D$ as follows:
-  \begin{align*}
-    D = & \ \text{``On input $w$:} \\
-    & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
-    & \ \quad \text{2. } \text{If $w$ is not of the form $\texttt{1}^n$ where $n \geq n_0$, \emph{reject}.} \\
-    & \ \quad \text{3. } \text{Compute $k$ such that $n$ lies in the interval $I_k = (l_k, u_k]$.} \\
-    & \ \quad \ \quad \text{3.1. } \text{If $n < u_k$, then nondeterministically simulate $M_k$ on the input} \\
-    & \ \quad \ \quad \phantom{\text{3.1. }} \text{$\texttt{1}^{n + 1}$ for up to $g(n)$ steps. If $M$ accepts, then \emph{accept}. If $M$ rejects,} \\
-    & \ \quad \ \quad \phantom{\text{3.1. }} \text{then \emph{reject}. (Observe that here we are \emph{not} diagonalizing.)} \\
-    & \ \quad \ \quad \text{3.2. } \text{If $n = u_k$, then deterministically decide if $M_k$ accepts the input} \\
-    & \ \quad \ \quad \phantom{\text{3.2. }} \text{$\texttt{1}^{l_k + 1}$ by simulating all computation paths, for up to $g(n)$ steps in} \\
-    & \ \quad \ \quad \phantom{\text{3.2. }} \text{total. If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}. (Observe} \\
-      & \ \quad \ \quad \phantom{\text{3.2. }} \text{that here we are indeed diagonalizing. But we are doing it on a} \\
-    & \ \quad \ \quad \phantom{\text{3.2. }} \text{much shorter input than the input to $D$.)''}
-  \end{align*}
+
+  \begin{turing}{$D$}{On input $w$:}
+  \item Let $n$ be the length of $w$.
+  \item If $w$ is not of the form $\texttt{1}^n$ where $n \geq n_0$, \emph{reject}.
+  \item Compute $k$ such that $n$ lies in the interval $I_k = (l_k, u_k]$.
+    \begin{enumerate}[label=\theenumi.\arabic*.]
+      \item If $n < u_k$, then nondeterministically simulate $M_k$ on the input $\texttt{1}^{n + 1}$ for up to $g(n)$ steps. If $M$ accepts, then \emph{accept}. If $M$ rejects, then \emph{reject}. (Observe that here we are \emph{not} diagonalizing.)
+      \item If $n = u_k$, then deterministically decide if $M_k$ accepts the input $\texttt{1}^{l_k + 1}$ by simulating all computation paths, for up to $g(n)$ steps in total. If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}. (Observe that here we are indeed diagonalizing. But we are doing it on a much shorter input than the input to $D$.)
+    \end{enumerate}
+  \end{turing}
+
   Let's analyze the running time of each stage of $D$. Stage 1 and 2 clearly operate in $O(g(n))$ time. Stage 3 can also be performed in $O(g(n))$ time, since $k \ll n$. In stage 3.1, $D$ nondeterministically simulates $M_k$ on the input $\texttt{1}^{n + 1}$. If $M_k$ really runs within $O(f(n + 1))$ time, then $D$ has sufficient time for the simulation, since $f(n + 1) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will terminate the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time. In stage 3.2, $D$ deterministically simulates every computation path of $M_k$ on the input $\texttt{1}^{l_k + 1}$. If $M_k$ really runs within $O(f(l_k + 1))$, $D$ again has sufficient time for the simulation. The deterministic simulation of each computation path requires $O(f(l_k + 1) \log f(l_k + 1))$, leading to a total time for all paths of $2^{O(f(l_k + 1) \log f(l_k + 1))}$. This is less than $2^{f(l_k + 1)^2} < f(u_k) = f(n) = o(g(n))$. Otherwise, if $M_k$ doesn't halt, $D$ will stop the simulation after $g(n)$ steps. In both cases, $D$ runs within $O(g(n))$ time.
 
   Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some TM $M_k$ decides $A$ in time $f(n)$, where $f(n + 1)$ is $o(g(n))$. Here, $D$ can simulate $M_k$, using time $d \cdot g(n)$ for some constant $d$. The simulation will run to completion as long as the asymptotic ``kicks in''. Because $f(n + 1)$ is $o(g(n))$, some constant $n_0$ exists where $d \cdot f(n + 1) < g(n)$ for all $n \geq n_0$. Therefore, $D$'s simulation of $M_k$ will run to completion as long as the input has length $n_0$ or more. Consider what happens when we run $D$ on all the inputs $\texttt{1}^n$ where $n \geq n_0$, such that all these inputs correspond to the interval $I_k = (l_k, u_k]$. Stages 3.1 and 3.2 of $D$ ensure, respectively, that:
@@ -261,16 +254,13 @@ Now, we lay out the proof more formally. To make things clearer, instead of usin
 
 \begin{proof}
   The following $O(g(n))$ time NTM $D$ decides a language $A$ that is not decidable in $O(f(n))$ time.
-  \begin{align*}
-    D = & \ \text{``On input $w = (M, \texttt{1}^k, y)$:} \\
-    & \ \quad \text{1. } \text{Let $n$ be the length of $w$.} \\
-    & \ \quad \text{2. } \text{If $\len{y} < g(\len{M} + k)$ then simulate $M(M, \texttt{1}^k, y\texttt{0})$ and $M(M, \texttt{1}^k, y\texttt{1})$} \\
-    & \ \quad \phantom{\text{2. }} \text{for at most $g(n)$ steps each, and \emph{accept} iff they both accept.} \\
-    & \ \quad \text{3. } \text{If $\len{y} \geq g(\len{M} + k)$ then \emph{accept} iff $M(M, \texttt{1}^k, \epsilon)$ rejects using $y$ as} \\
-    & \ \quad \phantom{\text{3. }} \text{advice (i.e. nondeterministic choices). Note that if $M$ does not} \\
-    & \ \quad \phantom{\text{3. }} \text{halt on this computation path (e.g. because $y$ is not long enough),} \\
-    & \ \quad \phantom{\text{3. }} \text{then \emph{reject}.''}
-  \end{align*}
+
+  \begin{turing}{$D$}{On input $w = (M, \texttt{1}^k, y)$}
+  \item Let $n$ be the length of $w$.
+  \item If $\len{y} < g(\len{M} + k)$, then simulate $M(M, \texttt{1}^k, y\texttt{0})$ and $M(M, \texttt{1}^k, y\texttt{1})$ for at most $g(n)$ steps each, and \emph{accept} iff they both accept.
+  \item If $\len{y} \geq g(\len{M} + k)$ then \emph{accept} iff $M(M, \texttt{1}^k, \epsilon)$ rejects using $y$ as advice (i.e. nondeterministic choices). Note that if $M$ does not halt on this computation path (e.g. because $y$ is not long enough), then \emph{reject}.
+  \end{turing}
+
   It is easy to see that $D$ runs within $O(g(n))$ time. Now, we show that $A$ is not decidable in $O(f(n))$ time. Assume the contrary that some NTM $M_A$ decides $A$ in $O(f(n))$ time. Consider an input of the form $w = (M_A, \texttt{1}^k, \epsilon)$ for sufficiently large $k$. We have:
   \begin{align*}
     w \in A \iff & (M_A, \texttt{1}^k, \epsilon) \in A && \text{(because $w = (M_A, \texttt{1}^k, \epsilon)$)} \\
@@ -424,26 +414,15 @@ for some function $f : \NN \to \NN$. The choice of $f$ is crucial. Here, we want
 Let $M_1, M_2, \dots$ be an enumeration of polynomial-time Turing machines, where each machine $M_i$ runs for at most $\len{x}^i + i$ steps on input $x$. Such an enumeration can be constructed quite easily.
 
 We define $f$ by giving a Turing machine $M_f$ that computes it.
-\begin{align*}
-  M_f = & \ \text{``On input $\texttt{1}^n$:} \\
-  & \ \quad \text{1. } \text{Compute $l = (\log n)^{1 / (k + 1)}$, where $k$ is from the definition of $M_C$.} \\
-  & \ \quad \text{2. } \text{Compute the values $f(0), f(1), \dots, f(i)$ where $i \leq l$. This can be done} \\
-  & \ \quad \phantom{\text{2. }} \text{efficiently by calling $M_f(\texttt{1}^i)$ in order from $i = 0$ to $i = l$, and storing} \\
-  & \ \quad \phantom{\text{2. }} \text{all the values in memory.} \\
-  & \ \quad \text{3. } \text{Iterate over all strings $s$ of length at most $l$. For each string $s$, decide} \\
-  & \ \quad \phantom{\text{3. }} \text{whether $s$ is in $A$. To do so, check if $s$ looks like $x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string} \\
-  & \ \quad \phantom{\text{3. }} \text{$x$. We already have the values of $f(k)$ for all $k \leq l$, so this formatting} \\
-  & \ \quad \phantom{\text{3. }} \text{check is easy. Then, to check if $x$ is in $C$, simulate $M_C(x)$. At the end,} \\
-  & \ \quad \phantom{\text{3. }} \text{produce a table that lists, for each string $s$ of length at most $l$, whether} \\
-  & \ \quad \phantom{\text{3. }} \text{$s$ is in $A$.} \\
-  & \ \quad \text{4. } \text{Iterate over the first $n$ Turing machines $M_1, \dots, M_n$ in order. For each} \\
-  & \ \quad \phantom{\text{4. }} \text{machine $M_i$, iterate over all strings of length at most $l$. For each pair} \\
-  & \ \quad \phantom{\text{4. }} \text{of machine $M_i$ and string $s$ with $\len{s} \leq l$, simulate $M_i(s)$ for $n$ steps. If} \\
-  & \ \quad \phantom{\text{4. }} \text{$M_i(s)$ halts in that time, check whether $M_i$ correctly decides if $s \in A$ by} \\
-  & \ \quad \phantom{\text{4. }} \text{consulting the table. Find the smallest $j$ such that some $M_i$ for $i \leq j$} \\
-  & \ \quad \phantom{\text{4. }} \text{gives the correct answers for all strings $s$. If there is no such $j$, set $j$ to $n$.} \\
-  & \ \quad \text{5. } \text{Output $n^{j + 3}$.''}
-\end{align*}
+
+\begin{turing}{$M_f$}{On input $\texttt{1}^n$:}
+\item Compute $l = (\log n)^{1 / (k + 1)}$, where $k$ comes from the definition of $M_C$.
+\item Compute the values $f(0), f(1), \dots, f(i)$ where $i \leq l$. This can be done efficiently by calling $M_f(\texttt{1}^i)$ in order from $i = 0$ to $l$, and storing all the values in memory.
+\item Iterate over all strings $s$ of length at most $l$. For each string $s$, decide whether $s$ is in $A$. To do so, check if $s$ looks like $x\texttt{0}\texttt{1}^{f(\len{x})}$ for some string $x$. We already have the values of $f(k)$ for all $k \leq l$, so this formatting check is easy. Then, to check if $x$ is in $C$, simulate $M_C(x)$. Produce a table that lists, for each string $s$ of length at most $l$, whether $s$ is in $A$.
+\item Iterate over the first $n$ Turing machines $M_1, \dots, M_n$ in order. For each machine $M_i$, iterate over all strings of length at most $l$. For each pair of machine $M_i$ and string $s$ with $\len{s} \leq l$, simulate $M_i(s)$ for $n$ steps. If $M_i(s)$ halts in that time, check whether $M_i$ correctly decides if $s \in A$ by consulting the table. Find the smallest $j$ such that some $M_i$ for $i \leq j$ gives the correct answers for all strings $s$. If there is no such $j$, set $j$ to $n$.
+\item Output $n^{j + 3}$.
+\end{turing}
+
 It is easy to see that $f(n) = \Omega(n^3)$, and hence $f$ is time-constructible, since $M_f$ outputs $f(n)$ in at most $O(f(n))$ time. We now show that $M_f$ computes a function $f$ that exhibit our desired property, thus showing that $A \in \NPTIME$-intermediate.
 
 \begin{proof}

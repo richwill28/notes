@@ -1,10 +1,22 @@
 % General
-\newenvironment{proofidea}{
-\begin{proof}[Proof Idea]}{
-\end{proof}}
+
 \newenvironment{automata}{
 \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto,initial text=$ $]}{
 \end{tikzpicture}}
+
+\newenvironment{proofidea}{
+\begin{proof}[Proof Idea]}{
+\end{proof}}
+
+\newenvironment{turing}[2]{
+  \vspace{\parskip}
+  \begin{addmargin}[2.5em]{2.5em}
+    \setlength{\parskip}{0.25em}
+    #1 = #2
+    \begin{enumerate}[leftmargin=5em]
+      }{
+    \end{enumerate}
+\end{addmargin}\vspace{\parskip}}
 
 \newcommand{\dubious}[1]{\sethlcolor{BurntOrange}\hl{#1}}
 \newcommand{\incorrect}[1]{\textcolor{red}{#1}}
