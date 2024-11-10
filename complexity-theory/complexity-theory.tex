@@ -151,11 +151,6 @@ This corollary establishes the existence of decidable problems that are decidabl
   \end{proof}
 \end{remark}
 
-\subsection{Sharper time hierarchy theorem}
-
-This subsection is completely optional. If you're short on time, skip it.
-\todo{State more recent time hierarchy results.}
-
 \section{Nondeterministic Time Hierarchy Theorem}
 \seclabel{nondeterministic-time-hierarchy-theorem}
 The time hierarchy theorem for nondeterministic Turing machines was originally proven by Cook \cite{cook1972hierarchy}. The following tighter result is due to Seiferas, Fischer, and Meyer \cite{seiferas1978separating}.
@@ -393,7 +388,7 @@ Here's what we want to do. We want to choose $f$ so that it grows polynomially i
 Essentially, we've designed $f$ in a way that forces $A$ to be $\NPTIME$-intermediate. If we could construct $f$ to behave like this (and ensure that $f$ is non-decreasing and time-constructible), we would be done. The problem is that the definition of $A$ depends on $f$, so this seems circular: the choice of $f$ depends on $A$, and the definition of $A$ depends on $f$. To resolve this, we will do something that essentially amounts to a diagonalization argument.
 
 \subsubsection{The diagonalization argument}
-We now present and formalize the diagonalization argument. First, let $M_1, M_2, \dots$ be an enumeration of Turing machines. We assign a restriction to each $M_i$ such that the running time of $M_i(x)$ is bounded by $\len{x}^i + i$ steps. (The additional term ``$+ i$'' accounts for the length of the encoding for $M_i$. Recall that every natural number (in unary) $\texttt{1}^i$ can be interpreted as some TM $M_i$.) We claim that $M_1, M_2, \dots$ is an enumeration of all polynomial-time algorithms.
+We now present and formalize the diagonalization argument. First, let $M_1, M_2, \dots$ be an enumeration of Turing machines. We assign a restriction (or intuitively, an ``alarm'') to each $M_i$ such that the running time of $M_i(x)$ is bounded by $\len{x}^i + i$ steps. (The additional term ``$+ i$'' accounts for the length of the encoding for $M_i$. Recall that every natural number (in unary) $\texttt{1}^i$ can be interpreted as some TM $M_i$.) We claim that $M_1, M_2, \dots$ is an enumeration of all polynomial-time algorithms.
 
 \begin{proof}
   Let $p : \NN \to \NN$ be an arbitrary polynomial function, i.e. $p(n) = O(n^k)$ for some $k \in \NN$. It is easy to see that there exists a smallest $i \in \NN$ such that $n^i + i \geq p(n)$. This implies that for any $j \geq i$, the machine $M_j$ in the enumeration will have a running time that is at least as large as $p(n)$, and thus can represent the polynomial function $p$.
@@ -460,17 +455,86 @@ Complexity theory is unusual as a field of mathematics in having a rich collecti
 
 Often the best way to understand the limits of a proposed approach for proving a statement $S$, is to examine what else besides $S$ the approach would prove if it worked, i.e. which stronger statements $S'$ the approach ``fails to differentiate'' from $S$. If any of the stronger statements are false, then the approach can't prove $S$ either.
 
-That is exactly what Baker, Gill, and Solovay \cite{baker1975relativizations} did for diagonalization in 1975, when they articulated the \vocab{relativization barrier}. The central insight was that almost all the techniques we have for proving statements in complexity theory—such as $C \subseteq D$ or $C \not\subseteq D$, where $C$ and $D$ are two complexity classes—are so general that, if they work at all, then they can actually prove $C^A \subseteq D^A$ or $C^A \not\subseteq D^A$ for all possible \vocab{oracles} $A$. In other words, if all the machines that appear in the proof are enhanced in the same way, by being given an access to the same oracle, the proof is completely oblivious to that change, and goes through just as before. A proof with this property is said to ``relativize'', or to hold ``in all possible relativized worlds'' or ``relative to any oracle.''
+That is exactly what Baker, Gill, and Solovay \cite{baker1975relativizations} did for diagonalization in 1975, when they articulated the \vocab{relativization barrier}. The central insight was that almost all the techniques we have for proving statements in complexity theory—such as $C \subseteq D$ or $C \not\subseteq D$, where $C$ and $D$ are two complexity classes—are so general that, if they work at all, then they can actually prove $C^A \subseteq D^A$ or $C^A \not\subseteq D^A$ \emph{for all possible oracles} $A$. In other words, if all the machines that appear in the proof are enhanced in the same way, by being given access to the same oracle, the proof is completely oblivious to that change, and goes through just as before. A proof with this property is said to ``relativize'', or to hold ``in all possible relativized worlds'' or ``relative to any oracle.''
 
 Why do so many proofs relativize? Intuitively, because the proofs, as with the case of diagonalization, only do things like using one Turing machine $M_1$ to simulate a second Turing machine $M_2$ step-by-step, without examining either machine's internal structure. In that case, if $M_2$ is given access to an oracle $A$, then $M_1$ can still simulate $M_2$ just fine, provided that $M_1$ is also given access to $A$, in order to simulate $M_2$'s oracle calls. To illustrate, you might want to check that the alternative proof of \corref{ptime-strict-subset-of-exptime} can be easily modified to show that $\PTIME^A \neq \EXPTIME^A$ for all oracles $A$.
 
 Alas, Baker, Gill, and Solovay then observed that no relativizing technique can possibly resolve the $\PTIME$ vs $\NPTIME$ question. For, unlike $\PTIME$ vs $\EXPTIME$, or the unsolvability of the halting problem, $\PTIME$ vs $\NPTIME$ admits ``contradictory relativizations.'' That is, there are some oracle worlds where $\PTIME = \NPTIME$, and others where $\PTIME \neq \NPTIME$. For this reason, any proof of $\PTIME \neq \NPTIME$ will need to ``notice'', at some point, that there are no oracles in ``our'' world: it will have to use techniques that \emph{fail} relative to certain oracles.
 
-We will discuss the main result of Baker, Gill, and Solovay. But before we do that, let us first formalize the notion of oracle machines.
+\subsection{Oracles}
+We will soon discuss the main result of Baker, Gill, and Solovay. But before we do that, let us first formalize the notion of oracle machines in the following.
 
-\subsection{Oracle machines}
+\begin{definition}[Oracles]
+  An \vocab{oracle} for a language $A$ is a device that is capable of reporting whether any string $w$ is a member of $A$. Thus, formally an oracle is just a function $\oracle : \set{\texttt{0}, \texttt{1}}^\ast \to \set{0, 1}$ (or equivalently, a set $\oracle \subseteq \set{0, 1}^\ast$) that corresponds to some language $A$.
+\end{definition}
 
-\subsection{The theorem of Baker, Gill, and Solovay}
+\begin{definition}[Oracle Turing machines]
+  An \vocab{oracle Turing machine} $M^A$ is a modified Turing machine that has the additional capability of querying an oracle. Whenever $M^A$ writes a string on a special \vocab{oracle tape}, it is informed whether that string is a member of $A$, in a single computation step.
+
+  Formally, this can be done with the addition of three special states: $q_\text{query}$, $q_\text{yes}$, and $q_\text{no}$. Whenever during the execution $M^A$ enters the state $q_\text{query}$, the machine moves into the state $q_\text{yes}$ if $q \in A$ and $q_\text{no}$ if $q \notin A$, where $q$ denotes the contents of the oracle tape.
+\end{definition}
+
+Nondeterministic oracle Turing machines are defined similarly.
+
+\begin{definition}[Oracle classes]
+  We define $C^A$ to be the complexity class of decision problems solvable by an algorithm in class $C$ with an oracle for a language $A$.
+\end{definition}
+
+\begin{example}
+  $\PTIME^\SAT$ is the class of problems solvable in polynomial time by a deterministic Turing machine with an oracle for SAT.
+\end{example}
+
+The notation can be extended to the set of languages. For instance, when $X$ and $Y$ are complexity classes, we write $X^Y$ for the class of languages computable by a machine in class $X$ using an oracle from class $Y$. Formally,
+\[ X^Y = \bigcup_{L \in Y} X^L. \]
+When the language $L$ is complete for some class $Y$, then $X^L = X^Y$ provided that machines in $X$ can execute reductions used in the completeness definition of class $Y$. In particular, since SAT is $\NPTIME$-complete with respect to polynomial-time reductions, we have $\PTIME^\SAT = \PTIME^\NPTIME$. However, $\DLOGTIME^\SAT$ may not equal $\DLOGTIME^\NPTIME$.
+
+Also, notice that the definition makes $X^Y$ at least as powerful as the strongest of $X$ and $Y$, and may give it even more power. For example, if $\NPTIME \neq \coNPTIME$, then $\NPTIME \subsetneq \PTIME^\NPTIME$, since in $\PTIME^\NPTIME$ we can solve any problem in $\NPTIME$ just by asking the oracle for its opinion, but we can also solve any problem in $\coNPTIME$ by asking the oracle for its opinion and giving the opposite answer. And this is all without even taking advantage of the ability to ask multiple questions and have the later questions depend on the outcome of earlier ones.
+
+\subsection{The Baker-Gill-Solovay theorem}
+Now, we state the result formally.
+\begin{theorem}[The Baker-Gill-Solovay theorem]
+  There exists an oracle $A$ such that $\PTIME^A = \NPTIME^A$, and another oracle $B$ such that $\PTIME^B \neq \NPTIME^B$.
+\end{theorem}
+
+\begin{proofidea}
+  Exhibiting an oracle $A$ is easy. Just let $A$ be any $\PSPACE$-complete problem such as TQBF. We exhibit oracle $B$ by construction. We design $B$ so that a certain language $L_B$ in $\NPTIME^B$ provably requires brute-force search, and so $L_B$ cannot be in $\PTIME^B$. Hence, we can conclude that $\PTIME^B \neq \NPTIME^B$. The construction considers every polynomial-time oracle machine in turn and ensures that each fails to decide the language $L_B$. (This is diagonalization!)
+\end{proofidea}
+
+\begin{proof}
+  Let $A$ be TQBF. We have a series of containtments
+  \[ \NPTIME^\TQBF \overset{1}{\subseteq} \NPSPACE \overset{2}{\subseteq} \PSPACE \overset{3}{\subseteq} \PTIME^\TQBF. \]
+  Containtment 1 holds because we can convert the nondeterministic polynomial-time oracle TM to a nondeterministic polynomial-space machine that computes the answers to queries regarding TQBF instead of using the oracle. Containtment 2 follows from Savitch's theorem. Containtment 3 holds because TQBF is $\PSPACE$-complete. Hence, we conclude that $\PTIME^\TQBF = \NPTIME^\TQBF$.
+
+  Next, we show how to construct oracle $B$. For any oracle $B$, we define
+  \[ L_B = \set{\texttt{1}^n \mid \text{$B$ contains a string of length $n$} }. \]
+  Obviously, for any $B$, $L_B$ is in $\NPTIME^B$. Here's why. A nondeterministic linear-time oracle Turing machine $M$ that uses the oracle $B$ can recognize $L_B$ as follows. On the input $\texttt{1}^n$ of length $n$, $M$ nondeterministically guesses a string $x$ of length $n$, queries it on the oracle set $B$, and accepts if and only if $x \in B$. In particular, if $\texttt{1}^n \in L_B$, then one of the computation paths of $M$ will guess a correct string $x$ of length $n$ in $B$ so that computational path will accept $\texttt{1}^n$. On the other hand, if $\texttt{1}^n \notin B$, then all strings $x$ of length $n$ guessed by $M$ are not in $B$ so all computational paths of $M$ reject $\texttt{1}^n$. This shows that the nondeterministic (linear-time) Turing machine $M$ accepts the language $L_N$, and thus $L_B \in \NPTIME^B$.
+
+  To show that $L_B$ is not in $\PTIME^B$, we design $B$ as follows. Let $M_1, M_2, \dots$ be an enumeration of all polynomial-time oracle Turing machines. We may assume for simplicity that $M_i$ runs in time $n^i$. The construction proceeds in stages, where stage $i$ constructs a part of $B$, which ensures that $M_i^B$ doesn't decide $L_B$. We construct $B$ by declaring that certain strings are in $B$ and others aren't in $B$. Each stage determines the status of only a finite number of strings. Initially, we have no information about $B$. We begin with stage 1.
+
+  \textbf{Stage i.} So far, a finite number of strings have been declared to be in or our of $A$. We choose $n_i$ greater than the length of any such string and large enough that $2^{n_i}$ is greater than ${n_i}^i$, the running time of $M_i$. We show how to extend our information about $B$ so that $M_i^B$ accepts $\texttt{1}^{n_i}$ whenever that string is not in $L_B$.
+
+  We run $M_i$ on input $\texttt{1}^{n_i}$ and respond to its oracle queries as follows.
+  \begin{enumerate}
+    \item If $M_i$ queries a string $y$ whose status had already been determined. (This can happen because $M_i$, when running on input $\texttt{1}^{n_i}$, may ask about strings $y$ of length shorter than $n_i$, for which the membership of $y$ in $B$ had been decided from earlier stages.) In this case, we respond consistently.
+    \item If $M_i$ queries a string $y$ whose status is undetermined. (This occurs when $M_i$ queries strings $y$ of length $n_i$ or greater, for which the membership of $y$ in $B$ has not been decided yet.) In this case, we respond NO to the query and declare $y$ to be out of $B$.
+  \end{enumerate}
+  We continue the simulation of $M_i$ until it halts.
+
+  Now consider the situation from $M_i$'s perspective. If it finds a string of length $n_i$ in $B$, it should accept because it knows that $\texttt{1}^{n_i}$ is in $L_B$. If $M_i$ determines that all strings of length $n_i$ aren't in $B$, it should reject because it knows that $\texttt{1}^{n_i}$ is not in $L_B$. However, it doesn't have enough time to ask about all strings of length $n_i$, and we have answered NO to each of the queries it has made. Hence, when $M_i$ halts and must decide whether to accept or reject, it doesn't have enough information to be sure that its decision is correct.
+
+  Our objective is to ensure that its decision is \emph{not} correct. We do so by observing its decision and then extending $B$ so that the reverse is true. Let us denote by $B_i$ the subset of $B$ that is constructed at stage $i$. At each stage $i$, it is easy to see that the set $B_i$ is a finite set and contains strings of length bounded by $n_i$. We also have $B_{i - 1} \subseteq B_i$ and $n_{i - 1} < n_i$ for all $i$, by virtue of our construction. Now, if $M_i$ accepts $1^{n_i}$, we declare all strings of length $n_i$ to be out of $B$ to guarantee that $\texttt{1}^{n_i}$ is not in $L_B$. Formally, we do this by setting $B_i = B_{i - 1}$. Otherwise, if $M_i$ rejects $\texttt{1}^{n_i}$, we find a string of length $n_i$ that $M_i$ hasn't queried and declare that string to be in $B$ to guarantee that $\texttt{1}^{n_i}$ is in $L_B$. Such a string must exist because $M_i$ runs for ${n_i}^i$ steps, which is fewer than $2^{n_i}$, the total number of strings of length $n_i$. Formally, let $Q_i$ be the set of queries made by $M_i$, pick any string $x \in \set{\texttt{0}, \texttt{1}}^{n_i} \setminus Q_i$, then we set $B_i = B_{i - 1} \cup \set{x}$. In either case, we have ensured that $M_i^B$ doesn't decide $L_B$. Stage $i$ is completed and we proceed with stage $i + 1$.
+
+  After finishing all stages, we complete the construction of $B$ by arbitrarily declaring that any string whose status remains undetermined by all stages is out of $B$. No polynomial-time oracle Turing machine decides $L_B$ with oracle $B$, proving the theorem.
+\end{proof}
+
+\subsection{Logical independence vs relativization}
+If relativization seems too banal, one way to appreciate it is to try to invent new techniques, for proving inclusions or separations among complexity classes, that \emph{fail} to relativize. It's much harder than it sounds! A partial explanation for this challenge was given by Arora, Impagliazzo, and Vazirani \cite{arora1992relativizing}, by drawing an analogy between the relativization barrier and \emph{independence} results in mathematical logic.
+
+An independence result shows that certain mathematical statements cannot be proven or disproven within a given formal system of axioms. Classic examples include the independence of Euclid's fifth postulate from the first four (which led to the development of non-Euclidean geometry), and the independence of the continuum hypothesis from Zermelo-Fraenkel set theory. Similarly, relativization results—such as the fact that $\PTIME \neq \NPTIME$ cannot be proven or disproven with ``known techniques''—are akin to these logical independence results. However, our results are less precise, as the term ``known techniques'' is vague and not as formally defined as the axiomatic systems in logic.
+
+So, can techniques like diagonalization or simulation help resolve the $\PTIME$ vs $\NPTIME$ question? Possibly, but any such approach must rely on a fact about Turing machines that does not hold in the presence of oracles, i.e. a \emph{non-relativizing} fact. Even though many results in complexity relativize, there are notable exceptions, such as $\IP = \PSPACE$ and the $\PCP$ theorem. Yet, despite these non-relativizing results, we still don't know how to apply them to resolve the $\PTIME$ vs $\NPTIME$ question!
+
+Arora, Impagliazzo, and Vazirani further expanded on this analogy by explaining that a relativizing proof is simply any proof that ``knows'' about complexity classes, only through axioms that assert the classes' closure properties, as well as languages that the classes do contain. For instance, the class $\PTIME$ includes the empty language, and if two languages $L_1$ and $L_2$ are in $\PTIME$, then so are Boolean combinations like $\overline{L_1}$ and $L_1 \cap L_2$. Using these closure properties, one can prove results like $\PTIME \neq \EXPTIME$. However, when it comes to more intricate statements, like $\PTIME \neq \NPTIME$, these closure axioms alone are not enough to prove or disprove the claim. In fact, the statement $\PTIME \neq \NPTIME$ can be shown to be independent of the axioms. To demonstrate this, one can construct models of axioms where the statement $\PTIME \neq \NPTIME$ is false. This is done by using oracles to ``force in'' additional languages—such as $\PSPACE$-complete languages, as seen in our proof of the Baker-Gill-Solovay theorem—which the axioms don't require to be in $\PTIME$ or $\NPTIME$, but also don't prohibit. The conclusion is that any proof of $\PTIME \neq \NPTIME$ will need to appeal to deeper properties of these classes—properties that go beyond the closure axioms and cannot be captured by relativizing techniques.
 
 \printbibliography[nottype=image]
 
