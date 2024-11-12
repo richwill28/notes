@@ -37,7 +37,7 @@ Second-order logic is an extension of first-order logic. Recall that one of the 
 
 To help illustrate the distinction between first-order and second-order logic, it's helpful to consider an example from number theory. Here, the objects of our study are the natural numbers $0, 1, 2, \dots$ and their arithmetic. Using first-order logic, we can make statements about these numbers through atomic expressions such as $x = y$, $x + y = z$, and $x \times y = z$. These expressions are combined with logical connectives like $\wedge$, $\neg$, $\vee$, and $\rightarrow$, as well as quantifiers $\forall x$ and $\exists x$, where the variables $x, y, z, \dots$ range over the natural numbers.
 
-In second-order logic, we can express even more complex ideas. In addition to variables like $x, y, z, \dots$ that represent numbers, second-order logic introduces variables $X, Y, Z, \dots$ that represent properties or relations between numbers. For these variables, we also have quantifiers $\forall X$ and $\exists X$. This means we can now quantify over properties or relations, not just individual elements. Moreover, in addition to first-order atomic expressions, we have new atomic expressions of the form $X(y_1, \dots, y_n)$.
+In second-order logic, we can express even more complex ideas. In addition to variables like $x, y, z, \dots$ that represent numbers, second-order logic introduces variables $X, Y, Z, \dots$ that represent properties or relations between numbers. For these second-order variables, we also have quantifiers $\forall X$ and $\exists X$. This means we can now quantify over properties or relations, not just individual elements. Moreover, in addition to first-order atomic expressions, we have new atomic expressions of the form $X(y_1, \dots, y_n)$.
 
 \subsection{Syntax and semantics}
 Like first-order logic, second-order logic is defined over a \emph{signature}.
@@ -51,7 +51,7 @@ Like first-order logic, second-order logic is defined over a \emph{signature}.
   \end{enumerate}
 \end{definition}
 
-Second-order logic has several kinds of \emph{variables}. It has \emph{individual variables} denoted by lower case letters $x, y, z, \dots$ possibly with subscripts. It has \emph{property} and \emph{relation variables} denoted by uppercase letters $X, Y, X, \dots$ possibly with subscripts. Finally, it has \emph{function variables} denoted by uppercase letters $F, G, H, \dots$ possibly with subscripts. Each relation and function variable has an arity, which is a positive natural number. We identify property variables with 1-ary relation variables.
+Second-order logic has several kinds of \emph{variables}. It has \emph{individual} or \emph{first-order variables} denoted by lower case letters $x, y, z, \dots$ possibly with subscripts. It has \emph{property} or \emph{relation variables} denoted by uppercase letters $X, Y, X, \dots$ possibly with subscripts. Finally, it has \emph{function variables} denoted by uppercase letters $F, G, H, \dots$ possibly with subscripts. Each relation and function variable has an arity, which is a positive natural number. We identify property variables with 1-ary relation variables.
 
 \begin{remark}
   It is noteworthy that although we have property variables, we do not have variables for properties of properties. Such variables would be part of the formalism of third-order logic.
@@ -61,7 +61,7 @@ Formulas in second-order logic over signature $\tau = (\consts, \rels)$ are sequ
 \begin{enumerate}
   \item The symbol $\bot$, called \emph{false}.
   \item The symbol $=$, called \emph{equality}.
-  \item An element of the infinite set $\vars_1 = \set{x_1, x_2, \dots}$ of \emph{variables}.
+  \item An element of the infinite set $\vars_1 = \set{x_1, x_2, \dots}$ of (first-order) \emph{variables}.
   \item An element of the infinite set $\vars_2 = \set{X_1^1, X_2^1, \dots, X_1^2, X_2^2, \dots, X_j^k, \dots}$ of \emph{relational variables}, where the superscript indicates the arity of the variable.
   \item Constant symbols and relation symbols in $\tau$.
   \item The symbol $\neg$, called \emph{negation}.
@@ -173,19 +173,19 @@ We are now ready to define the semantics of a second-order formula in a structur
   \end{enumerate}
 \end{definition}
 
-The definition above suggests that the assignment of values to variables (individual and relational) only matters for the \emph{free} variables, i.e. those that are not quantified. We extend the definition of free and bound occurrences to relational variable as well.
+The definition above suggests that the assignment of values to variables (first-order and relational) only matters for the \emph{free} variables, i.e. those that are not quantified. We extend the definition of free and bound occurrences to relational variable as well.
 
 \begin{definition}[Free and bound variables in second-order logic]
-  In well-formed formulas $(\exists x \phi_1)$ and $(\exists X^k \phi_2)$, $\phi_1$ and $\phi_2$ are said to be in scope of the quantifiers $\exists x$ and $\exists X^k$, respectively. Every occurrence of $x$ and $X^k$ in $(\exists x \phi)$ and $(\exists X^k \phi)$, respectively, are said to be \emph{bound}. Any occurrences of variables (individual and relational) are said to be \emph{free}.
+  In well-formed formulas $(\exists x \phi_1)$ and $(\exists X^k \phi_2)$, $\phi_1$ and $\phi_2$ are said to be in scope of the quantifiers $\exists x$ and $\exists X^k$, respectively. Every occurrence of $x$ and $X^k$ in $(\exists x \phi)$ and $(\exists X^k \phi)$, respectively, are said to be \emph{bound}. Any occurrences of variables (first-order and relational) that is not bound are said to be \emph{free}.
 \end{definition}
 
 When comparing different variable assignments and their effect on a given formula $\phi$, those variables that do not occur in the formula or are not free variables in the formula should not affect the fact that a given structure $\struct$ logically implies the formula or not. We state this intuitive result in the following.
 
 \begin{lemma}[The relevance lemma for second-order logic]
-  For a formula $\phi$ and assignments $\alpha$ and $\beta$ that agree on all the free variables and free relational variables of $\phi$, we have $\struct, \alpha \models \phi$ iff $\struct, \beta \models \phi$.
+  For a formula $\phi$ and assignments $\alpha$ and $\beta$ that agree on all the free (first-order) variables and free relational variables of $\phi$, we have $\struct, \alpha \models \phi$ iff $\struct, \beta \models \phi$.
 \end{lemma}
 
-\emph{Sentences} are formulas with no free variables or relational variables. Thanks to the relevance lemma, this means that for sentences, the assignment does not determine its satisfaction.
+\emph{Sentences} are formulas with no free (first-order) variables or relational variables. Thanks to the relevance lemma, this means that for sentences, the assignment does not determine its satisfaction.
 
 \begin{proposition}
   For a sentence $\phi$ and any two assignments $\alpha$ and $\beta$, we have $\struct, \alpha \models \phi$ iff $\struct, \beta \models \phi$. Therefore, we write $\struct \models \phi$ if for any assignment $\alpha$, $\struct, \alpha \models \phi$.
@@ -221,7 +221,7 @@ In this section, we will study MSO on a restricted class of structures, specific
     \[ \forall x \forall y ((Q_a(x) \wedge x < y) \rightarrow Q_a(y)). \]
     The language of the formula is $\lang(b^\ast a^\ast)$. Notice, however, that this is so because $\Sigma = \set{a, b}$. If $\Sigma = \set{a, b, c}$, then the language of the formula is $\lang((b + c)^\ast a^\ast)$.
   \item Formulas of the form $S(x, y)$ where $x$ and $y$ range over the positions of the word. The intended meaning is ``$y$ is the next position after $x$'' or ``position $x$ plus one is position $y$.'' For example, the predicate ``the next letter after $a$ is $b$, and the next letter after $b$ is $a$'' is expressed by the formula
-    \[ \forall x \forall y (S x y \rightarrow ((Q_a(x) \wedge Q_b(y)) \vee (Q_b(x) \wedge Q_a(y)))). \]
+    \[ \forall x \forall y (S(x, y) \rightarrow ((Q_a(x) \wedge Q_b(y)) \vee (Q_b(x) \wedge Q_a(y)))). \]
     The language of the formula is $\lang((ab)^\ast + (ba)^\ast)$.
 \end{enumerate}
 
@@ -252,7 +252,7 @@ Finally, a \emph{word structure} is defined as follows. Its universe consists of
   \end{align*}
 \end{definition}
 
-\todo{Write some examples to round out this subsection.}
+\todo{Write some examples to round out this section.}
 
 \section{The Büchi-Elgot-Trakhtenbrot theorem}
 The main result we will establish in this section is that the set of words definable in MSO exactly corresponds to the set of regular languages.
@@ -269,14 +269,144 @@ The main result we will establish in this section is that the set of words defin
   A language $A$ is definable in MSO if and only if $A$ is regular.
 \end{theorem}
 
+There are two directions to establishing this result, and we will consider them in order.
+
 \begin{remark}
-  The Büchi-Elgot-Trakhtenbrot theorem is of fundamental importance in automata theory because it gives a logical characterization of the regular languages. It was proven independently by Büchi \cite{buchi1960weak}, Elgot \cite{elgot1961decision}, and Trakhtenbrot \cite{trakhtenbrot1962finite}.
+  The Büchi-Elgot-Trakhtenbrot theorem is of fundamental importance in automata theory because it provides a logical characterization of the regular languages. Büchi \cite{buchi1960weak}, Elgot \cite{elgot1961decision}, and Trakhtenbrot \cite{trakhtenbrot1962finite} each independently proved the theorem.
 \end{remark}
 
 \subsection{Regular languages are expressible in $\MSO(\Sigma)$}
-\todo{Write the rest of this.}
+In this section, we show that monadic second-order logic on words can express all regular languages. In other words, given any regular language $A$, we can construct an MSO sentence $\phi_A$ that defines the set $A$.
+
+\begin{lemma}[Regular languages are definable in MSO]
+  If $A \subseteq \Sigma^\ast$ is regular, then $A$ is definable in $\MSO(\Sigma)$.
+\end{lemma}
+
+The following presentation of the proof is based on Esparza and Blondin \cite{esparza2023automata}, with some modifications.
+
+\begin{proof}
+  We present a generic procedure that, given a regular language over $\Sigma$, represented by a DFA $A$, constructs a formula $\phi_A$ of $\MSO(\Sigma)$ such that $\lang(\phi_A) = \lang(A)$. Imagine we are given an $A$. There is an obvious way to express the membership predicate of $\lang(A)$: ``a word belongs to $\lang(A)$ iff the last state of its run on $A$ is accepting.'' For this, we introduce the \emph{visit record} of a word. The visit record of a word $w$ is a mapping that assigns to each state $q$, the set of positions of $w$ after which the run reaches $q$. It is the inverse of the mapping that assigns to each letter of $w$ the state reached by $A$ after reading it. Formally:
+
+  \begin{definition}
+    Let $A = (Q, \Sigma, \delta, q_0, F)$ be a DFA, and let $w = a_1 \dots a_m$ be a non-empty word over $\Sigma$. The visit record of $w$ is the mapping $R_w : Q \to 2^{\set{1, \dots, m}}$ that assigns each state $q \in Q$ to the set of positions defined as follows:
+    \[ R_w(q) = \set{i \in \set{1, \dots, m} \mid \hat{\delta}(q_0, a_1 \dots a_i) = q}. \]
+  \end{definition}
+
+  \begin{example}
+    \explabel{mso-of-dfa}
+    \figref{visit-record-example} shows a DFA, its run on the word $w = aabbb$, and the visit record $R_w$. Observe that each position belongs to the visit record of exactly one state. In other words, $R_w(q_0)$, $R_w(q_1)$, and $R_w(q_2)$ form a partition of the set of positions $\set{1, 2, \dots, 5}$.
+  \end{example}
+
+  \begin{figure}[ht]
+    \figlabel{visit-record-example}
+    \begin{minipage}{0.3\textwidth}
+      \begin{automata}
+        \node[state,initial]   (q_0)                {$q_0$};
+        \node[state]           (q_1) at (3, 0)      {$q_1$};
+        \node[state,accepting] (q_2) at (1.5, -2.5) {$q_2$};
+
+        \path[->] (q_0) edge                node {$a$} (q_1)
+        (q_0) edge [bend left=15] node {$b$} (q_2)
+        (q_1) edge [loop above]   node {$a$} (q_1)
+        (q_1) edge [bend left=15] node {$b$} (q_2)
+        (q_2) edge [bend left=15] node {$b$} (q_0)
+        (q_2) edge [bend left=15] node {$a$} (q_1);
+      \end{automata}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.6\textwidth}
+      Run: \hspace{1cm} $q_0 \overset{a}{\longrightarrow} q_1 \overset{a}{\longrightarrow} q_1 \overset{b}{\longrightarrow} q_2 \overset{b}{\longrightarrow} q_0 \overset{b}{\longrightarrow} q_2$ \\
+      Position: \hspace{1.6cm} 1 \hspace{0.72cm} 2 \hspace{0.72cm} 3 \hspace{0.72cm} 4 \hspace{0.72cm} 5
+      \begin{align*}
+        & R_w(q_0) = \set{4} \\
+        & R_w(q_1) = \set{1, 2} \\
+        & R_w(q_2) = \set{3, 5}
+      \end{align*}
+    \end{minipage}
+    \caption{Example of a run and a visit record.}
+  \end{figure}
+
+  For every non-empty word, ``the run of $A$ on the word is accepting'' is equivalent to the predicate ``the last position of the word belongs to the visit record of an accepting state.'' Let us examine this predicate. Assume the states of $A$ are $\set{q_0, q_1, \dots, q_n}$, and imagine we are able to define a macro expressing the visit record—that is, a macro $\VisitRecord(X_0, \dots, X_n)$ such that an interpretation models the macro if and only if it assigns to each $X_0, \dots, X_n$, the visit record $R_w(q_0), \dots, R_w(q_n)$, respectively. The predicate is then expressed by the sentence
+  \[ \psi_A = \exists X_0 \dots \exists X_n \left( \VisitRecord(X_0, \dots, X_n) \wedge \forall x (\last(x) \rightarrow \bigvee_{q_i \in F} X_i(x)) \right) \]
+  and hence, for every non-empty word $w$, we have $w \in \lang(\psi_A)$ iff $w \in \lang(A)$.
+
+  The next step is to handle the empty word, which has no visit record. Since the only first-order quantifier of $\psi_A$ is universal, we have $\epsilon \models \psi_A$ for every DFA $A$, regardless of whether $\epsilon \in \lang(A)$ holds or not, and so we cannot define $\phi_A = \psi_A$. This is easy to fix by defining $\phi_A$ as follows:
+  \begin{align*}
+    \phi_A =
+    \begin{cases}
+      \psi_A & \text{if $\epsilon \in \lang(A)$} \\
+      \psi_A \wedge \exists x (\neg (x < x)) & \text{otherwise}
+    \end{cases}
+  \end{align*}
+  After this adjustment, we have $\lang(\phi_A) = \lang(A)$.
+
+  To help illustrate, for \expref{mso-of-dfa}, the corresponding formula is:
+  \[ \exists X_0 \exists X_1 \exists X_2 \left( \VisitRecord(X_0, X_1, X_2) \wedge \forall x (\last(x) \rightarrow X_2(x)) \right) \wedge \exists x (\neg (x < x)) \]
+
+  To complete our proof, we need to construct the macro $\VisitRecord(X_0, \dots, X_1)$. For this, note that the visit record $R_w$ can also be defined inductively: we first define which component $R_w(q)$ of the record contains position 1, and then, assuming we know which component contains position $i$, we define which component contains position $i + 1$.
+
+  \begin{proposition}
+    \prplabel{visit-record-conditions}
+    Let $A = (Q, \Sigma, \delta, q_0, F)$ be a DFA, and let $w = a_1 \dots a_m$ be a non-empty word over $\Sigma$. The visit record $R_w : Q \to 2^{\set{1, \dots, m}}$ is a unique mapping satisfying the following properties for every $q, q' \in Q$ and every $1 \leq i < m$:
+    \begin{enumerate}
+      \item $1 \in R_w(q)$ iff $q = \delta(q_0, a_1)$, and
+      \item if $i \in R_w(q)$ then $i + 1 \in R_w(q')$ where $q' = \delta(q, a_i)$.
+    \end{enumerate}
+  \end{proposition}
+
+  Again, to help illustrate, for \expref{mso-of-dfa}, we get
+  \begin{gather*}
+    \text{$1 \in R_w(q)$ iff $q = \delta(q_0, a) = q_1$} \\
+    \text{$2 \in R_w(q)$ iff $q = \delta(q_1, a) = q_1$} \\
+    \text{$3 \in R_w(q)$ iff $q = \delta(q_1, b) = q_2$} \\
+    \vdots
+  \end{gather*}
+  Intuitively, conditions (1) and (2) of \prpref{visit-record-conditions} state that the initial position belongs to the right component of the visit record and that the visit record ``respects'' the transition relation of $A$. We give macros $\Init(X_0, \dots, X_n)$ and $\Respect(X_0, \dots, X_n)$ expressing these predicates, where we assume the states of $A$ to be $\set{q_0, q_1, \dots, q_n}$.
+
+  Before we proceed, let us define the following auxiliary macro. Given $0 \leq i \leq n$, we express that position $x$ belongs to $X_j$ iff $i = j$ by
+  \[ \InX_{q_i}(x) = \left( X_i(x) \wedge \bigwedge_{i \neq j} \neg (X_i(x) \wedge X_j(x)) \right). \]
+
+  For condition (1), we define
+  \[ \Init(X_0, \dots, X_n) = \forall x \left( \bigwedge_{a \in \Sigma} (\first(x) \wedge Q_a(x)) \rightarrow \InX_{\delta(q_0, a)}(x) \right). \]
+  The formula expresses that if the letter at position 1 is an $a$, the position $1$ belongs to $X_{\delta(q_0, a)}$ and to no other set.
+
+  \begin{example}
+    For the DFA of \figref{visit-record-example} with states $\set{q_0, q_1, q_2}$, we get
+    \begin{align*}
+      & \Init(X_0, X_1, X_2) = \\
+      & \qquad \forall x ((\first(x) \wedge Q_a(x)) \rightarrow \InX_{q_1}(x)) \wedge ((\first(x) \wedge Q_b(x)) \rightarrow \InX_{q_2}(x)).
+    \end{align*}
+  \end{example}
+
+  For condition (2), we define
+  \begin{align*}
+    & \Respect(X_0, \dots, X_n) \\
+    & \qquad = \forall x \forall y \left( S(x, y) \rightarrow \bigwedge_{a \in \Sigma, \ i \in \set{0, \dots, n}} (Q_a(x) \wedge X_i(x)) \rightarrow \InX_{\delta(q_i, a)}(y) \right).
+  \end{align*}
+  The formula expresses that if a position $x$ belongs to $X_i$, and the letter at this position is an $a$, then its successor position $y$ belongs to $X_{\delta(q_i, a)}$, and to no other set.
+
+  \begin{example}
+    For the DFA of \figref{visit-record-example}, this yields
+    \begin{align*}
+      & \Respect(X_0, \dots, X_n) \\
+      & \qquad = \forall x \forall y \left( S(x, y) \rightarrow
+        \begin{pmatrix}
+          \phantom{\wedge} \enskip (Q_a(x) \wedge X_0(x)) \rightarrow \InX_{q_1}(y) \\
+          \wedge \enskip (Q_b(x) \wedge X_0(x)) \rightarrow \InX_{q_2}(y) \\
+          \wedge \enskip (Q_a(x) \wedge X_1(x)) \rightarrow \InX_{q_1}(y) \\
+          \wedge \enskip (Q_b(x) \wedge X_1(x)) \rightarrow \InX_{q_2}(y) \\
+          \wedge \enskip (Q_a(x) \wedge X_2(x)) \rightarrow \InX_{q_1}(y) \\
+          \wedge \enskip (Q_b(x) \wedge X_2(x)) \rightarrow \InX_{q_0}(y)
+      \end{pmatrix} \right).
+    \end{align*}
+  \end{example}
+
+  Finally, we are done by setting
+  \[ \VisitRecord(X_0, \dots, X_n) = \Init(X_0, \dots, X_n) \wedge \Respect(X_0, \dots, X_n). \]
+\end{proof}
 
 \subsection{Languages expressible in $\MSO(\Sigma)$ are regular}
+For now, refer to Esparza and Blondin \cite{esparza2023automata} for a detailed discussion.
 \todo{Write the rest of this.}
 
 \printbibliography[nottype=image]
