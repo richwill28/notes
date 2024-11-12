@@ -144,7 +144,9 @@ This corollary establishes the existence of decidable problems that are decidabl
     Clearly $L \in \EXPTIME$. On the other hand, suppose by contradiction that $L \in \PTIME$. Then there's some polynomial-time Turing machine $A$ such that $A(w)$ accepts if and only if $w \in L$. Let $A$ runs in $p(n + \len{\enc{M}} + \len{x})$ on input $(\enc{M}, x, \texttt{1}^n)$, for some polynomial function $p$. Then using $A$, we can easily produce another machine $B$ that does the following.
 
     \begin{turing}{$B$}{On input $w = (\enc{M}, \texttt{1}^n)$:}
-    \item Runs forever if $M(\enc{M}, \texttt{1}^n)$ halts in at most $2^n$ steps; otherwise halts.
+    \item Use $A$ to decide if $M(\enc{M}, \texttt{1}^n)$ halts in at most $2^n$ steps.
+    \item If it does, run forever.
+    \item Otherwise, halt.
     \end{turing}
 
     Note that, if $B$ halts at all, then it halts after only $p(2n + 2 \enc{M}) = n^{O(1)}$ steps. Now consider what happens when $B$ is run on input $(\enc{B}, \texttt{1}^n)$. If $B(\enc{B}, \texttt{1}^n)$ runs forever, then $B(\enc{B}, \texttt{1}^n)$ halts. Conversely, if $B(\enc{B}, \texttt{1}^n)$ halts, then for all sufficiently large $n$, it halts in fewer than $2^n$ steps, but that means that $B(\enc{B}, \texttt{1}^n)$ runs forever. So we conclude that $B$, and hence $A$, cannot exist.
@@ -535,6 +537,58 @@ An independence result shows that certain mathematical statements cannot be prov
 So, can techniques like diagonalization or simulation help resolve the $\PTIME$ vs $\NPTIME$ question? Possibly, but any such approach must rely on a fact about Turing machines that does not hold in the presence of oracles, i.e. a \emph{non-relativizing} fact. Even though many results in complexity relativize, there are notable exceptions, such as $\IP = \PSPACE$ and the $\PCP$ theorem. Yet, despite these non-relativizing results, we still don't know how to apply them to resolve the $\PTIME$ vs $\NPTIME$ question!
 
 Arora, Impagliazzo, and Vazirani further expanded on this analogy by explaining that a relativizing proof is simply any proof that ``knows'' about complexity classes, only through axioms that assert the classes' closure properties, as well as languages that the classes do contain. For instance, the class $\PTIME$ includes the empty language, and if two languages $L_1$ and $L_2$ are in $\PTIME$, then so are Boolean combinations like $\overline{L_1}$ and $L_1 \cap L_2$. Using these closure properties, one can prove results like $\PTIME \neq \EXPTIME$. However, when it comes to more intricate statements, like $\PTIME \neq \NPTIME$, these closure axioms alone are not enough to prove or disprove the claim. In fact, the statement $\PTIME \neq \NPTIME$ can be shown to be independent of the axioms. To demonstrate this, one can construct models of axioms where the statement $\PTIME \neq \NPTIME$ is false. This is done by using oracles to ``force in'' additional languages—such as $\PSPACE$-complete languages, as seen in our proof of the Baker-Gill-Solovay theorem—which the axioms don't require to be in $\PTIME$ or $\NPTIME$, but also don't prohibit. The conclusion is that any proof of $\PTIME \neq \NPTIME$ will need to appeal to deeper properties of these classes—properties that go beyond the closure axioms and cannot be captured by relativizing techniques.
+
+\section{Selected Problems}
+\begin{problem}[Exercise 3.1 of Arora and Barak \cite{arora2009computational}]
+  Show that the following language is undecidable:
+  \[ L = \set{\enc{M} \mid \text{$M$ is a machine that runs in $100 n^2 + 200$ time}} \]
+  \begin{sol}
+    We present two proofs: one using reduction and the other using diagonalization.
+
+    \textbf{Proof by reduction}
+
+    \begin{proof}
+      We demonstrate a many-to-one reduction from the complement of the halting problem $\overline{\HALT}$ to $L$ as follows. To do so, we present a computable function $f$ that takes an input of the form $(\enc{M}, w)$ and produces an output of the form $\enc{M'}$, where
+      \[ \text{$(\enc{M}, w) \in \overline{\HALT}$ if and only if $\enc{M'} \in L$.} \]
+      The following machine $M_f$ computes the reduction $f$.
+      \begin{turing}{$M_f$}{On input $(\enc{M}, w)$:}
+      \item Construct the following machine $M'$.
+        \begin{turing}{$M'$}{On input $x$:}
+        \item Simulate $M$ on $w$ for up to $\len{x}$ steps. (This is the time limit for the simulation.)
+        \item If $M$ halts within the time limit, count up to $\len{x}^3$, then halt.
+        \item Otherwise, halt.
+        \end{turing}
+      \item Output $\enc{M'}$.
+      \end{turing}
+
+      We show that the reduction is correct.
+
+      ($\Rightarrow$) If $(\enc{M}, w) \in \overline{\HALT}$, then $M$ does not halt on input $w$. This implies that $M'$ would always halt in $\len{x}$ steps, which is less than $100 \len{x}^2 + 200$ time. Thus, $\enc{M} \in L$, as desired.
+
+      ($\Leftarrow$) If $(\enc{M}, w) \notin \overline{\HALT}$, then there exists a constant $c$, where $M$ halts on input $w$ within $c$ steps. This implies that on some input $x$, $M'$ may not halt in $100 \len{x}^2 + 200$ time. (Specifically, if the input $x$ is such that $\len{x} > c$, then $M'$ runs in $\len{x}^3$ steps.) Since $M'$ does not always halt in $100 \len{x}^2 + 200$ time, we get $\enc{M'} \notin L$, as desired.
+
+      Since $\overline{HALT}$ is undecidable, and $\overline{\HALT}$ is many-to-one reducible to $L$, it follows that $L$ is undecidable.
+    \end{proof}
+
+    \begin{remark}
+      This proof is adapted from one shared on Mathematics Stack Exchange by Hamkins \cite{hamkins2011to}. (Yes, the same Hamkins who authored \emph{Proof and the Art of Mathematics}!) Admittedly, when I first stumbled upon the proof, I was puzzled as to why the reduction was correct. (It didn't quite make sense to me at first—how could it possibly be correct?) But as it turns out, it was just a confusion on my part. Let me clarify where the confusion came from. (If you understand the proof already, you might want to skip this.)
+
+      Let's consider the pair $(\enc{M}, w)$. Suppose $M$ halts on $w$ only after a very long time, say after $2^{\len{w}}$ steps. Clearly, $(\enc{M}, w) \notin \overline{\HALT}$. \incorrect{However, $M'$ won't have enough time to simulate $M$ on $w$, because the simulation limit is ``only linear.'' If $M'$ runs out of time, it halts. This would place $M' \in L$, making the reduction incorrect.} This line of reasoning, however, is flawed, and the sentences highlighted in red are incorrect.
+
+      The input to $M'$ is $x$, not $w$. Therefore, the time limit for the simulation is ``only linear'' \highlight{in $\len{x}$}, not in $\len{w}$. Since $x$ is independent of $(\enc{M}, w)$, $M'$ doesn't necessarily run out of time when simulating $M$ on $w$. In fact, we know that for large enough $x$, say $\len{x} > 2^{\len{w}}$, $M'$ will have sufficient time to simulate $M$ on $w$.
+
+      Now, consider all the possible inputs $x$. There are some inputs $x$ where $M'$ halts in $\len{x}$ steps, while there are others, where $M'$ halts after $\len{x}^3$ steps. This means that, depending on the input $x$, $M'$ \emph{may or may not} halt within $100 \len{x}^2 + 200$ time. In other words, $M'$ \emph{does not always} halt within the required time bound as required by $L$. Hence, we have $M' \notin L$, as desired. The reduction is correct!
+
+      I hope this clears things up for anyone reading who might have had the same confusion.
+    \end{remark}
+
+    \textbf{Proof by diagonalization}
+    \todo{Write the rest of this.}
+  \end{sol}
+  \todo{Move the solution to a dedicated section.}
+\end{problem}
+
+\section{Solutions to Selected Problems}
 
 \printbibliography[nottype=image]
 
