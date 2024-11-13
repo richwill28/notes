@@ -23,14 +23,14 @@ We begin with the following technical definition, given by Goldreich \cite{goldr
 
 When designing algorithms of arbitrary time complexity $f : \NN \to \NN$, we need to make sure that the algorithm does not exceed the time bound. However, when invoked on an input $w$, we cannot assume that the algorithm is given the time bound $f(\len{w})$ explicitly. A reasonable design methodology is to have the algorithm compute this bound before doing anything else. This, in turn, requires the algorithm to read the entire input and compute $f(n)$ in $O(f(n))$ steps; otherwise, this preliminary stage already consumes too much time. The latter requirement motivates the notion of time-constructible functions.
 
-There are multiple definitions of the time hierarchy theorem. We present the following one by Sipser \cite{sipser2013introduction}, with some correction.
+There are multiple definitions of the time hierarchy theorem. We present the following one by Sipser \cite{sipser2012introduction}, with some correction.
 
 \begin{theorem}[Time hierarchy theorem]
   \thmlabel{time-hierarchy-theorem}
   For any time-constructible function $f : \NN \to \NN$ where $f(n) = \omega(n \log n)$, a language $A$ exists that is decidable in $O(f(n))$ time but not decidable in time $o(f(n) / \log f(n))$.
 \end{theorem}
 
-We present the following proof by Sipser \cite{sipser2013introduction}, with some modification.
+We present the following proof by Sipser \cite{sipser2012introduction}, with some modification.
 
 \begin{proofidea}
   We must demonstrate a language $A$ that has two properties. The first says that $A$ is decidable in $O(f(n))$ time. The second says that $A$ isn't decidable in $o(f(n) / \log f(n))$ time.
@@ -585,7 +585,63 @@ This result seems especially attractive: on a scale of 0 to 1, the ``needle'' po
       \textbf{Proof by diagonalization}
       \todo{Write the rest of this.}
     \end{sol}
-    \todo{Move the solution to a dedicated section.}
+  \end{problem}
+
+  \begin{problem}[Problem 9.12 of Sipser \cite{sipser2012introduction}]
+    Describe the error in the following fallacious ``proof'' of $\PTIME \neq \NPTIME$. Assume that $\PTIME = \NPTIME$ and obtain a contradiction. If $\PTIME = \NPTIME$, then $\SAT \in \PTIME$ and so for some $k$, $\SAT \in \DTIME(n^k)$. Because every language in $\NPTIME$ is polynomial-time reducible to $\SAT$, you have $\NPTIME \subseteq \DTIME(n^k)$. Therefore, $\PTIME \subseteq \DTIME(n^k)$. But, by the time hierarchy theorem, $\DTIME(n^{k + 1})$ contains a language that isn't in $\DTIME(n^k)$, which contradicts $\PTIME \subseteq \DTIME(n^k)$. Therefore, $\PTIME \neq \NPTIME$.
+  \end{problem}
+
+  \begin{problem}[Problem 9.13 of Sipser \cite{sipser2012introduction}]
+    \prblabel{pad}
+    Consider the function $\pad : \Sigma^\ast \times \NN \to \Sigma^\ast\texttt{\#}^\ast$ that is defined as follows. Let $\pad(s, l) = s\texttt{\#}^j$ where $j = \max(0, l - m)$ and $m$ is the length of $s$. Thus $\pad(s, l)$ simply adds enough copies of the new symbol $\texttt{\#}$ to the end of $s$ so that the length of the result is at least $l$. For any language $A$ and function $f : \NN \to \NN$ define the language $\pad(A, f(m))$ as
+    \[ \pad(A, f(m)) = \set{\pad(s, f(m)) \mid \text{where $s \in A$ and $m$ is the length of $s$}}. \]
+    Prove that, if $A \in \DTIME(n^6)$, then $\pad(A, n^2) \in \DTIME(n^3)$.
+  \end{problem}
+
+  \begin{problem}[Problem 9.14 of Sipser \cite{sipser2012introduction}]
+    Prove that, if $\EXPTIME \neq \NEXPTIME$, then $\PTIME \neq \NPTIME$. You may find the function $\pad$, defined in \prbref{pad}, to be helpful.
+  \end{problem}
+
+  \begin{problem}[Problem 9.15 of Sipser \cite{sipser2012introduction}]
+    Define $\pad$ as in \prbref{pad}.
+    \begin{enumerate}
+      \item Prove that, for every $A$ and natural number $k$, $A \in \PTIME$ iff $\pad(A, n^k) \in \PTIME$.
+      \item Prove that $\PTIME \neq \DSPACE(n)$.
+    \end{enumerate}
+  \end{problem}
+
+  \begin{problem}[Exercise 3.2 of Arora and Barak \cite{arora2009computational}]
+    Prove that $\NPTIME \neq \DSPACE(n)$.
+  \end{problem}
+
+  \begin{problem}[Problem 9.16 of Sipser \cite{sipser2012introduction}]
+    Prove that $\TQBF \notin \DSPACE(n^{1/3})$
+  \end{problem}
+
+  \begin{problem}[Problem 9.17 of Sipser \cite{sipser2012introduction}]
+    Define a \vocab{two-headed finite automaton} (2DFA) to be a deterministic finite automaton that has two read-only, bidirectional heads that start at the left-hand end of the input tape and can be independently controlled to move in either direction. The tape of a 2DFA is finite and is just large enough to contain the input plus two additional blank tape cells, one on the left-hand end and one on the right-hand end, that serve as delimiters. A 2DFA accepts its input by entering a special accept state. Prove that $\PTIME$ contains a language that is not decidable by a 2DFA.
+  \end{problem}
+
+  \begin{problem}[Problem 9.19 of Sipser \cite{sipser2012introduction}]
+    Define the \vocab{unique-sat} problem to be
+    \[ \USAT = \set{\enc{\phi} \mid \text{$\phi$ is a Boolean formula that has a single satisfying assignment}}. \]
+    Show that $\USAT \in \PTIME^\SAT$.
+  \end{problem}
+
+  \begin{problem}[Problem 9.20 of Sipser \cite{sipser2012introduction}]
+    Prove that an oracle $C$ exists for which $\NPTIME^C \neq \coNPTIME^C$.
+  \end{problem}
+
+  \begin{problem}[Exercise 3.3 of Arora and Barak \cite{arora2009computational}]
+    Show that there is a language $B \in \EXPTIME$ such that $\PTIME^B \neq \NPTIME^B$.
+  \end{problem}
+
+  \begin{problem}[Problem 2.22 of Sipser \cite{sipser2012introduction}]
+    Suppose that $A$ and $B$ are two oracles. One of them is an oracle for $\TQBF$, but you don't know which. Give an algorithm that has access to both $A$ and $B$ and that is guaranteed to solve $\TQBF$ in polynomial time.
+  \end{problem}
+
+  \begin{problem}[Exercise 3.7 of Arora and Barak \cite{arora2009computational}]
+    Show that there is an oracle $A$ and a language $L \in \NPTIME^A$ such that $L$ is not polynomial-time reducible to $\threeSAT$ even when the machine computing the reduction is allowed to access $A$.
   \end{problem}
 
   \Closesolutionfile{solutions}
