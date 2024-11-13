@@ -109,7 +109,6 @@
 %%fakesection Fancy section and chapter heads
 \renewcommand*{\sectionformat}{\color{purple}\S\thesection\autodot\enskip}
 \renewcommand*{\subsectionformat}{\color{purple}\S\thesubsection\autodot\enskip}
-\newcommand{\problemhead}{A few harder problems to think about}
 
 \addtokomafont{chapterprefix}{\raggedleft}
 \RedeclareSectionCommand[beforeskip=0.5em]{chapter}
@@ -252,8 +251,8 @@ style=thmbluebox,name=Theorem,numberwithin=section]{theorem}
 
 %%fakesection Answers
 \usepackage{answers}
-\Newassociation{hint}{answeritem}{tex/backmatter/all-hints}
-\Newassociation{sol}{answeritem}{tex/backmatter/all-solns}
+\Newassociation{hint}{answeritem}{hints}
+\Newassociation{sol}{answeritem}{solutions}
 \renewcommand{\solutionextension}{out}
 \renewenvironment{answeritem}[1]{
 \item[\bfseries #1.]}{}
