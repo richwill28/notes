@@ -158,7 +158,7 @@ Our first instinct is to duplicate the proof of \thmref{time-hierarchy-theorem},
 \item Let $n$ be the length of $w$.
 \item If $w$ is not of the form $\enc{M}\texttt{1}\texttt{0}^\ast$ for some TM $M$, \emph{reject}.
 \item Nondeterministically simulate $M$ on $w$ for up to $g(n)$ steps.
-  \begin{enumerate}[label=\theenumi.\arabic*.]
+  \begin{enumerate}[label=\theenumi\arabic*.]
     \item If $M$ accepts, then \emph{reject}.
     \item \incorrect{If $M$ rejects, then \emph{accept}. (How to decide this efficiently so the simulation does not timeout?)}
   \end{enumerate}
@@ -205,7 +205,7 @@ Now, we describe the proof formally.
   \item Let $n$ be the length of $w$.
   \item If $w$ is not of the form $\texttt{1}^n$ where $n \geq n_0$, \emph{reject}.
   \item Compute $k$ such that $n$ lies in the interval $I_k = (l_k, u_k]$.
-    \begin{enumerate}[label=\theenumi.\arabic*.]
+    \begin{enumerate}[label=\theenumi\arabic*.]
       \item If $n < u_k$, then nondeterministically simulate $M_k$ on the input $\texttt{1}^{n + 1}$ for up to $g(n)$ steps. If $M$ accepts, then \emph{accept}. If $M$ rejects, then \emph{reject}. (Observe that here we are \emph{not} diagonalizing.)
       \item If $n = u_k$, then deterministically decide if $M_k$ accepts the input $\texttt{1}^{l_k + 1}$ by simulating all computation paths, for up to $g(n)$ steps in total. If $M$ accepts, then \emph{reject}. If $M$ rejects, then \emph{accept}. (Observe that here we are \emph{indeed} diagonalizing. But we are doing it on a much shorter input than the input to $D$.)
     \end{enumerate}
@@ -567,7 +567,7 @@ This result seems especially attractive: on a scale of 0 to 1, the ``needle'' po
 
         ($\Leftarrow$) If $(\enc{M}, w) \notin \overline{\HALT}$, then there exists a constant $c$, where $M$ halts on input $w$ within $c$ steps. This implies that on some input $x$, $M'$ may not run in $100 \len{x}^2 + 200$ time. (Specifically, if the input $x$ is such that $\len{x} > c$, then $M'$ halts after $\len{x}^3$ steps.) Since $M'$ does not always halt in $100 \len{x}^2 + 200$ time, we get $\enc{M'} \notin L$, as desired.
 
-        Since $\overline{HALT}$ is undecidable, and $\overline{\HALT}$ is many-to-one reducible to $L$, it follows that $L$ is undecidable.
+        Since $\overline{\HALT}$ is undecidable, and $\overline{\HALT}$ is many-to-one reducible to $L$, it follows that $L$ is undecidable.
       \end{proof}
 
       \begin{remark}
@@ -575,7 +575,7 @@ This result seems especially attractive: on a scale of 0 to 1, the ``needle'' po
 
         Let's consider the pair $(\enc{M}, w)$. Suppose $M$ halts on $w$ only after a very long time, say after $2^{\len{w}}$ steps. Clearly, $(\enc{M}, w) \notin \overline{\HALT}$. \incorrect{However, $M'$ won't have enough time to simulate $M$ on $w$, because the simulation limit is ``only linear.'' If $M'$ runs out of time, it halts. This would place $M' \in L$, making the reduction incorrect.} This line of reasoning, however, is flawed, and the sentences in red are incorrect.
 
-        The input to $M'$ is $x$, not $w$. Therefore, the time limit for the simulation is ``only linear'' \highlight{in $\len{x}$}, not in $\len{w}$. Since $x$ is independent of $(\enc{M}, w)$, $M'$ doesn't necessarily run out of time when simulating $M$ on $w$. In fact, we know that for large enough $x$, say $\len{x} > 2^{\len{w}}$, $M'$ will have sufficient time to simulate $M$ on $w$.
+        The input to $M'$ is $x$, not $w$. Therefore, the time limit for the simulation is ``only linear'' \highlight{in $\len{x}$}, not in $\len{w}$. Since $x$ is independent of $(\enc{M}, w)$, $M'$ may not necessarily run out of time when simulating $M$ on $w$. In fact, we know that for large enough $x$, say $\len{x} > 2^{\len{w}}$, $M'$ will have sufficient time to simulate $M$ on $w$.
 
         Now, consider all the possible inputs $x$. There are some inputs $x$ where $M'$ halts in $\len{x}$ steps, while there are others, where $M'$ halts after $\len{x}^3$ steps. This means that, depending on the input $x$, $M'$ \emph{may or may not} halt within $100 \len{x}^2 + 200$ time. In other words, $M'$ \emph{does not always} halt within the required time bound as required by $L$. Hence, we have $M' \notin L$, as desired. The reduction is correct!
 
