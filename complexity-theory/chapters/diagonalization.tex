@@ -601,6 +601,18 @@ This result seems especially attractive: on a scale of 0 to 1, the ``needle'' po
     Consider the function $\pad : \Sigma^\ast \times \NN \to \Sigma^\ast\texttt{\#}^\ast$ that is defined as follows. Let $\pad(s, l) = s\texttt{\#}^j$ where $j = \max(0, l - m)$ and $m$ is the length of $s$. Thus $\pad(s, l)$ simply adds enough copies of the new symbol $\texttt{\#}$ to the end of $s$ so that the length of the result is at least $l$. For any language $A$ and function $f : \NN \to \NN$ define the language $\pad(A, f(m))$ as
     \[ \pad(A, f(m)) = \set{\pad(s, f(m)) \mid \text{where $s \in A$ and $m$ is the length of $s$}}. \]
     Prove that, if $A \in \DTIME(n^6)$, then $\pad(A, n^2) \in \DTIME(n^3)$.
+
+    \begin{sol}
+      \begin{proof}
+        Suppose $A$ is decided by a TM $M_A$ that runs in $O(n^6)$ time. We construct a TM $D$ that decides $\pad(A, n^2)$ as follows.
+        \begin{turing}{$D$}{On input $w$:}
+        \item Check that $w$ is of the form $s\texttt{\#}^\ast$. If not, \emph{reject}.
+        \item Check that $\len{s} = \len{w}^2$. If not, \emph{reject}.
+        \item Run $M_A$ on $s$. If $M$ accepts, \emph{accept}. Otherwise, \emph{reject}.
+        \end{turing}
+        Stage 1 needs only linear time. Stage 2 can be done in $O(n^2)$ time. Stage 3 is performed only when $\len{s} = \sqrt{n}$, it then takes time $O(\len{s}^6) = O((\sqrt{n})^6) = O(n^3)$. In total, $D$ computes in time $O(n^3)$.
+      \end{proof}
+    \end{sol}
   \end{problem}
 
   \begin{problem}[Problem 9.22 of Sipser \cite{sipser2013introduction}]
