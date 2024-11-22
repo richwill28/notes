@@ -495,7 +495,7 @@ Now, we state the result formally.
 
   Next, we show how to construct oracle $B$. For any oracle $B$, we define
   \[ L_B = \set{\texttt{1}^n \mid \text{$B$ contains a string of length $n$} }. \]
-  Obviously, for any $B$, $L_B$ is in $\NPTIME^B$. Here's why. A nondeterministic linear-time oracle Turing machine $M$ that uses the oracle $B$ can recognize $L_B$ as follows. On the input $\texttt{1}^n$ of length $n$, $M$ nondeterministically guesses a string $x$ of length $n$, queries it on the oracle set $B$, and accepts if and only if $x \in B$. In particular, if $\texttt{1}^n \in L_B$, then one of the computation paths of $M$ will guess a correct string $x$ of length $n$ in $B$ so that computational path will accept $\texttt{1}^n$. On the other hand, if $\texttt{1}^n \notin B$, then all strings $x$ of length $n$ guessed by $M$ are not in $B$ so all computational paths of $M$ reject $\texttt{1}^n$. This shows that the nondeterministic (linear-time) Turing machine $M$ accepts the language $L_N$, and thus $L_B \in \NPTIME^B$.
+  Obviously, for any $B$, $L_B$ is in $\NPTIME^B$. Here's why. A nondeterministic linear-time oracle Turing machine $M$ that uses the oracle $B$ can recognize $L_B$ as follows. On the input $\texttt{1}^n$ of length $n$, $M$ nondeterministically guesses a string $x$ of length $n$, queries it on the oracle set $B$, and accepts if and only if $x \in B$. In particular, if $\texttt{1}^n \in L_B$, then one of the computation paths of $M$ will guess a correct string $x$ of length $n$ in $B$ so that computational path will accept $\texttt{1}^n$. On the other hand, if $\texttt{1}^n \notin B$, then all strings $x$ of length $n$ guessed by $M$ are not in $B$ so all computational paths of $M$ reject $\texttt{1}^n$. This shows that the nondeterministic (linear-time) Turing machine $M$ accepts the language $L_B$, and thus $L_B \in \NPTIME^B$.
 
   To show that $L_B$ is not in $\PTIME^B$, we design $B$ as follows. Let $M_1, M_2, \dots$ be an enumeration of all polynomial-time oracle Turing machines. We may assume for simplicity that $M_i$ runs in time $n^i$. The construction proceeds in stages, where stage $i$ constructs a part of $B$, which ensures that $M_i^B$ doesn't decide $L_B$. We construct $B$ by declaring that certain strings are in $B$ and others aren't in $B$. Each stage determines the status of only a finite number of strings. Initially, we have no information about $B$. We begin with stage 1.
 
@@ -544,10 +544,6 @@ This result seems especially attractive: on a scale of 0 to 1, the ``needle'' po
     \[ L = \set{\enc{M} \mid \text{$M$ is a machine that runs in $100 n^2 + 200$ time}} \]
 
     \begin{sol}
-      We present two proofs: one using reduction and the other using diagonalization.
-
-      \textbf{Proof by reduction}
-
       \begin{proof}
         We demonstrate a many-to-one reduction from the complement of the halting problem $\overline{\HALT}$ to $L$ as follows. To do so, we present a computable function $f$ that takes an input of the form $(\enc{M}, w)$ and produces an output of the form $\enc{M'}$, where
         \[ \text{$(\enc{M}, w) \in \overline{\HALT}$ if and only if $\enc{M'} \in L$.} \]
@@ -582,9 +578,6 @@ This result seems especially attractive: on a scale of 0 to 1, the ``needle'' po
 
         I hope this clears things up for anyone reading who might have had the same confusion.
       \end{remark}
-
-      \textbf{Proof by diagonalization}
-      \todo{Write the rest of this.}
     \end{sol}
   \end{problem}
 
