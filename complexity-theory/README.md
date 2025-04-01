@@ -10,4 +10,4 @@ I think it's nice to have a reliable reference that pulls everything together in
 
 ## Disclaimer
 
-This is a work in progress, and it always will be.
+This is a work in progress.

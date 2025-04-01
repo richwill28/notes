@@ -1,6 +1,6 @@
 # Notes
 
-Here lies my notes. They mainly serve as references to my future self.
+Here lie my notes, which mainly serve as references to my future self.
 
 ## Style
 
@@ -8,4 +8,4 @@ The LaTeX style and template are shamelessly taken from [Evan Chen](https://web.
 
 ## Disclaimer
 
-Most of the notes are intended for my own use. Those that I think are decent enough for public consumption will have a dedicated README. Feedbacks are welcome.
+Most of the notes are intended for my own use. Feedbacks are welcome.
