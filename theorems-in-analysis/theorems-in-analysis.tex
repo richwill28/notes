@@ -26,7 +26,27 @@ Use these notes as a companion to your studies, not as a substitute for the dept
 
 \tableofcontents
 
+\setchapterpreamble{\dictum[G. H. Hardy, \textit{A Mathematician's Apology}]{``It is a `simple' theorem, simple both in idea and execution, but there is no doubt at all about it being a theorem of the highest class. It is as fresh and significant as when it was discovered---two thousand years have not written a wrinkle on it.''}}
 \chapter{The Real Numbers}
+\begin{theorem}[The irrationality of $\sqrt{2}$]
+    There is no rational number whose square is $2$.
+\end{theorem}
+
+\begin{proof}
+    A rational number is any number that can be expressed in the form $p/q$, where $p$ and $q$ are integers. Thus, what the theorem asserts is that no matter how $p$ and $q$ are chosen, it is never the case that $(p/q)^2 = 2$. The line of attack is indirect, using a type of argument referred to as a proof by contradiction. The idea is to assume that there is a rational number whose square is 2 and then proceed along logical lines until we reach a conclusion that is unacceptable. At this point, we will be forced to retrace our steps and reject the erroneous assumption that some rational number squared is equal to 2. In short, we will prove that the theorem is true by demonstrating that it cannot be false.
+
+    And so assume, for contradiction, that there exist integers $p$ and $q$ satisfying
+    \[ \left(\frac{p}{q}\right)^2 = 2. \tag{1} \]
+    We may also assume that $p$ and $q$ have no common factor, because, if they had one, we could simply cancel it out and rewrite the fraction in lowest terms. Now, equation (1) implies
+    \[ p^2 = 2q^2. \tag{2} \]
+    From this, we can see that the integer $p^2$ is an even number (it is divisible by 2), and hence $p$ must be even as well because the square of an odd number is odd. This allows us to write $p = 2r$, where $r$ is also an integer. If we substitute $2r$ for $p$ in equation (2), then a little algebra yields the relationship
+    \[ 2r^2 = q^2. \]
+    But now the absurdity is at hand. This last equation implies that $q^2$ is even, and hence $q$ must also be even. Thus, we have shown that $p$ and $q$ are both even (i.e., divisible by 2) when they were originally assumed to have no common factor. From this logical impasse, we can only conclude that equation (1) cannot hold for any integers $p$ and $q$, and thus the theorem is proved.
+\end{proof}
+
+\begin{remark}
+    So the rationals aren't quite enough to describe all numbers. That said, they do have almost every other fundamental property we would want. To the point: They are what we call an \textit{ordered field}. But first, what's a \textit{field}? It's a set that satisfies the classic additive and multiplicative properties we know and love.
+\end{remark}
 
 \begin{definition}[Fields]
     A \vocab{field} is a nonempty set $\FF$, along with two binary operations, addition ($+$) and multiplication ($\cdot$), satisfying the following axioms.
@@ -48,7 +68,12 @@ Use these notes as a companion to your studies, not as a substitute for the dept
     \end{itemize}
 \end{example}
 
+\begin{remark}
+    Now, let's come up with a definition for an ordered field. Think about $\QQ$. What does $\QQ$ have that a field does not? There are three main properties we are missing: First, there are infinitely many rationals (and they are ``symmetric'' about the 0 element.) Second, the rationals have an ordering to them. Lastly, we would like to talk about how big a number is. Beautifully, \defref{ordered-fields} describes a single elegant axiom that we can include to capture \textit{all} of these properties.
+\end{remark}
+
 \begin{definition}[Ordered Fields]
+    \deflabel{ordered-fields}
     An \vocab{ordered field} is a field $\FF$, along with the following additional axiom.
 
     \textbf{Axiom 6 (Order Axiom).} There is a nonempty subset $P \subseteq \FF$, called the \textit{positive elements}, such that
@@ -479,8 +504,8 @@ We will only prove the suprema case. The infima case is analogous.
     Note that the conclusion of \thmref{nested-intervals-property} need not hold if each $I_n$ is allowed to be an open interval.
 \end{remark}
 
+\setchapterpreamble{\dictum[David Hilbert, \textit{Über das Unendliche}]{``No one shall expel us from the paradise that Cantor has created.''}}
 \chapter{Cardinality}
-
 \begin{definition}[Cardinality]
     \deflabel{cardinality-bijection}
     Let $S$ and $T$ be sets. Then, $\abs{S} = \abs{T}$ if and only if there is a bijection from $S$ to $T$.
@@ -786,8 +811,8 @@ We will only prove the suprema case. The infima case is analogous.
     There exist infinitely many distinct infinite cardinalities.
 \end{corollary}
 
+\setchapterpreamble{\dictum[Paul Hoffman, \textit{The Man Who Loved Only Numbers}]{``Erdős loved epsilons---his word for small children (in mathematics the Greek letter epsilon is used to represent small quantities).''}}
 \chapter{Sequences}
-
 \begin{definition}
     A \vocab{sequence} of real numbers is a function $a : \NN \to \RR$.
 \end{definition}
