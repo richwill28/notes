@@ -458,6 +458,7 @@ We will only prove the suprema case. The infima case is analogous.
 \end{proof}
 
 \begin{theorem}[$\QQ$ is dense in $\RR$]
+    \thmlabel{q-is-dense-in-r}
     The rational numbers are dense in the real numbers.
 \end{theorem}
 
@@ -705,12 +706,22 @@ We will only prove the suprema case. The infima case is analogous.
 \end{corollary}
 
 \begin{corollary}[$\QQ$ is countable]
+    \corlabel{q-is-countable}
     The set of rational numbers is countable.
 \end{corollary}
 
 \begin{corollary}[$\RR$ is uncountable]
+    \corlabel{r-is-uncountable}
     The set of real numbers is uncountable.
 \end{corollary}
+
+\begin{theorem}
+    An uncountable collection of disjoint open intervals in $\RR$ cannot exist.
+\end{theorem}
+
+\begin{proof}
+    We use contradiction. Suppose there exists an uncountable collection of disjoint open intervals in $\RR$. By the density of $\QQ$ in $\RR$ (\thmref{q-is-dense-in-r}), every open interval in $\RR$ contains at least one rational number. Therefore, there are uncountably many rational numbers. A contradiction of \corref{q-is-countable}. Hence, such a collection cannot exist.
+\end{proof}
 
 \begin{theorem}[Countable infinity is the smallest infinity]
     \thmlabel{countable-infinity-smallest}
@@ -732,6 +743,7 @@ We will only prove the suprema case. The infima case is analogous.
 \end{corollary}
 
 \begin{theorem}[Countable union of countable sets is countable]
+    \thmlabel{countable-union-countable}
     A countable union of countable sets is countable. More precisely:
     \begin{enumerate}
         \item If $A_1, A_2, \dots, A_m$ are each countable sets, then $A_1 \cup A_2 \cup \dots \cup A_m$ is countable.
@@ -796,22 +808,175 @@ We will only prove the suprema case. The infima case is analogous.
     If the sets $\set{A_n}$ are not disjoint then our mapping may not be injective. In this case we could again replace $A_n$ with $B_n = A_n \setminus \set{A_1 \cup \dots \cup A_{n - 1}}$. Another approach is to use the previous argument to establish a bijection between $\bigcup_{n = 1}^{\infty} A_n$ and an infinite subset of $\NN$, and then appeal to \thmref{countable-infinity-smallest}. This completes the proof for part 2.
 \end{proof}
 
-\begin{theorem}[$\size{\QQ_+} = \size{\NN}$]
-    There are as many positive rational numbers as there are natural numbers.
-\end{theorem}
-
 \begin{theorem}[$\RR \setminus \QQ$ is uncountable]
     There are uncountably many irrational numbers.
 \end{theorem}
 
-\begin{theorem}
-    An uncountable collection of disjoint open intervals in $\RR$ cannot exist.
+\begin{proof}
+    We use contradiction. Suppose $\RR \setminus \QQ$ is countable. By \thmref{countable-union-countable}, we know that a countable union of countable sets is countable, thus $(\RR \setminus \QQ) \cup \QQ = \RR$ is countable. A contradiction of \corref{r-is-uncountable}. Hence, $\RR \setminus \QQ$ is uncountable.
+\end{proof}
+
+\begin{theorem}[$\size{\QQ_+} = \size{\NN}$]
+    There are as many positive rational numbers as there are natural numbers.
 \end{theorem}
 
 \begin{theorem}[$\size{(0, 1)} > \size{\NN}$]
     \thmlabel{cardinality-of-(0,1)-greater-than-n}
     There are more numbers in the open interval $(0, 1)$ than there are natural numbers.
 \end{theorem}
+
+\begin{proof}
+    We proceed by contradiction and assume that there does exist a function $f : \NN \to (0, 1)$ that is bijective. For each $m \in \NN$, $f(m)$ is a real number between 0 and 1, and we represent it using the decimal notation
+    \[ f(m) = .a_{m1}a_{m2}a_{m3}a_{m4}a_{m5}\dots. \]
+    What is meant here is that for each $m, n \in \NN$, $a_{mn}$ is the digit from the set $\set{0, 1, 2, \dots, 9}$ that represents the $n$th digit in the decimal expansion of $f(m)$. The bijection between $\NN$ and $(0, 1)$ can be summarized in the doubly indexed array
+    \begin{align*}
+        \begin{array}{ccccccccccc}
+            \NN & & (0,1) & & & & & & & & \\
+            \hline
+            1 & \longleftrightarrow & f(1) & = & .\boldsymbol{a_{11}} & a_{12} & a_{13} & a_{14} & a_{15} & a_{16} & \cdots \\
+            2 & \longleftrightarrow & f(2) & = & .a_{21} & \boldsymbol{a_{22}} & a_{23} & a_{24} & a_{25} & a_{26} & \cdots \\
+            3 & \longleftrightarrow & f(3) & = & .a_{31} & a_{32} & \boldsymbol{a_{33}} & a_{34} & a_{35} & a_{36} & \cdots \\
+            4 & \longleftrightarrow & f(4) & = & .a_{41} & a_{42} & a_{43} & \boldsymbol{a_{44}} & a_{45} & a_{46} & \cdots \\
+            5 & \longleftrightarrow & f(5) & = & .a_{51} & a_{52} & a_{53} & a_{54} & \boldsymbol{a_{55}} & a_{56} & \cdots \\
+            6 & \longleftrightarrow & f(6) & = & .a_{61} & a_{62} & a_{63} & a_{64} & a_{65} & \boldsymbol{a_{66}} & \cdots \\
+            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \ddots \\
+        \end{array}
+    \end{align*}
+    The key assumption about this correspondence is that \textit{every} real number in $(0, 1)$ is assumed to appear somewhere on the list.
+    Now for the pearl of the argument. Define a real number $x \in (0, 1)$ with the decimal expansion $x = .b_1b_2b_3b_4\dots$ using the rule
+    \[ b_n := (a_{nn} + 1) \bmod 9. \]
+    Observe that $x = .b_1b_2b_3b_4\dots$ cannot be $f(1)$. $x$ also cannot be $f(2)$, and in general $x \neq f(n)$ for any $n \in \NN$. Therefore, the real number $x$ is nowhere on the list! This is a contradiction; clearly we were unable to pair up all the reals, if $x$ got left out.
+\end{proof}
+
+\begin{remark}
+    The clever idea behind the proof of \thmref{cardinality-of-(0,1)-greater-than-n} is from Georg Cantor, and is known as \vocab{Cantor's diagonal argument}.
+\end{remark}
+
+Here's another proof of \thmref{cardinality-of-(0,1)-greater-than-n} that I particular enjoy.
+
+
+\begin{proofsketch}
+    Imagine you were trying to map $\NN$ on to the real number line (which clearly has $\size{\RR}$ points).
+    \begin{figure}[h]
+        \centering
+        \usetikzlibrary{arrows.meta}
+        \begin{tikzpicture}[scale=1.5]
+            % Define styles
+            \tikzset{
+                point/.style={circle, fill=black, inner sep=1.5pt}
+            }
+            
+            % Bottom number line (real numbers)
+            \draw[black, Latex-Latex] (0,0) -- (8,0);
+            
+            % Define positions for natural numbers and their corresponding images
+            \def\posOne{1}
+            \def\posTwo{2.5}
+            \def\posThree{3.5}
+            \def\posFour{4.5}
+            \def\posFive{6}
+            
+            % Define the height of natural numbers (reduced from 2 to 1)
+            \def\naturalHeight{1}
+            
+            % Draw natural numbers and points
+            \foreach \x/\pos in {1/\posOne, 2/\posTwo, 3/\posThree, 4/\posFour, 5/\posFive} {
+                % Draw number label
+                \node at (\pos,\naturalHeight+0.3) {$\x$};
+                
+                % Draw point
+                \node[point] (p\x) at (\pos,\naturalHeight) {};
+            }
+            
+            % Draw real number points
+            \node[point] (r1) at (1,0) {};
+            \node[point] (r2) at (3,0) {};
+            \node[point] (r3) at (3.5,0) {};
+            \node[point] (r4) at (5,0) {};
+            \node[point] (r5) at (7,0) {};
+            
+            % Draw connecting lines - one arrow per natural number
+            \draw[->] (p1) -- (r1);
+            \draw[->] (p2) -- (r2);
+            \draw[->] (p3) -- (r3);
+            \draw[->] (p4) -- (r4);
+            \draw[->] (p5) -- (r5);
+            
+            % Add ... for natural numbers
+            \node at (7,\naturalHeight) {$\ldots$};
+        \end{tikzpicture}
+    \end{figure}
+
+    We aim to show that it is impossible for this map to be a bijection---there must be points on the real line that were missed. But instead of mapping just these points, let's make our job slightly harder. Around 1, let's put a little interval of length $\frac{1}{2}$. Around 2, let's put a little interval of length $\frac{1}{4}$. Around 3, let's place a little interval of length $\frac{1}{8}$. And so on. Now, when you map the points in $\NN$ to the real line, send over the intervals too (possibly some intervals will overlap; this is ok). We'll now prove that not only are there points on the real line that weren't mapped to, but there are even points that these intervals don't cover!
+    \begin{figure}[h]
+        \centering
+        \usetikzlibrary{arrows.meta, positioning, fit, backgrounds, shadows}
+        \begin{tikzpicture}[scale=1.5]
+            % Define styles
+            \tikzset{
+                point/.style={circle, fill=black, inner sep=1.5pt},
+                interval/.style={draw=black!40, fill=black!20, inner sep=1pt,
+                                minimum height=0.2cm, rectangle, rounded corners=1pt}
+            }
+            
+            % Bottom number line (real numbers) - darker color
+            \draw[black, Latex-Latex] (0,0) -- (8,0);
+            
+            % Define interval lengths
+            \def\intervalOne{2}  % 1/2 unit
+            \def\intervalTwo{1} % 1/4 unit
+            \def\intervalThree{0.5} % 1/8 unit
+            \def\intervalFour{0.25} % 1/16 unit
+            \def\intervalFive{0.125} % 1/32 unit
+            
+            % Define the height of natural numbers (reduced from 2 to 1)
+            \def\naturalHeight{1}
+
+            % Draw natural numbers and their intervals with specified lengths
+            % (no connecting line for natural numbers)
+            \foreach \x/\pos/\intwidth in {1/1/\intervalOne, 2/2.5/\intervalTwo, 3/3.5/\intervalThree, 4/4.5/\intervalFour, 5/6/\intervalFive} {
+                % Draw number label
+                \node at (\pos,\naturalHeight+0.3) {$\x$};
+                
+                % Draw point
+                \node[point] (p\x) at (\pos,\naturalHeight) {};
+                
+                % Draw interval around the point with specific width
+                \node[interval, minimum width=\intwidth cm, drop shadow={shadow xshift=0pt, shadow yshift=-1pt, opacity=0.2}] (i\x) at (\pos,\naturalHeight) {};
+            }
+            
+            % Draw real number points and their intervals with corresponding widths
+            \node[point] (r1) at (1,0) {};
+            \node[interval, minimum width=\intervalOne cm] at (1,0) {};
+            
+            \node[point] (r2) at (3,0) {};
+            \node[interval, minimum width=\intervalTwo cm] at (3,0) {};
+            
+            \node[point] (r3) at (3.5,0) {};
+            \node[interval, minimum width=\intervalThree cm] at (3.5,0) {};
+            
+            \node[point] (r4) at (5,0) {};
+            \node[interval, minimum width=\intervalThree cm] at (5,0) {};
+            
+            \node[point] (r5) at (7,0) {};
+            \node[interval, minimum width=\intervalFive cm] at (7,0) {};
+            
+            % Draw connecting lines - only one arrow per natural number
+            \draw[->] (p1) -- (r1);
+            \draw[->] (p2) -- (r2);
+            \draw[->] (p3) -- (r3);
+            \draw[->] (p4) -- (r4);  // Changed to point to r4 instead of r5
+            \draw[->] (p5) -- (r5);
+            
+            % Add ... for natural numbers
+            \node at (7,\naturalHeight) {$\ldots$};
+        \end{tikzpicture}
+    \end{figure}
+
+    See what happened? Our intervals' lengths add up to $\frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dots = 1$ (and with overlaps, their collective length when mapped to the real line may even be smaller than 1). But the whole real line has length $\infty$! So certainly there is no chance that all the points are covered; not only do the points of $\NN$ not cover the line, but even if we fatten them up with these intervals, those intervals don't even cover the real line! And any point that's in the ``$\infty - 1$'' portion of the real line that is not covered by an interval was certainly not mapped to. So we have all sorts of points that were missed, and so the mapping is far from being a bijection.
+
+    And we could instead pick intervals that add up to 0.0001, or any other tiny number. This proof therefore provides a visualization of how we aren't just missing the one point that Cantor's diagonalization argument finds, but ``most'' points are missed.
+\end{proofsketch}
 
 \begin{theorem}[$\size{(0, 1)} = \size{\RR}$]
     \thmlabel{cardinality-of-(0,1)-equal-r}
