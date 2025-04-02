@@ -4,10 +4,10 @@
 \usepackage[pdfusetitle]{hyperref}
 \ExplSyntaxOn
 \sys_if_engine_luatex:T {
-    \usepackage{luatex85}
+  \usepackage{luatex85}
 }
 \sys_if_engine_pdftex:T {
-    \usepackage[T1]{fontenc}
+  \usepackage[T1]{fontenc}
 }
 \ExplSyntaxOff
 
@@ -31,21 +31,22 @@
 %Small commands
 %% Napkin commands
 \newcommand{\prototype}[1]{
-    \emph{{\color{red} Prototypical example for this section:} #1} \par\medskip
+  \emph{{\color{red} Prototypical example for this section:} #1} \par\medskip
 }
 \newenvironment{moral}{%
-    \begin{mdframed}[linecolor=green!70!black]%
-        \bfseries\color{green!50!black}}%
-        {\end{mdframed}}
+  \begin{mdframed}[linecolor=green!70!black]%
+  \bfseries\color{green!50!black}}%
+  {
+\end{mdframed}}
 
 %%fakesection Links (hyperref loaded earlier implicitly)
 \hypersetup{
-    linkcolor={red!50!black},
-    citecolor={green!50!black},
-    urlcolor={blue!80!black},
-    pdfkeywords={napkin,math},
-    pdfsubject={web.evanchen.cc},
-    colorlinks,
+  linkcolor={red!50!black},
+  citecolor={green!50!black},
+  urlcolor={blue!80!black},
+  pdfkeywords={napkin,math},
+  pdfsubject={web.evanchen.cc},
+  colorlinks,
 }
 
 %%fakesection Commutative diagrams
@@ -55,32 +56,34 @@
 % https://tex.stackexchange.com/questions/514451/how-to-define-a-new-hooked-arrow
 \makeatletter
 \pgfdeclarearrow{
-    name=xGlyph,
-    cache=false,
-    bending mode=none,
-    parameters={\tikzcd@glyph@len,\tikzcd@glyph@shorten},
-    setup code={%
-            \pgfarrowssettipend{\tikzcd@glyph@len\advance\pgf@x by\tikzcd@glyph@shorten}},
-    defaults={
-            glyph axis=axis_height,
-            glyph length=+1.55ex,
-            glyph shorten=+-0.1ex},
-    drawing code={%
-            \pgfpathrectangle{\pgfpoint{+0pt}{+-1.5ex}}{\pgfpoint{+\tikzcd@glyph@len}{+3ex}}%
-            \pgfusepathqclip%
-            \pgftransformxshift{+\tikzcd@glyph@len}%
-            \pgftransformyshift{+-\tikzcd@glyph@axis}%
-            \pgftext[right,base]{\tikzcd@glyph}}}
+  name=xGlyph,
+  cache=false,
+  bending mode=none,
+  parameters={\tikzcd@glyph@len,\tikzcd@glyph@shorten},
+  setup code={%
+  \pgfarrowssettipend{\tikzcd@glyph@len\advance\pgf@x by\tikzcd@glyph@shorten}},
+  defaults={
+    glyph axis=axis_height,
+    glyph length=+1.55ex,
+  glyph shorten=+-0.1ex},
+  drawing code={%
+    \pgfpathrectangle{\pgfpoint{+0pt}{+-1.5ex}}{\pgfpoint{+\tikzcd@glyph@len}{+3ex}}%
+    \pgfusepathqclip%
+    \pgftransformxshift{+\tikzcd@glyph@len}%
+    \pgftransformyshift{+-\tikzcd@glyph@axis}%
+\pgftext[right,base]{\tikzcd@glyph}}}
 \makeatother
 \tikzcdset{
-arrow style=tikz,
-diagrams={>={Latex}},
-tikzcd left hook/.tip={xGlyph[glyph math command=supset, swap, glyph axis = 5.7pt]},
-tikzcd right hook/.tip={xGlyph[glyph math command=supset, glyph axis = 5.7pt]},
-surjective head arrow /.tip = {tikzcd to[sep=-1.5pt]tikzcd to},
-surjective head/.style={
-        -surjective head arrow
-    }
+  arrow style=tikz,
+  diagrams={>={Latex}},
+  tikzcd left hook/.tip={xGlyph[glyph math command=supset, swap,
+  glyph axis = 5.7pt]},
+  tikzcd right hook/.tip={xGlyph[glyph math command=supset, glyph
+  axis = 5.7pt]},
+  surjective head arrow /.tip = {tikzcd to[sep=-1.5pt]tikzcd to},
+  surjective head/.style={
+    -surjective head arrow
+  }
 }
 
 %%fakesection Page layout
@@ -95,7 +98,8 @@ surjective head/.style={
 \automark[chapter]{chapter}
 
 \rohead{\footnotesize\thepage}
-\rehead{\footnotesize \textbf{\sffamily Napkin}, by \emph{Evan Chen} (\napkinversion)}
+\rehead{\footnotesize \textbf{\sffamily Napkin}, by \emph{Evan Chen}
+(\napkinversion)}
 \lehead{\footnotesize\thepage}
 \lohead{\footnotesize \leftmark}
 \chead{}
@@ -112,8 +116,8 @@ surjective head/.style={
 \addtokomafont{chapterprefix}{\raggedleft}
 \RedeclareSectionCommand[beforeskip=0.5em]{chapter}
 \renewcommand*{\chapterformat}{%
-    \mbox{\scalebox{1.5}{\chapappifchapterprefix{\nobreakspace}}%
-        \scalebox{2.718}{\color{purple}\thechapter\autodot}\enskip}}
+  \mbox{\scalebox{1.5}{\chapappifchapterprefix{\nobreakspace}}%
+\scalebox{2.718}{\color{purple}\thechapter\autodot}\enskip}}
 
 \addtokomafont{partprefix}{\rmfamily}
 \renewcommand*{\partformat}{\color{purple}\scalebox{2.5}{\thepart}}
@@ -124,90 +128,90 @@ surjective head/.style={
 
 \theoremstyle{definition}
 \mdfdefinestyle{mdbluebox}{%
-    linewidth=1pt,
-    skipabove=12pt,
-    innerbottommargin=9pt,
-    skipbelow=2pt,
-    nobreak=true,
-    linecolor=blue,
-    backgroundcolor=TealBlue!5,
+  linewidth=1pt,
+  skipabove=12pt,
+  innerbottommargin=9pt,
+  skipbelow=2pt,
+  nobreak=true,
+  linecolor=blue,
+  backgroundcolor=TealBlue!5,
 }
 \declaretheoremstyle[
-    headfont=\sffamily\bfseries\color{MidnightBlue},
-    mdframed={style=mdbluebox},
-    headpunct={\\[3pt]},
-    postheadspace={0pt}
+  headfont=\sffamily\bfseries\color{MidnightBlue},
+  mdframed={style=mdbluebox},
+  headpunct={\\[3pt]},
+  postheadspace={0pt}
 ]{thmbluebox}
 
 \mdfdefinestyle{mdredbox}{%
-    linewidth=0.5pt,
-    skipabove=12pt,
-    frametitleaboveskip=5pt,
-    frametitlebelowskip=0pt,
-    skipbelow=2pt,
-    frametitlefont=\bfseries,
-    innertopmargin=4pt,
-    innerbottommargin=8pt,
-    linecolor=RawSienna,
-    backgroundcolor=Salmon!5,
+  linewidth=0.5pt,
+  skipabove=12pt,
+  frametitleaboveskip=5pt,
+  frametitlebelowskip=0pt,
+  skipbelow=2pt,
+  frametitlefont=\bfseries,
+  innertopmargin=4pt,
+  innerbottommargin=8pt,
+  linecolor=RawSienna,
+  backgroundcolor=Salmon!5,
 }
 \declaretheoremstyle[
-    headfont=\bfseries\color{RawSienna},
-    mdframed={style=mdredbox},
-    headpunct={\\[3pt]},
-    postheadspace={0pt},
+  headfont=\bfseries\color{RawSienna},
+  mdframed={style=mdredbox},
+  headpunct={\\[3pt]},
+  postheadspace={0pt},
 ]{thmredbox}
 
 \declaretheorem[%
-    style=thmbluebox,name=Theorem,numberwithin=chapter]{theorem}
+style=thmbluebox,name=Theorem,numberwithin=chapter]{theorem}
 \declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem]{lemma}
 \declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem]{proposition}
 \declaretheorem[style=thmbluebox,name=Corollary,sibling=theorem]{corollary}
 \declaretheorem[style=thmredbox,name=Example,sibling=theorem]{example}
 
 \mdfdefinestyle{mdgreenbox}{%
-    skipabove=8pt,
-    linewidth=2pt,
-    rightline=false,
-    leftline=true,
-    topline=false,
-    bottomline=false,
-    linecolor=ForestGreen,
-    backgroundcolor=ForestGreen!5,
+  skipabove=8pt,
+  linewidth=2pt,
+  rightline=false,
+  leftline=true,
+  topline=false,
+  bottomline=false,
+  linecolor=ForestGreen,
+  backgroundcolor=ForestGreen!5,
 }
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ForestGreen!70!black},
-    bodyfont=\normalfont,
-    spaceabove=2pt,
-    spacebelow=1pt,
-    mdframed={style=mdgreenbox},
-    headpunct={ --- },
+  headfont=\bfseries\sffamily\color{ForestGreen!70!black},
+  bodyfont=\normalfont,
+  spaceabove=2pt,
+  spacebelow=1pt,
+  mdframed={style=mdgreenbox},
+  headpunct={ --- },
 ]{thmgreenbox}
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ForestGreen!70!black},
-    bodyfont=\normalfont,
-    spaceabove=2pt,
-    spacebelow=1pt,
-    mdframed={style=mdgreenbox},
-    headpunct={},
+  headfont=\bfseries\sffamily\color{ForestGreen!70!black},
+  bodyfont=\normalfont,
+  spaceabove=2pt,
+  spacebelow=1pt,
+  mdframed={style=mdgreenbox},
+  headpunct={},
 ]{thmgreenbox*}
 
 \mdfdefinestyle{mdblackbox}{%
-    skipabove=8pt,
-    linewidth=3pt,
-    rightline=false,
-    leftline=true,
-    topline=false,
-    bottomline=false,
-    linecolor=black,
-    backgroundcolor=RedViolet!5!gray!5,
+  skipabove=8pt,
+  linewidth=3pt,
+  rightline=false,
+  leftline=true,
+  topline=false,
+  bottomline=false,
+  linecolor=black,
+  backgroundcolor=RedViolet!5!gray!5,
 }
 \declaretheoremstyle[
-    headfont=\bfseries,
-    bodyfont=\normalfont\small,
-    spaceabove=0pt,
-    spacebelow=0pt,
-    mdframed={style=mdblackbox}
+  headfont=\bfseries,
+  bodyfont=\normalfont\small,
+  spaceabove=0pt,
+  spacebelow=0pt,
+  mdframed={style=mdblackbox}
 ]{thmblackbox}
 
 \declaretheorem[name=Question,sibling=theorem,style=thmblackbox]{ques}
@@ -221,19 +225,19 @@ surjective head/.style={
 
 \theoremstyle{definition}
 \mdfdefinestyle{mdpurplebox}{%
-    linewidth=1pt,
-    skipabove=12pt,
-    innerbottommargin=9pt,
-    skipbelow=2pt,
-    nobreak=true,
-    linecolor=darkmagenta,
-    backgroundcolor=patriarch!5,
+  linewidth=1pt,
+  skipabove=12pt,
+  innerbottommargin=9pt,
+  skipbelow=2pt,
+  nobreak=true,
+  linecolor=darkmagenta,
+  backgroundcolor=patriarch!5,
 }
 \declaretheoremstyle[
-    headfont=\sffamily\bfseries\color{darkmagenta},
-    mdframed={style=mdpurplebox},
-    headpunct={\\[3pt]},
-    postheadspace={0pt}
+  headfont=\sffamily\bfseries\color{darkmagenta},
+  mdframed={style=mdpurplebox},
+  headpunct={\\[3pt]},
+  postheadspace={0pt}
 ]{thmpurplebox}
 \declaretheorem[style=thmpurplebox,name=Definition,sibling=theorem]{definition}
 \newtheorem{claim}[theorem]{Claim}
@@ -244,19 +248,19 @@ surjective head/.style={
 
 \theoremstyle{definition}
 \mdfdefinestyle{mdhypbox}{%
-    linewidth=1pt,
-    skipabove=12pt,
-    innerbottommargin=9pt,
-    skipbelow=2pt,
-    nobreak=true,
-    linecolor=alizarin,
-    backgroundcolor=Red!5,
+  linewidth=1pt,
+  skipabove=12pt,
+  innerbottommargin=9pt,
+  skipbelow=2pt,
+  nobreak=true,
+  linecolor=alizarin,
+  backgroundcolor=Red!5,
 }
 \declaretheoremstyle[
-    headfont=\sffamily\bfseries\color{alizarin},
-    mdframed={style=mdhypbox},
-    headpunct={\\[3pt]},
-    postheadspace={0pt}
+  headfont=\sffamily\bfseries\color{alizarin},
+  mdframed={style=mdhypbox},
+  headpunct={\\[3pt]},
+  postheadspace={0pt}
 ]{thmhypbox}
 \declaretheorem[style=thmhypbox,name=Hypothesis,sibling=theorem]{hypothesis}
 
@@ -273,61 +277,66 @@ surjective head/.style={
 \Newassociation{hint}{answeritem}{tex/backmatter/all-hints}
 \Newassociation{sol}{answeritem}{tex/backmatter/all-solns}
 \renewcommand{\solutionextension}{out}
-\renewenvironment{answeritem}[1]{\item[\bfseries #1.]}{}
+\renewenvironment{answeritem}[1]{
+\item[\bfseries #1.]}{}
 
 %%fakesection Table of contents
 % First add ToC to ToC
 \makeatletter
 \usepackage{etoolbox}
 \pretocmd{\tableofcontents}{%
-    \if@openright\cleardoublepage\else\clearpage\fi
-    \pdfbookmark[0]{\contentsname}{toc}%
+  \if@openright\cleardoublepage\else\clearpage\fi
+  \pdfbookmark[0]{\contentsname}{toc}%
 }{}{}%
 \makeatother
 \setcounter{tocdepth}{1}
 \RedeclareSectionCommand[tocnumwidth=4.2em]{part}
 \RedeclareSectionCommand[tocpagenumberwidth=2.2em,tocnumwidth=4.2em]{chapter}
 \RedeclareSectionCommand[tocpagenumberwidth=2.2em,tocnumwidth=2.8em]{section}
-% adjust tocpagenumberwidth manually for large page number: https://tex.stackexchange.com/a/502168
+% adjust tocpagenumberwidth manually for large page number:
+% https://tex.stackexchange.com/a/502168
 
 %%fakesection Asymptote definitions
 \usepackage{patch-asy}
 \numberwithin{asy}{chapter}
 \renewcommand{\theasy}{\thechapter\Alph{asy}}
 \begin{asydef}
-    import extras;
-    size(6cm);
-    usepackage("amsmath");
-    usepackage("amssymb");
-    defaultpen(fontsize(11pt));
-    settings.tex = "latex";
-    settings.outformat = "pdf";
+  import extras;
+  size(6cm);
+  usepackage("amsmath");
+  usepackage("amssymb");
+  defaultpen(fontsize(11pt));
+  settings.tex = "latex";
+  settings.outformat = "pdf";
 \end{asydef}
 \def\asydir{asy}
 
 %%fakesection Bibliography
 \usepackage[backend=biber,backref=true,style=alphabetic]{biblatex}
 \DeclareLabelalphaTemplate{
-    \labelelement{
-        \field[final]{shorthand}
-        \field{label}
-        \field[strwidth=2,strside=left]{labelname}
-    }
-    \labelelement{
-        \field[strwidth=2,strside=right]{year}
-    }
+  \labelelement{
+    \field[final]{shorthand}
+    \field{label}
+    \field[strwidth=2,strside=left]{labelname}
+  }
+  \labelelement{
+    \field[strwidth=2,strside=right]{year}
+  }
 }
 \DeclareFieldFormat{labelalpha}{\textbf{\scriptsize #1}}
 \addbibresource{references.bib}
 \addbibresource{images.bib}
 %% stylistic biblatex choices
 \DefineBibliographyStrings{english}{%
-    backrefpage  = {cited p.}, % for single page number
-    backrefpages = {cited pp.} % for multiple page numbers
+  backrefpage  = {cited p.}, % for single page number
+  backrefpages = {cited pp.} % for multiple page numbers
 }
-\DeclareFieldFormat{journaltitle}{\mkbibemph{#1},} % italic journal title with comma
-\DeclareFieldFormat[inbook,thesis]{title}{\mkbibemph{#1}\addperiod} % italic title with period
-\DeclareFieldFormat[article]{title}{#1} % title of journal article is printed as normal text
+\DeclareFieldFormat{journaltitle}{\mkbibemph{#1},} % italic journal
+% title with comma
+\DeclareFieldFormat[inbook,thesis]{title}{\mkbibemph{#1}\addperiod} %
+% italic title with period
+\DeclareFieldFormat[article]{title}{#1} % title of journal article is
+% printed as normal text
 \DeclareFieldFormat[article]{volume}{\textbf{#1}\addcolon\space}
 \renewcommand{\mkbibnamegiven}[1]{\textsc{#1}}
 \renewcommand{\mkbibnamefamily}[1]{\textsc{#1}}
@@ -360,3 +369,6 @@ surjective head/.style={
 \renewcommand*{\dictumwidth}{.66\textwidth}
 \renewcommand*{\dictumrule}{\vskip-1ex\hrulefill\par}
 \renewcommand*{\dictumauthorformat}[1]{#1 \vskip1ex}
+
+% For positioning figures
+\usepackage{float}

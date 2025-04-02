@@ -1,6 +1,16 @@
 % General
-\newenvironment{proofidea}{\begin{proof}[Proof Idea]}{\end{proof}}
-\newenvironment{proofsketch}{\begin{proof}[Proof Sketch]}{\end{proof}}
+% Define a custom tight figure environment
+\newenvironment{tightfigure}[1][H]{
+\begin{figure}[#1]\vspace{-4pt}} % Reduce space at the top
+  {\vspace{-8pt}
+\end{figure}}       % Reduce space at the bottom
+
+\newenvironment{proofidea}{
+\begin{proof}[Proof Idea]}{
+\end{proof}}
+\newenvironment{proofsketch}{
+\begin{proof}[Proof Sketch]}{
+\end{proof}}
 
 \newcommand{\dubious}[1]{\sethlcolor{BurntOrange}\hl{#1}}
 \newcommand{\vocab}[1]{\textbf{\color{blue} #1}}
