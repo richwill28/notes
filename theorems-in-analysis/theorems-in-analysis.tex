@@ -820,10 +820,96 @@ We will only prove the suprema case. The infima case is analogous.
     There are as many positive rational numbers as there are natural numbers.
 \end{theorem}
 
+\begin{proof}
+    The following diagram arranges the rational numbers (with some repetition) and illustrates our bijection, which we call the \textit{winding bijection}.
+    \begin{figure}[h]
+        \centering
+        \usetikzlibrary{matrix, arrows.meta}
+        \begin{tikzpicture}
+            % Define the column and row headers
+            \foreach \x in {1,...,8} {
+                \node at (\x,0.5) {$\x$};
+                \node at (-0.5,-\x) {$\x$};
+            }
+            \node at (9,0.5) {$\cdots$};
+            \node at (-0.5,-9) {$\vdots$};
+            
+            % Draw horizontal line beneath the column headers
+            \draw (0,0) -- (10,0);
+            
+            % Draw vertical line to the right of row headers
+            \draw (0,0) -- (0,-10);
+            
+            % Create the matrix of fractions
+            \foreach \x in {1,...,8} {
+                \foreach \y in {1,...,8} {
+                    \node at (\x,-\y) {$\x/\y$};
+                }
+            }
+            
+            % Add remaining dots
+            \foreach \x in {1,...,8} {
+                \node at (\x,-9) {$\vdots$};
+            }
+            \foreach \y in {1,...,8} {
+                \node at (9,-\y) {$\cdots$};
+            }
+            \node at (9,-9) {$\ddots$};
+
+            % So arrows don't touch the numbers
+            \def\eps{0.25}
+
+            % Draw the arrows
+            \foreach \x in {1,...,7} {
+                \foreach \y in {2,...,8} {
+                    \pgfmathparse{int(\x+\y)}
+                    \ifnum\pgfmathresult<12
+                        \pgfmathparse{int(mod(\pgfmathresult,2))}
+                        \ifnum\pgfmathresult=0
+                            % Diagonal arrows (upward)
+                            \draw[->,red,thick] (\x+\eps,-\y+\eps) -- (\x+1-\eps,-\y+1-\eps);
+                        \else
+                            % Diagonal arrows (downward)
+                            \draw[->,red,thick] (\x+1-\eps,-\y+1-\eps) -- (\x+\eps,-\y+\eps);
+                        \fi
+                    \fi
+                }
+            }
+            
+            % Draw curved arrows
+            \foreach \x in {1,...,7} {
+                \pgfmathparse{int(mod(\x,2))}
+                \ifnum\pgfmathresult=1
+                    \draw[->,red,thick,bend left=30] (\x+\eps,-1+\eps) to (\x+1-\eps,-1+\eps);
+                \fi
+            }
+            \foreach \y in {1,...,7} {
+                \pgfmathparse{int(mod(\y,2))}
+                \ifnum\pgfmathresult=0
+                    \draw[->,red,thick,bend right=30] (1-\eps,-\y-\eps) to (1-\eps,-\y-1+\eps);
+                \fi
+            }
+
+            % Draw dashed arrows
+            \draw[->,red,thick,dashed] (8+\eps,-2+\eps) to (9-\eps,-1-\eps);
+            \draw[->,red,thick,dashed] (9-\eps,-2-\eps) to (8+\eps,-3+\eps);
+            \draw[->,red,thick,dashed,bend right=30] (1-\eps,-8-\eps) to (1-\eps,-9+\eps);
+            \draw[->,red,thick,dashed] (1+\eps,-9+\eps) to (2-\eps,-8-\eps);
+            \draw[->,red,thick,dashed] (3-\eps,-8-\eps) to (2+\eps,-9+\eps);
+        \end{tikzpicture}
+    \end{figure}
+
+    Weaving through this chart, you are guaranteed to hit every positive rational number. So if you pair up 1 with the first number you hit, 2 with the second number you hit, 3 with the third, and so on, then every positive rational number is in a pair. Now, there's just one small problem: each rational number is actually hit more than once. The number $p/q$ will be written in positions $(p, q), (2p, 2q), (3p, 3q), \dots$. But the fix is easy: When you come across a number that has already been hit, just skip it. Clearly you won't run out of rational numbers, so this does indeed pair up everything. So
+    \[ f(n) = \text{the $n$th new rational number you reach}. \]
+    And that's it.
+\end{proof}
+
 \begin{theorem}[$\size{(0, 1)} > \size{\NN}$]
     \thmlabel{cardinality-of-(0,1)-greater-than-n}
     There are more numbers in the open interval $(0, 1)$ than there are natural numbers.
 \end{theorem}
+
+We will demonstrate a clever argument known as \textit{Cantor's diagonal argument}.
 
 \begin{proof}
     We proceed by contradiction and assume that there does exist a function $f : \NN \to (0, 1)$ that is bijective. For each $m \in \NN$, $f(m)$ is a real number between 0 and 1, and we represent it using the decimal notation
@@ -844,16 +930,27 @@ We will only prove the suprema case. The infima case is analogous.
     \end{align*}
     The key assumption about this correspondence is that \textit{every} real number in $(0, 1)$ is assumed to appear somewhere on the list.
     Now for the pearl of the argument. Define a real number $x \in (0, 1)$ with the decimal expansion $x = .b_1b_2b_3b_4\dots$ using the rule
-    \[ b_n := (a_{nn} + 1) \bmod 9. \]
+    \begin{align*}
+        b_n = \begin{cases}
+            2 & \text{if $a_{nn} \neq 2$} \\
+            3 & \text{if $a_{nn} = 2$}.
+        \end{cases}
+    \end{align*}
     Observe that $x = .b_1b_2b_3b_4\dots$ cannot be $f(1)$. $x$ also cannot be $f(2)$, and in general $x \neq f(n)$ for any $n \in \NN$. Therefore, the real number $x$ is nowhere on the list! This is a contradiction; clearly we were unable to pair up all the reals, if $x$ got left out.
 \end{proof}
 
 \begin{remark}
-    The clever idea behind the proof of \thmref{cardinality-of-(0,1)-greater-than-n} is from Georg Cantor, and is known as \vocab{Cantor's diagonal argument}.
+    Consider the following complaints about the proof of \thmref{cardinality-of-(0,1)-greater-than-n}.
+
+    \begin{enumerate}
+        \item Every rational number has a decimal expansion, so we could apply this same argument to show that the set of rational numbers between 0 and 1 is uncountable. However, because we know that any subset of $\QQ$ must be countable, the proof of \thmref{cardinality-of-(0,1)-greater-than-n} must be flawed.
+        \item Some numbers have two different decimal representations. Specifically, any decimal expansion that terminates can also be written with repeating 9's. For instance, $1/2$ can be written as $.5$ or as $.4999\dots$. Doesn't this cause some problems?
+    \end{enumerate}
+
+    Are they valid?
 \end{remark}
 
 Here's another proof of \thmref{cardinality-of-(0,1)-greater-than-n} that I particular enjoy.
-
 
 \begin{proofsketch}
     Imagine you were trying to map $\NN$ on to the real number line (which clearly has $\size{\RR}$ points).
@@ -983,6 +1080,10 @@ Here's another proof of \thmref{cardinality-of-(0,1)-greater-than-n} that I part
     There are as many numbers in the open interval $(0, 1)$ as there are real numbers.
 \end{theorem}
 
+\begin{proofidea}
+    The function $f(x) = (x-1/2)/(x-x^2)$ is a bijection from $(0, 1)$ to $\RR$. This shows, by \defref{cardinality-bijection}, that $\size{(0, 1)} = \size{\RR}$.
+\end{proofidea}
+
 \begin{remark}
     \thmref{cardinality-of-(0,1)-equal-r} effectively establishes that \thmref{cardinality-of-r-greater-than-n} and \thmref{cardinality-of-(0,1)-greater-than-n} are equivalent.
 \end{remark}
@@ -994,16 +1095,46 @@ Here's another proof of \thmref{cardinality-of-(0,1)-greater-than-n} that I part
     \end{align*}
 \end{hypothesis}
 
+\begin{remark}
+    We now know that $\size{\NN} < \size{\RR}$. Here's one natural question: Is there any infinity between these two? An astounding fact is that, based on the axioms of set theory (called ZFC), whether or not there exists such an infinity is \textit{unprovable}. And what I don't mean is that mathematicians are not smart enough to find the answer; no, I mean that they \textit{are} smart enough to have shown that \textit{no proof can possibly exist}. That's right, there are statements in math which are impossible to prove and also impossible to disprove (but we \textit{are} able to prove that they are unprovable, amazingly).
+
+    This particular question is among the most famous in mathematical history. It was posed by Georg Cantor and is known as \textit{the continuum hypothesis}. It is the first of Hilbert's 23 problems—an influential list of unsolved problems that David Hilbert presented in 1900 at the International Congress of Mathematicians, setting the mathematical agenda for the 20th century. Decades later, Kurt Gödel's groundbreaking incompleteness theorems revealed that virtually every mathematical theory contains unprovable statements.
+
+    ZFC set theory is the foundational framework upon which nearly all of modern mathematics is built. Gödel constructed a model of ZFC where the continuum hypothesis holds, while Paul Cohen later constructed a model where it fails. Together, their results established that the continuum hypothesis is independent of ZFC---it can be neither proved nor disproved within the system. Thus, the continuum hypothesis---which asks what is presumably a basic question about the infinite---is unprovable.
+\end{remark}
+
 \begin{theorem}[$\size{A} < \size{\power(A)}$]
+    \thmlabel{power-set-larger-cardinality}
     If $A$ is a set and $\power(A)$ is the power set of $A$, then
     \begin{align*}
         \size{A} < \size{\power(A)}.
     \end{align*}
 \end{theorem}
 
+\begin{proof}
+    Assume for a contradiction that $\size{A} \geq \size{\power(A)}$. That is, assume that there is a surjection $f$ from $A$ to $\power(A)$. Since $f$ is a surjection, for every $T \subseteq A$, there is some element $t \in A$ where $f(t) = T$. To reach our contradiction, we will construct a set $B \subsetneq A$ which is not hit.
+
+    For each $a$ there is one special property about the set $f(a)$ that we are going to care about: Is $a \in f(a)$ or is $a \notin f(a)$? In general, consider the set of all elements $a$ such that $a \notin f(a)$, and call this set $B$:
+    \[ B = \set{a \in A : a \notin f(a)}. \]
+    By the above, if we can show that that there is no $b$ where $f(b) = B$, then we are done; we will have discovered an element of $\power(A)$ that was not hit by $f$, a contradiction.
+
+    \underline{Claim.} There is no $b \in A$ such that $f(b) = B$.
+
+    \underline{Proof of claim.} Assume for a contradiction that there does exist some $b \in A$ such that $f(b) = B$. Note by the definition of $B$ that
+    \[ \text{$b \in B$ if and only if $b \notin f(b)$}. \]
+    But since we assumed that $f(b) = B$, this is equivalent to
+    \[ \text{$b \in f(b)$ if and only if $b \notin f(b)$}, \]
+    which is clearly a contradiction.
+\end{proof}
+
 \begin{corollary}[There exist infinitely many infinities]
     There exist infinitely many distinct infinite cardinalities.
 \end{corollary}
+
+\begin{proof}
+    By \thmref{power-set-larger-cardinality}, the following is a chain of distinct infinite cardinalities
+    \[ \size{\NN} < \size{\power(\NN)} < \size{\power(\power(\NN))} < \size{\power(\power(\power(\NN)))} < \size{\power(\power(\power(\power(\NN))))} < \dots.\]
+\end{proof}
 
 \setchapterpreamble{\dictum[Paul Hoffman, \textit{The Man Who Loved Only Numbers}]{``Erdős loved epsilons---his word for small children (in mathematics the Greek letter epsilon is used to represent small quantities).''}}
 \chapter{Sequences}
