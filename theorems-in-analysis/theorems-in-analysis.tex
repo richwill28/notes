@@ -83,11 +83,11 @@ discovered---two thousand years have not written a wrinkle on it.''}}
 \end{proof}
 
 \begin{remark}
-  So the rationals aren't quite enough to describe all numbers. That
-  said, they do have almost every other fundamental property we would
-  want. To the point: They are what we call an \textit{ordered
-  field}. But first, what's a \textit{field}? It's a set that
-  satisfies the classic additive and multiplicative properties we know and love.
+  So the rationals aren't quite enough. That said, they do have
+  almost every other fundamental property we would want. To the
+  point: They are what we call an \textit{ordered field}. But first,
+  what's a \textit{field}? It's a set that satisfies the classic
+  additive and multiplicative properties we know and love.
 \end{remark}
 
 \begin{definition}[Fields]
@@ -716,6 +716,55 @@ We will only prove the suprema case. The infima case is analogous.
   \end{proof}
 \end{example}
 
+\begin{theorem}[$0.999\ldots = 1$]
+  \thmlabel{0.999...=1}
+  $0.999\dots$ is a repeating decimal representation of the real number 1.
+\end{theorem}
+
+\begin{proofidea}
+  If we place $0.9, 0.99, 0.999, \dots$ on the real number line, we
+  see immediately that all these points are to the left of 1, and
+  that they get closer and closer to 1. For any number $x$ that is
+  less than 1, the sequence $0.9, 0.99, 0.999, \dots$ will eventually
+  reach a number larger than $x$. So it does not make sense to
+  identify $0.999\ldots$ with any number less than 1. This means that
+  $x$ must be equal to 1.
+\end{proofidea}
+
+\begin{proof}
+  Let $0.(9)_n$ denote the number $0.999\ldots9$ with $n$ nines after
+  the decimal point. For example, $0.(9)_1 = 0.9$, $0.(9)_2 = 0.99$,
+  $0.(9)_3 = 0.999$, and so on. Observe that for each $n \in \NN$, we have
+  \[ 1 - 0.(9)_n = \frac{1}{10^n}. \]
+
+  Now, let $x = 0.999\ldots$. Clearly, $0.(9)_n < x \leq 1$ for every
+  $n \in \NN$. Subtracting these inequalities from 1 gives us
+  \[ 0 \leq 1 - x < 1 - 0.(9)_n = \frac{1}{10^n}. \]
+  By the Archimedean principle (\lemref{archimedean-principle}),
+  there is no positive number smaller than
+  \[ \frac{1}{10^n} \text{ for all $n \in \NN$}. \]
+  Therefore, $1 - x$ must be equal to 0. That is, $x = 1$.
+\end{proof}
+
+\begin{remark}
+  Despite the persistent rumors, $0.999\ldots$ is not
+  ``almost exactly 1'' or ``very, very nearly but not quite 1'' or
+  ``1's clingy little sibling.'' Rather, $0.999\ldots$ and 1 are, in
+  fact, the same number. So the next time someone insists otherwise,
+  feel free to hand them a copy of these notes.
+\end{remark}
+
+\begin{remark}
+  The Archimedean principle used in \thmref{0.999...=1} differs from
+  the one stated in \lemref{archimedean-principle}. One can show that
+  these two formulations are equivalent.
+\end{remark}
+
+\begin{remark}
+  We will revisit \thmref{0.999...=1} in future chapters and discuss
+  various different proofs.
+\end{remark}
+
 \begin{definition}[Density]
   Suppose $A$ and $B$ are ordered field. Then $A$ is \vocab{dense} in
   $B$ if, for any $x, y \in B$, there exists $a \in A$ such that $x < a < y$.
@@ -789,13 +838,13 @@ We will only prove the suprema case. The infima case is analogous.
   ceiling functions exist.
 \end{remark}
 
-\begin{definition}[Ceiling and floor functions]
+\begin{definition}[Floor and ceiling functions]
   Let $x \in R$.
   \begin{itemize}
-    \item The \textit{ceiling} of $x$, denoted $\ceil{x}$, is the
-      integer $n$ such that $x \leq n < x + 1$.
     \item The \textit{floor} of $x$, denoted $\floor{x}$, is the
       integer $n$ such that $x  - 1 < n \leq x$.
+    \item The \textit{ceiling} of $x$, denoted $\ceil{x}$, is the
+      integer $n$ such that $x \leq n < x + 1$.
   \end{itemize}
 \end{definition}
 
@@ -1602,10 +1651,11 @@ diagonal argument}.
       numbers between 0 and 1 is uncountable. However, because we
       know that any subset of $\QQ$ must be countable, the proof of
       \thmref{cardinality-of-(0,1)-greater-than-n} must be flawed.
-    \item Some numbers have two different decimal representations.
-      Specifically, any decimal expansion that terminates can also be
-      written with repeating 9's. For instance, $1/2$ can be written
-      as $.5$ or as $.4999\dots$. Doesn't this cause some problems?
+    \item Some numbers have two different decimal representations
+      (see \thmref{0.999...=1}). Specifically, any decimal expansion
+      that terminates can also be written with repeating 9's. For
+      instance, $1/2$ can be written as $.5$ or as $.4999\dots$.
+      Doesn't this cause some problems?
   \end{enumerate}
 
   Are these complaints valid?
