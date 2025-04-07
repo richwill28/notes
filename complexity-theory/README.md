@@ -1,13 +1,15 @@
 # Notes on Complexity Theory
 
+![Badge](https://raw.githubusercontent.com/richwill28/notes/refs/heads/assets/assets/warning-np-hardness-and-existential-dread.svg)
+
 This is a personal exposition project of mine. Its primary purpose is to serve as an accessible reference to some of the most fundamental results in complexity theory.
 
 ## Motivation
 
-I often find myself scouring through multiple references just to find a satisfying explanation of a certain theorem or proof, and too frequently, the available exposition fall short—either lacking in rigor (e.g. by establishing only part of the theorem), or missing the necessary intuition that makes it all "click". In my notes, I aim to strike a good balance between intuition and rigor.
+I often find myself scouring through multiple references to find a satisfying explanation for a theorem or proof, only to be met with expositions that lack rigor or miss the necessary intuition to make it all click. In these notes, I aim to strike a balance between providing solid intuition and maintaining reasonable rigor. Keep in mind that I prefer to err on the side of over-explaining rather than under-explaining, so I apologize in advance if some parts feel lengthy or repetitive.
 
-I think it's nice to have a reliable reference that pulls everything together in one place, and I hope you find these notes as useful as I do. In general, I'd rather explain things in too much detail than not enough. So I apologize in advance if some parts come across as lengthy and redundant. Feedbacks are welcome.
+I hope you find these notes as useful as I do. All the best.
 
 ## Disclaimer
 
-This is a work in progress.
+This is a work in progress. Feedbacks are welcome.
