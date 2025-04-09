@@ -193,6 +193,7 @@ discovered---two thousand years have not written a wrinkle on it.''}}
 \end{fact}
 
 \begin{theorem}[The triangle inequality]
+  \thmlabel{triangle-inequality}
   If $\FF$ is an ordered field and if $x, y \in \FF$, then
   \[ \abs{x + y} \leq \abs{x} + \abs{y}. \]
 \end{theorem}
@@ -2002,11 +2003,11 @@ that I particular enjoy.
     (in mathematics the Greek letter epsilon is used to represent small
 quantities).''}}
 \chapter{Sequences}
-\begin{definition}
+\begin{definition}[Sequences]
   A \vocab{sequence} of real numbers is a function $a : \NN \to \RR$.
 \end{definition}
 
-\begin{definition}
+\begin{definition}[Bounded sequences]
   A sequence $(a_n)$ is \vocab{bounded} if the range $\set{a_n : n
   \in \NN}$ is bounded. That is, if there exists a lower bound $L \in
   \RR$ and an upper bound $U \in \RR$ where
@@ -2044,7 +2045,8 @@ quantities).''}}
   $\abs{a_n} \leq C$.
 \end{proof}
 
-\begin{definition}
+\begin{definition}[Convergent sequences]
+  \deflabel{convergent-sequences}
   A sequence $(a_n)$ \vocab{converges} to $a \in \RR$ if for all
   $\epsilon > 0$ there exists some $N \in \NN$ such that $\abs{a_n -
   a} < \epsilon$ for all $n > N$.
@@ -2052,7 +2054,92 @@ quantities).''}}
   When this happens, $a$ is called the \vocab{limit} of $a_n$.
 \end{definition}
 
+\begin{definition}[$\epsilon$-neighborhood]
+  Given a real number $a \in \RR$ and a positive number $\epsilon > 0$, the set
+  \[ V_\epsilon(a) = \set{x \in \RR : \abs{x - a} < \epsilon} \]
+  is called the \vocab{$\epsilon$-neighborhood} of $a$.
+\end{definition}
+
+\begin{definition}[Convergent sequences (topological version)]
+  \deflabel{convergent-sequences-topological-version}
+  A sequence $(a_n)$ \textit{converges} to $a \in \RR$ if, given any
+  $\epsilon$-neighborhood $V_\epsilon(a)$ of $a$, there exists a
+  point in the sequence after which all of the terms are in
+  $V_\epsilon(a)$. In other words, every $\epsilon$-neighborhood
+  contains all but finite number of the terms of $(a_n)$.
+\end{definition}
+
+\begin{remark}
+  \defref{convergent-sequences} and
+  \defref{convergent-sequences-topological-version} say precisely the
+  same thing: the natural number $N$ in \defref{convergent-sequences}
+  is the point after which the sequence $(a_n)$ enters
+  $V_\epsilon(a)$, never to leave. It should be apparent that the
+  value of $N$ depends on the choice of $\epsilon$. The smaller the
+  $\epsilon$-neighborhood, the larger the $N$ may have to be.
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}
+      % Draw the number line
+      \draw[->] (0,0) -- (12,0);
+
+      % Draw the points
+      \filldraw (1.4,0) circle (1.5pt) node[above=1.5pt] {$a_1$};
+      \filldraw (2.9,0) circle (1.5pt) node[above=1.5pt] {$a_2$};
+      \filldraw (4.4,0) circle (1.5pt) node[above=1.5pt] {$a_3$};
+      \filldraw (5.9,0) circle (1.5pt);
+      \filldraw (7.1,0) circle (1.5pt);
+      \filldraw (8.1,0) circle (1.5pt);
+      \filldraw (8.9,0) circle (1.5pt) node[above=1.5pt] {$a_N$};
+      \filldraw (9.4,0) circle (1.5pt);
+      \filldraw (9.7,0) circle (1.5pt);
+      \filldraw (9.9,0) circle (1.5pt);
+      \filldraw (10.05,0) circle (1.5pt);
+      \filldraw (10.15,0) circle (1.5pt);
+      \filldraw (10.2,0) circle (1.5pt);
+
+      % Draw the epsilon neighborhood
+      \draw (9.315,0.25) arc (150:210:0.5);
+      \node at (9.25,-0.5) {$a - \epsilon$};
+      \draw (10.25,-0.1) -- (10.25,0.1);
+      \node at (10.25,-0.5) {$a$};
+      \draw (11.185,-0.25) arc (-30:30:0.5);
+      \node at (11.25,-0.5) {$a + \epsilon$};
+
+      % Draw the brace above the epsilon neighborhood
+      \draw[decorate, decoration={brace, amplitude=5pt}] (9.25,0.5) --
+      (11.25,0.5) node[midway, above=5pt] {$V_\epsilon(a)$};
+    \end{tikzpicture}
+    \vspace{1em}
+  \end{tightfigure}
+\end{remark}
+
+\begin{example}
+  Show that the sequence
+  \[ (a_n) = (1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4}, \frac{1}{5}, \dots) \]
+  converges to 0.
+
+  \begin{proof}
+    Fix any $\epsilon > 0$. By the Archimedean principle
+    (\lemref{archimedean-principle}), there is an $N$ for which
+    $\frac{1}{N} < \epsilon$. This $N$ has the property
+    that, for all $n > N$, we have $\frac{1}{n} < \frac{1}{N} <
+    \epsilon$. That is, for all $n > N$,
+    \[ \left|\frac{1}{n} - 0\right| = \frac{1}{n} < \epsilon. \]
+    And so, by \defref{convergent-sequences}, we may conclude that
+    $a_n \to 0$.
+  \end{proof}
+\end{example}
+
+\begin{remark}
+  Using the Archimedean principle will not usually work, though. We
+  need a more general approach, which is described in
+  \outref{how-to-show-sequence-convergence}.
+\end{remark}
+
 \begin{outline}
+  \outlabel{how-to-show-sequence-convergence}
   To show that $a_n \to a$, begin with preliminary work:
   \begin{enumerate}
     \item[0.] Scratch work: Start with $\abs{a_n - a} < \epsilon$ and
@@ -2069,19 +2156,41 @@ quantities).''}}
   \end{enumerate}
 \end{outline}
 
-\begin{definition}
-  Let $\epsilon > 0$. The \vocab{$\epsilon$-neighborhood} of a point
-  $a$ is the interval
-  \[ (a - \epsilon, a + \epsilon). \]
-\end{definition}
+\begin{example}
+  Again, show that the sequence
+  \[ (a_n) = (1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4}, \frac{1}{5}, \dots) \]
+  converges to 0. This time, use the method described in
+  \outref{how-to-show-sequence-convergence}.
 
-\begin{definition}
-  A sequence $(a_n)$ \textit{converges} to $a \in \RR$ if for all
-  $\epsilon > 0$ there exists some $N \in \NN$ such that $a_n$ is in
-  the $\epsilon$-neighborhood of $a$ for all $n > N$.
-\end{definition}
+  \textit{Scratch work.} Given an arbitrary $\epsilon > 0$, we will
+  find what specifc $N$ guarantees that, for every $n > N$, we have
+  $\abs{a_n - 0} < \epsilon$. For example, if $\epsilon =
+  \frac{1}{2}$, then $N = 2$ works. If $\epsilon = \frac{1}{3}$, then
+  $N = 3$ works. You see the pattern, but here is how we might come
+  about it in general. We want the following:
+  \begin{align*}
+    \abs{a_n - a} & < \epsilon \\
+    \left|\frac{1}{n} - 0\right| & < \epsilon \\
+    \frac{1}{n} & < \epsilon \\
+    \frac{1}{\epsilon} & < n.
+  \end{align*}
+  So as long as we choose $N = \frac{1}{\epsilon}$, then for any $n >
+  N$, we will have $n > \frac{1}{\epsilon}$, which by the above will
+  imply that $\frac{1}{n} \to 0$, as desired. The solution below is
+  how we formally solve it.
 
-\begin{definition}
+  \begin{proof}
+    Fix any $\epsilon > 0$. Then for any $n > N$ (implying
+    $\frac{1}{n} < \frac{1}{N}$),
+    \[ \abs{a_n - a} = \left|\frac{1}{n} - 0\right| = \frac{1}{n} <
+    \frac{1}{N} = \frac{1}{1/\epsilon} = \epsilon. \]
+    That is, $\abs{a_n - 0} < \epsilon$. So by
+    \defref{convergent-sequences}, we have shown that $\frac{1}{n} \to 0$.
+  \end{proof}
+\end{example}
+
+\begin{definition}[Divergent Sequences]
+  \deflabel{divergent-sequences}
   If a sequence $(a_n)$ does not converge, then it \vocab{diverges}.
 
   Divergence can come in three forms.
@@ -2095,6 +2204,189 @@ quantities).''}}
     \item Otherwise, $(a_n)$'s limit \textit{does not exist}.
   \end{enumerate}
 \end{definition}
+
+\begin{example}
+  Let $a_n = n^2$. Show that $\lim_{n \to \infty} a_n = \infty$.
+
+  \textit{Scratch work.} We want
+  \begin{align*}
+    a_n & > M \\
+    n^2 & > M \\
+    n & > \sqrt{M}.
+  \end{align*}
+  So setting $N = \sqrt{M}$ should work.
+
+  \begin{proof}
+    Fix any $M > 0$. Set $N = \sqrt{M}$. Then for any $n > N$,
+    \[ a_n = n^2 > N^2 = (\sqrt{M})^2 = M. \]
+    So we have shown that if $n > N$, then $a_n > M$. Therefore
+    $\lim_{n \to \infty} a_n = \infty$.
+  \end{proof}
+\end{example}
+
+\begin{outline}
+  \outlabel{how-to-show-sequence-diverges}
+  What if the sequence's limit does not exist? Then how do we show
+  the sequence diverges? One way to show that $a_n$ diverges is to
+  show that $a_n \not\to a$ for any $a$. Note first, by
+  \defref{convergent-sequences}, that $a_n \to a$ means that
+  \begin{align*}
+    & \text{For \underline{every} $\epsilon > 0$ there exists
+    \underline{some} $N$} \\
+    & \text{such that \underline{for all} $n > N$ we have $\abs{a_n -
+    a} < \epsilon$}.
+  \end{align*}
+  So to show that $a_n \not\to a$, we need to show the
+  \textit{negation} of that statement. That is, we must show that
+  \begin{align*}
+    & \text{There exists \underline{some} $\epsilon > 0$ where
+    \underline{for all} $N$} \\
+    & \text{there exists \underline{some} $n > N$ such that $\abs{a_n -
+    a} \geq \epsilon$}.
+  \end{align*}
+  In practice, this is usually done with a proof by contradiction.
+  You assume that $a_n \to a$ and then you demonstrate a specific
+  $\epsilon$ where it fails, giving the contradiction.
+\end{outline}
+
+\begin{example}
+  Let $a_n = (-1)^n$. Prove that $(a_n)$ diverges.
+
+  \textit{Scratch work.} This is the sequence $-1, 1, -1, 1, -1, 1,
+  \dots$. It makes sense that there is no $a$ for which $a_n \to a$.
+  It certainly doesn't converge to $1$, since half the time it is at
+  $-1$ which is far away from $1$. (If we let $\epsilon = 1/$, then
+    there is no $N$ for which, for every $n > N$, $a_n$ is inside of
+  the shaded band; see below.)
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}
+      % Shaded region, drawn first so it goes behind everything
+      \fill[gray!20] (0,1-0.5) rectangle (10,1+0.5);
+
+      % Axes
+      \draw[->] (0,-2) -- (0,2);
+      \draw[<->] (-1,0) -- (10,0);
+
+      % Tick marks on y-axis with small lines
+      \draw (-0.1,1.5) -- (0.1,1.5);  % 1+epsilon
+      \draw (-0.1,1) -- (0.1,1);      % 1
+      \draw (-0.1,0.5) -- (0.1,0.5);  % 1-epsilon
+      \draw (-0.1,-1) -- (0.1,-1);    % -1
+
+      % Labels
+      \node[left] at (0,1) {$1$};
+      \node[left] at (0,-1) {$-1$};
+      \node[left] at (0,1.5) {$1+\varepsilon$};
+      \node[left] at (0,0.5) {$1-\varepsilon$};
+
+      % Dotted line at y=1
+      \draw[dotted] (0,1) -- (10,1);
+
+      % Points at y=1
+      \foreach \x in {1.5, 3, 4.5, 6, 7.5, 9} {
+        \filldraw (\x,1) circle (0.08);
+      }
+
+      % Points at y=-1
+      \foreach \x in {1, 2.5, 4, 5.5, 7, 8.5} {
+        \filldraw (\x,-1) circle (0.08);
+      }
+
+      % N marker with proper cross (X)
+      \node[below] at (6.5,0) {$N$};
+      \draw (6.3,-0.45) -- (6.7,-0.05);
+      \draw (6.3,-0.05) -- (6.7,-0.45);
+
+      % Tick mark for N on x-axis
+      \draw (6.5,-0.1) -- (6.5,0.1);
+    \end{tikzpicture}
+  \end{tightfigure}
+  It likewise can't converge to $-1$. One might guess $0$, since that
+  is halfway between $-1$ and $1$, but that also doesn't make sense
+  since $a_n$ is always a distance of $1$ away from $0$, so it's
+  certainly not getting ``closer and closer'' to $0$. (Or, $\epsilon
+  = 1/2$ works again.) Ok, so we believe that it doesn't converge to
+  anything, and we will use \outref{how-to-show-sequence-diverges} to show it.
+
+  \begin{proof}
+    Assume for a contradiction that there is
+    some $a$ for which $a_n \to a$.
+    Let $\epsilon = \frac{1}{2}$. Since we assumed that $a_n \to a$,
+    there must be some $N$ for which, for all $n > N$, we have
+    $\abs{a_n - a} < \frac{1}{2}$. That is, $\abs{(-1)^n - a} <
+    \frac{1}{2}$ for all $n > N$. We proceed by cases.
+
+    \underline{Even $n$.} If $n$ is even and $n > N$, then we have that
+    \[ \abs{1 - a} < \frac{1}{2}. \]
+    Unwinding this:
+    \begin{align*}
+      -\frac{1}{2} < 1 - a < \frac{1}{2}, \\
+      -\frac{3}{2} < -a < -\frac{1}{2}, \\
+      \frac{1}{2} < a < \frac{3}{2}.
+    \end{align*}
+
+    \underline{Odd $n$.} If $n$ is odd and $n > N$, then we have that
+    \[ \abs{-1 - a} < \frac{1}{2}. \]
+    Unwinding this:
+    \begin{align*}
+      -\frac{1}{2} < -1 - a < \frac{1}{2}, \\
+      \frac{1}{2} < -a < \frac{3}{2}, \\
+      -\frac{3}{2} < a < -\frac{1}{2}.
+    \end{align*}
+
+    But this is a contradiction; clearly no $a$ can be inside of both
+    $\left(\frac{1}{2}, \frac{3}{2}\right)$ and $\left(-\frac{3}{2},
+    -\frac{1}{2}\right)$.
+    And so we must have $a_n \not\to a$.
+  \end{proof}
+
+  Essentially, focusing on the even case created a ball around $1$,
+  of radius $\frac{1}{2}$, which $a_n$ would have to live within
+  for all $n > N$.
+  The odd case created a ball around $-1$, of radius $\frac{1}{2}$,
+  which $a_n$ would have to live within for all $n > N$.
+  But these two balls are disjoint, so $a_n$ can't live in both,
+  creating a contradiction.
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}
+      % Draw the number line
+      \draw[<->] (-5, 0) -- (5, 0);
+
+      % Draw the points -1 and 1
+      \filldraw (-2, 0) circle (2pt) node[below] {$-1$};
+      \filldraw (2, 0) circle (2pt) node[below] {$1$};
+
+      % Draw the circles around -1 and 1
+      \draw[dashed] (-2, 0) circle (1);
+      \draw[dashed] (2, 0) circle (1);
+
+      % Add arrows from the center to the perimeter at 45 degrees
+      \draw[->] (-2, 0) -- ++(45:1) node[midway, above,
+      font=\scriptsize, xshift=-8pt, yshift=-4pt] {$1/2$};
+      \draw[->] (2, 0) -- ++(45:1) node[midway, above,
+      font=\scriptsize, xshift=-8pt, yshift=-4pt] {$1/2$};
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  Now here's another proof using the triangle inequality
+  (\thmref{triangle-inequality}).
+
+  \begin{proof}
+    Again, let $\epsilon = \frac{1}{2}$. The even case still gives
+    $\abs{1 - a} < \frac{1}{2}$, and the odd case still gives
+    $\abs{-1 - a} < \frac{1}{2}$; although in the odd case we will
+    rewrite $\abs{-1 - a}$ as $\abs{1 + a}$. Then, by the triangle inequality:
+    \[ 2 = \abs{(1 - a) + (1 + a)} \leq \abs{1 - a} + \abs{1 + a}. \]
+    But each of the absolute values on the right are assumed to be
+    less than $\frac{1}{2}$. So,
+    \[ 2 = \abs{(1 - a) + (1 + a)} \leq \abs{1 - a} + \abs{1 + a} <
+    \frac{1}{2} + \frac{1}{2} = 1. \]
+    So $2 < 1$? Preposterous! We have our contradiction.
+  \end{proof}
+\end{example}
 
 \begin{proposition}[Limits are unique]
   A sequence cannot have more than one limit.
@@ -2136,9 +2428,11 @@ quantities).''}}
   Suppose $(a_n)$ is monotone. Then $(a_n)$ converges if and only if
   it is bounded. Moreover,
   \begin{itemize}
-    \item If $(a_n)$ is increasing, then either $(a_n)$ diverges to $\infty$ or
+    \item If $(a_n)$ is increasing, then either $(a_n)$ diverges to
+      $\infty$ or
       \[ \lim_{n \to \infty} a_n = \sup(\set{a_n : n \in \NN}). \]
-    \item If $(a_n)$ is decreasing, then either $(a_n)$ diverges to $-\infty$ or
+    \item If $(a_n)$ is decreasing, then either $(a_n)$ diverges to
+      $-\infty$ or
       \[ \lim_{n \to \infty} a_n = \inf(\set{a_n : n \in \NN}). \]
   \end{itemize}
 \end{theorem}
