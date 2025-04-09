@@ -1029,29 +1029,104 @@ has created.''}}
   gives the desired bijection from $A$ to $B$.
 
   Now, let $X_1 = A \setminus g(B)$ and inductively define a sequence
-  of sets by letting $X_{n + 1} = g(f(X_n))$. We show that $\set{X_n
-  : n \in \NN}$ is a pairwise disjoint collection of subsets of $A$,
-  while $\set{f(X_n) : n \in \NN}$ is a similar collection in $B$.
+  of sets by letting $X_{n + 1} = g(f(X_n))$.  Let $X = \bigcup_{n =
+  1}^{\infty} X_n$ and $Y = \bigcup_{n = 1}^{\infty} f(X_n)$.
 
-  To see that the sets $X_1, X_2, X_3, \dots$ are pairwise disjoint,
-  note that $X_1 \cap X_n = \emptyset$ for all $n \geq 2$ because
-  $X_1 = A \setminus g(B)$ and $X_n \subseteq g(B)$. (Why? $f$ is a
-    mapping from $A$ to $B$, so we have that $f(X_n) \subseteq B$, and
-  thus $X_{n + 1} = g(f(X_n)) \subseteq g(B)$.) In the general case
-  of $X_n \cap X_m$ where $1 < n < m$, note that if $x \in X_n \cap
-  X_m$ then $f^{-1}(g^{-1}(x)) \in X_{n - 1} \cap X_{m - 1}$.
-  Continuing in this way, we can show $X_1 \cap X_{m - n + 1}$ is not
-  empty, which is a contradiction. Thus $X_n \cap X_m = \emptyset$.
-  Just to be clear, the disjointness of the $X_n$ sets is not crucial
-  to the overall proof, but it does help paint a clearer picture of
-  how the sets $X$ and $X'$ are constructed.
+  To understand these definitions intuitively, observe that $X_1$
+  consists of all elements in $A$ that are not in the image of $g$.
+  Then $X_2$ consists of elements that are images under $g \circ f$
+  of elements in $X_1$, and so on. Similarly, each $Y_n = f(X_n)$
+  consists of the images of $X_n$ under $f$. The following diagram
+  illustrates this construction and the relationship between these sets.
 
-  Let $X = \bigcup_{n = 1}^{\infty} X_n$ and $Y = \bigcup_{n =
-  1}^{\infty} f(X_n)$. We show that $f$ is a surjection from $X$ to
-  $Y$. This is straightforward. Each $x \in X$ comes from some $X_n$
-  and so $f(x) \in f(X_n) \subseteq Y$. Likewise, each $y \in Y$ is
-  an element of some $f(X_n)$ and thus $y = f(x)$ for some $x \in X_n
-  \subseteq X$. Thus $f : A \to B$ is a surjection.
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}[scale=1.2, every node/.style={font=\small}]
+
+      % Draw outer ellipses for A and B
+      \draw[thick] (0, 0) ellipse (2.5cm and 3.5cm);
+      \draw[thick] (6, 0) ellipse (2.5cm and 3.5cm);
+
+      % Recursive ellipses for A (shades of red)
+      \foreach \i/\label/\shade in {0/X_1/red!40, 1//red!15,
+      2/X_2/red!40, 3//red!15, 4/X_3/red!40} {
+        \pgfmathsetmacro{\xradius}{2.5-\i*0.5}
+        \pgfmathsetmacro{\yradius}{3.5-\i*0.7}
+        \draw[fill=\shade] (0, 0) ellipse (\xradius cm and \yradius cm);
+        \ifx\label\empty
+        \else
+        \node at (0, {\yradius-0.3}) {\(\label\)};
+        \fi
+      }
+
+      % Recursive ellipses for B (shades of blue)
+      \foreach \i/\label/\shade in {0//blue!15, 1/Y_1/blue!40,
+      2//blue!15, 3/Y_2/blue!40, 4//blue!15} {
+        \pgfmathsetmacro{\xradius}{2.5-\i*0.5}
+        \pgfmathsetmacro{\yradius}{3.5-\i*0.7}
+        \draw[fill=\shade] (6, 0) ellipse (\xradius cm and \yradius cm);
+        \ifx\label\empty
+        \else
+        \node at (6, {\yradius-0.3}) {\(\label\)};
+        \fi
+      }
+
+      % Arrows for f(X_1) = Y_1
+      \draw[->, thick, blue!70!black] (0, 3.5) -- (6, 2.8)
+      node[midway, above] {\(f(X_1)\)};
+      \draw[->, thick, blue!70!black] (0, -3.5) -- (6, -2.8)
+      node[midway, below] {\(f(X_1)\)};
+
+      % Arrows for g(f(X_1)) = X_2.
+      \draw[->, thick, red!70!black] (6, 2.8) -- (0, 2.1)
+      node[midway, above] {\(g(f(X_1))\)};
+      \draw[->, thick, red!70!black] (6, -2.8) -- (0, -2.1)
+      node[midway, below] {\(g(f(X_1))\)};
+
+      % Arrows for f(X_2) = Y_2.
+      \draw[->, thick, blue!70!black] (0, 2.1) -- (6, 1.4)
+      node[midway, above] {\(f(X_2)\)};
+      \draw[->, thick, blue!70!black] (0, -2.1) -- (6, -1.4)
+      node[midway, below] {\(f(X_2)\)};
+
+      % Arrows for g(f(X_2)) = X_3.
+      \draw[->, thick, red!70!black] (6, 1.4) -- (0, 0.7)
+      node[midway, above] {\(g(f(X_2))\)};
+      \draw[->, thick, red!70!black] (6, -1.4) -- (0, -0.7)
+      node[midway, below] {\(g(f(X_2))\)};
+
+      % Arrows for f(X_3) = Y_3.
+      \draw[->, thick, dashed, blue!70!black] (0, 0.7) -- (6, 0)
+      node[midway, above] {};
+      \draw[->, thick, dashed, blue!70!black] (0, -0.7) -- (6, 0)
+      node[midway, below] {};
+
+      % Add labels for A and B
+      \node at (0, -4) {\(A = (\bigcup_{n = 1}^{\infty} X_n) \cup X'\)};
+      \node at (6, -4) {\(B = (\bigcup_{n = 1}^{\infty} Y_n) \cup Y'\)};
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  We show that $\set{X_n : n \in \NN}$ is a pairwise disjoint
+  collection of subsets of $A$, while $\set{f(X_n) : n \in \NN}$ is a
+  similar collection in $B$. To see that the sets $X_1, X_2, X_3,
+  \dots$ are pairwise disjoint, note that $X_1 \cap X_n = \emptyset$
+  for all $n \geq 2$ because $X_1 = A \setminus g(B)$ and $X_n
+  \subseteq g(B)$. (Why? $f$ is a mapping from $A$ to $B$, so we have
+    that $f(X_n) \subseteq B$, and thus $X_{n + 1} = g(f(X_n))
+  \subseteq g(B)$.) In the general case of $X_n \cap X_m$ where $1 <
+  n < m$, note that if $x \in X_n \cap X_m$ then $f^{-1}(g^{-1}(x))
+  \in X_{n - 1} \cap X_{m - 1}$. Continuing in this way, we can show
+  $X_1 \cap X_{m - n + 1}$ is not empty, which is a contradiction.
+  Thus $X_n \cap X_m = \emptyset$. Just to be clear, the disjointness
+  of the $X_n$ sets is not crucial to the overall proof, but it does
+  help paint a clearer picture of how the sets $X$ and $X'$ are constructed.
+
+  We show that $f$ is a surjection from $X$ to $Y$. This is
+  straightforward. Each $x \in X$ comes from some $X_n$ and so $f(x)
+  \in f(X_n) \subseteq Y$. Likewise, each $y \in Y$ is an element of
+  some $f(X_n)$ and thus $y = f(x)$ for some $x \in X_n \subseteq X$.
+  Thus $f : A \to B$ is a surjection.
 
   Let $X' = A \setminus X$ and $Y' = B \setminus Y$. Let $y \in Y'$.
   Then $y \notin f(X_n)$ for all $n$ (by definition of $Y'$). We also
@@ -1944,6 +2019,31 @@ quantities).''}}
   \in \RR$ for which $\abs{a_n} \leq C$ for all $n$.
 \end{proposition}
 
+\begin{proof}
+  Recall that boundedness means that there exists a lower bound $L
+  \in \RR$ and an upper bound $U \in \RR$ where
+  \[ L \leq a_n \leq U \]
+  for all $n$. Now let's prove each direction.
+
+  $(\Leftarrow)$ Assume that there exists a $C \in \RR$ where
+  \[ \abs{a_n} \leq C. \]
+  Then
+  \[ -C \leq a_n \leq C. \]
+  And so, by setting $L = -C$ and $U = C$, we have shown that
+  \[ L \leq a_n \leq U, \]
+  which means that $(a_n)$ is bounded.
+
+  $(\Rightarrow)$ If $(a_n)$ is bounded, then there exists such an
+  $L$ and $U$. Let $C = \max(\abs{L}, U)$. Note that this implies
+  that $C \geq U$ and (since $C \geq \abs{L}$, that) $-C \leq
+  -\abs{L}$. Thus, for all $n$ we have
+  \[ -C \leq -\abs{L} \leq L \leq a_n \leq U \leq C. \]
+  So we see that
+  \[ -C \leq a_n \leq C \]
+  which by \facref{properties-of-absolute-values} is the same as
+  $\abs{a_n} \leq C$.
+\end{proof}
+
 \begin{definition}
   A sequence $(a_n)$ \vocab{converges} to $a \in \RR$ if for all
   $\epsilon > 0$ there exists some $N \in \NN$ such that $\abs{a_n -
@@ -1951,6 +2051,23 @@ quantities).''}}
 
   When this happens, $a$ is called the \vocab{limit} of $a_n$.
 \end{definition}
+
+\begin{outline}
+  To show that $a_n \to a$, begin with preliminary work:
+  \begin{enumerate}
+    \item[0.] Scratch work: Start with $\abs{a_n - a} < \epsilon$ and
+      unravel to solve for $n$. This tells you which $N$ to pick for
+      step 2 below.
+  \end{enumerate}
+  Now for your actual proof:
+  \begin{enumerate}
+    \item Let $\epsilon > 0$.
+    \item Let $N$ be the final value of $n$ you got in your scratch
+      work, and let $n > N$.
+    \item Redo scratch work (without $\epsilon$'s), but at the end
+      use $N$ to show that $\abs{a_n - a} < \epsilon$.
+  \end{enumerate}
+\end{outline}
 
 \begin{definition}
   Let $\epsilon > 0$. The \vocab{$\epsilon$-neighborhood} of a point
@@ -2081,7 +2198,10 @@ quantities).''}}
   A sequence converges if and only if it is Cauchy.
 \end{theorem}
 
-% \chapter{Series}
+\setchapterpreamble{\dictum[Niels Henrik Abel, in a letter to Holmboe
+  (1826)]{``Divergent series are the invention of the devil, and it is
+a shame to base on them any demonstration whatsoever.''}}
+\chapter{Series}
 
 % \chapter{The Topology of $\RR$}
 
