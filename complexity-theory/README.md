@@ -2,7 +2,7 @@
 
 ![Badge](https://raw.githubusercontent.com/richwill28/notes/refs/heads/assets/assets/warning-np-hardness-and-existential-dread.svg)
 
-This is a personal exposition project of mine. Its primary purpose is to serve as an accessible reference to some of the most fundamental results in complexity theory.
+This is a personal exposition project of mine. The primary purpose is to create a clear and accessible reference to some of the most fundamental results in complexity theory.
 
 ## Motivation
 
