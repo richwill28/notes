@@ -2302,7 +2302,7 @@ quantities).''}}
   the shaded band; see below.)
   \begin{tightfigure}
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.8]
       % Shaded region, drawn first so it goes behind everything
       \fill[gray!20] (0,1-0.5) rectangle (10,1+0.5);
 
@@ -2336,9 +2336,9 @@ quantities).''}}
       }
 
       % N marker with proper cross (X)
-      \node[below] at (6.5,0) {$N$};
-      \draw (6.3,-0.45) -- (6.7,-0.05);
-      \draw (6.3,-0.05) -- (6.7,-0.45);
+      \node[below, yshift=-2pt] at (6.5,0) {$N$};
+      \draw (6.3,-0.6) -- (6.7,-0.2);
+      \draw (6.3,-0.2) -- (6.7,-0.6);
 
       % Tick mark for N on x-axis
       \draw (6.5,-0.1) -- (6.5,0.1);
@@ -2624,7 +2624,6 @@ There is a second proof that is even a little shorter.
   \[ \lim_{n\to\infty} \frac{1}{2} \cdot \left(\frac{\frac{1}{n} +
     \frac{1}{n^2} + 4}{5 - \frac{1}{n^2}}\right) \cdot
   \left(\frac{3n+1}{n+2} + \frac{1}{\sqrt{n}}\right)? \]
-
   By the limit laws, we have
   \begin{align*}
     \lim_{n\to\infty} \frac{1}{2} \cdot \left(\frac{\frac{1}{n} +
@@ -2665,6 +2664,7 @@ There is a second proof that is even a little shorter.
     -\epsilon < x_n - L < \epsilon \\
     \abs{x_n - L} < \epsilon.
   \end{gather*}
+  \vspace{-1em}
 \end{proof}
 
 \begin{example}
@@ -2689,6 +2689,7 @@ There is a second proof that is even a little shorter.
 \end{definition}
 
 \begin{theorem}[The monotone convergence theorem]
+  \thmlabel{monotone-convergence}
   Suppose $(a_n)$ is monotone. Then $(a_n)$ converges if and only if
   it is bounded. Moreover,
   \begin{itemize}
@@ -2700,6 +2701,144 @@ There is a second proof that is even a little shorter.
       \[ \lim_{n \to \infty} a_n = \inf(\set{a_n : n \in \NN}). \]
   \end{itemize}
 \end{theorem}
+
+\begin{proofidea}
+  Suppose $(a_n)$ is monotonically increasing. If it's not bounded,
+  then given any $M > 0$, this $M$ is not an upper bound and so
+  eventually $(a_n)$ will get above it. And since it's monotonically
+  increasing, once it gets above a number, it \textit{stays} above that number.
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}[scale=0.75]
+      % Draw the coordinate axes
+      \draw[<->] (-2,0) -- (12,0);
+      \draw[<->] (0,-1.5) -- (0,6);
+
+      % Draw the horizontal line at M (solid, not dashed)
+      \draw (-0.1,3.5) -- (0.1,3.5) node[left, xshift=-2pt] {$M$};
+
+      % Plot the monotone sequence points following a y = 0.1x² curve
+      \foreach \x/\y in {1/0.55, 2/0.7, 3/0.95, 4/1.3, 5/1.75,
+      6/2.3, 7/2.95, 8/3.7, 9/4.55, 10/5.5}
+      \filldraw[black] (\x,\y) circle (0.09);
+
+      % Add the arrows pointing to points above M with proper angle
+      \draw[->] (6,5.4) -- (9.1,5.5);
+      \draw[->] (6,5) -- (8.2,4.65);
+      \draw[->] (6,4.6) -- (7.4,4);
+
+      % Add the text
+      \node[align=center, font=\small] at (3.5,5) {Once a monotone
+      \\ $(a_n)$ gets above $M$, \\ it stays above $M$.};
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  If, on the other hand, $(a_n)$ is bounded, then the sequence must
+  be leveling out (it's monotone, so it can't go up and down).
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}[scale=0.75]
+      % Draw the coordinate axes
+      \draw[<->] (-2,0) -- (12,0);
+      \draw[<->] (0,-1.5) -- (0,6);
+
+      % Draw the horizontal dashed line for the least upper bound
+      \draw[dashed] (-0.1,4) -- (12,4);
+
+      % Plot the monotone sequence points with diminishing increases
+      % (approaching the bound)
+      \filldraw[black] (1,0.9) circle (0.09);
+      \filldraw[black] (2,1.8) circle (0.09);
+      \filldraw[black] (3,2.4) circle (0.09);
+      \filldraw[black] (4,2.9) circle (0.09);
+      \filldraw[black] (5,3.2) circle (0.09);
+      \filldraw[black] (6,3.4) circle (0.09);
+      \filldraw[black] (7,3.6) circle (0.09);
+      \filldraw[black] (8,3.7) circle (0.09);
+      \filldraw[black] (9,3.8) circle (0.09);
+      \filldraw[black] (10,3.85) circle (0.09);
+
+      % Add the curved arrow pointing to the least upper bound
+      \draw[->] (4.75,5.5) to[out=180, in=90] (3,4);
+
+      % Add the text
+      \node[align=center, font=\small] at (8,5.5) {$(a_n)$'s
+      bounded above, so \\ there's a least upper bound};
+    \end{tikzpicture}
+    \vspace{-1.5em}
+  \end{tightfigure}
+\end{proofidea}
+
+\begin{proof}
+  Assume that $(a_n)$ is monotonically increasing, and let's suppose
+  first that $a_n$ is not bounded. Then for any $M > 0$ there exists
+  some $N$ such that $a_N > M$. But since $(a_N)$ is monotonically
+  increasing, for $n > N$ we have a$_n \geq a_N > M$. And so, by
+  \defref{divergent-sequences}, $(a_n)$ diverges to $\infty$.
+
+  Next suppose that $(a_n)$ is bounded. Then we have that $\set{a_n :
+  n \in \NN}$ is a subset of $\RR$ which is bounded above, which by
+  the completeness of $\RR$ implies that $\sup(\set{a_n : n \in
+  \NN})$ exists. Call this supremum $\alpha$. We want to show that
+  $\lim_{n \to \infty} a_n = \alpha$; that is, we want to show that
+  for any $\epsilon > 0$ there exists some $N$ such that $n > N$
+  implies $\size{a_n — \alpha} < \epsilon$.
+
+  To show this, first let $\epsilon > 0$. Since $\sup(\set{a_n : n
+  \in \NN}) = \alpha$, by the analytic definition of suprema
+  (\thmref{suprema-analytically}) there exists some $a_N > a -
+  \epsilon$. And since $(a_n)$ is monotonically increasing, we see
+  that for any $n > N$ we have that $a_n \geq a_N > \alpha -
+  \epsilon$. And of course, $a_n < \alpha$ due to the fact that
+  $\alpha$ is the supremum (and hence an upper bound) of $\set{a_n :
+  n \in \NN}$. And so, for $n > N$, we have $\alpha - \epsilon < a_n
+  < \alpha$. This implies $\alpha - \epsilon < a_n < \alpha +
+  \epsilon$, and hence $-\epsilon < a_n - \alpha < \epsilon$, which,
+  at last, gives
+  \[ \size{a_n - \alpha} < \epsilon \]
+  completing the proof in the case when $(a_n)$ is monotonically increasing.
+
+  The case where $(a_n)$ is monotonically decreasing is very similar.
+\end{proof}
+
+\begin{remark}
+  This theorem is nice for several reasons, but one of which is the
+  fact that you do not have to know what the limit of $(a_n)$ is in
+  order to show that $(a_n)$ is convergent. This is notable since in
+  the definition of sequence convergence---which, until now, we have
+  heavily relied on to show a sequence converges---requires that you
+  already know (and can write down) what the limit is going to be.
+  Below is an example where it would be quite a challenge to write
+  down the limit of the sequence in a beneficial way. Yet by the
+  monotone convergence theorem, we will be able to conclude that the
+  limit exists.
+\end{remark}
+
+\begin{example}
+  Let $(a_n)$ be the sequence where $a_1 = 0.1$, $a_2 = 0.12$, $a_3 =
+  0.123$, $a_4 = 0.1234$, and so on. (And, to be clear, this pattern
+    does not change when you reach double digits. For example, $a_{12}
+  = 0.123456789101112$.) Prove that $(a_n)$ converges.
+
+  \begin{proof}
+    Note that $a_{n+1}$ and $a_n$ match exactly until the last digits
+    of $a_{n+1}$, which are the digits of $n + 1$. Therefore,
+    $a_{n+1} - a_n$ is a number with a bunch of zeros followed the
+    digits of $n + 1$. In particular,
+    \[ a_{n+1} - a_n > 0 \]
+    for all $n$. We have shown that $a_{n+1} > a_n$ for all $n$,
+    proving that $(a_n)$ is monotone increasing. Furthermore note
+    that since all the terms begin with $0.1$, we have that $a_n \leq
+    1$ for all $n$.
+
+    We have shown that $(a_n)$ is monotone increasing and bounded
+    above, therefore by the monotone convergence theorem
+    (\thmref{monotone-convergence}) the sequence converges,
+    completing the proof.
+  \end{proof}
+\end{example}
 
 \begin{proposition}
   Suppose $S \subseteq \RR$ is bounded above. Then there exists a
