@@ -2117,7 +2117,8 @@ quantities).''}}
 
 \begin{example}
   Show that the sequence
-  \[ (a_n) = (1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4}, \frac{1}{5}, \dots) \]
+  \[ (a_n) = \left(1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4},
+  \frac{1}{5}, \dots\right) \]
   converges to 0.
 
   \begin{proof}
@@ -2158,7 +2159,8 @@ quantities).''}}
 
 \begin{example}
   Again, show that the sequence
-  \[ (a_n) = (1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4}, \frac{1}{5}, \dots) \]
+  \[ (a_n) = \left(1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4},
+  \frac{1}{5}, \dots\right) \]
   converges to 0. This time, use the method described in
   \outref{how-to-show-sequence-convergence}.
 
@@ -2186,6 +2188,46 @@ quantities).''}}
     \frac{1}{N} = \frac{1}{1/\epsilon} = \epsilon. \]
     That is, $\abs{a_n - 0} < \epsilon$. So by
     \defref{convergent-sequences}, we have shown that $\frac{1}{n} \to 0$.
+  \end{proof}
+\end{example}
+
+\begin{example}
+  Let $a_n = \frac{3n+1}{n+2}$. Prove that $\lim_{n\to\infty} a_n = 3$.
+
+  \textit{Scratch Work.} Again, we first play around. We start with
+  where we want to get to (that $|a_n - a| < \epsilon$), and then
+  do some algebra to figure out which values of $n$ would give this.
+
+  We want the following:
+  \begin{align*}
+    \abs{a_n - a} &< \epsilon\\
+    \left|\frac{3n+1}{n+2} - 3\right| &< \epsilon\\
+    \left|\frac{3n+1}{n+2} - \frac{3(n+2)}{n+2}\right| &< \epsilon\\
+    \left|\frac{3n+1-3n-6}{n+2}\right| &< \epsilon\\
+    \left|\frac{-5}{n+2}\right| &< \epsilon\\
+    \frac{5}{n+2} &< \epsilon\\
+    \frac{5}{\epsilon} &< n+2\\
+    \frac{5}{\epsilon} - 2 &< n
+  \end{align*}
+
+  So as long as we choose $N = \frac{5}{\epsilon} - 2$, then for
+  any $n > N$ we will have $n > \frac{5}{\epsilon} - 2$, which by
+  the above will imply that $\frac{3n+1}{n+2} \to 3$, as desired.
+
+  \begin{proof}
+    Fix any $\epsilon > 0$. Set $N = \frac{5}{\epsilon} - 2$.
+    Then for any $n > N$,
+    \begin{align*}
+      \abs{a_n - a} &= \left|\frac{3n+1}{n+2} - 3\right| =
+      \left|\frac{3n+1}{n+2} - \frac{3n+6}{n+2}\right|\\
+      &= \frac{5}{n+2} < \frac{5}{N+2} =
+      \frac{5}{(\frac{5}{\epsilon} - 2) + 2}\\
+      &= \frac{5}{5/\epsilon} = \epsilon.
+    \end{align*}
+
+    That is, $\abs{a_n - a} < \epsilon$. So by
+    \defref{convergent-sequences} we have
+    shown that $\frac{3n+1}{n+2} \to 3$.
   \end{proof}
 \end{example}
 
@@ -2277,8 +2319,8 @@ quantities).''}}
       % Labels
       \node[left] at (0,1) {$1$};
       \node[left] at (0,-1) {$-1$};
-      \node[left] at (0,1.5) {$1+\varepsilon$};
-      \node[left] at (0,0.5) {$1-\varepsilon$};
+      \node[left] at (0,1.5) {$1+\epsilon$};
+      \node[left] at (0,0.5) {$1-\epsilon$};
 
       % Dotted line at y=1
       \draw[dotted] (0,1) -- (10,1);
@@ -2320,20 +2362,20 @@ quantities).''}}
     \underline{Even $n$.} If $n$ is even and $n > N$, then we have that
     \[ \abs{1 - a} < \frac{1}{2}. \]
     Unwinding this:
-    \begin{align*}
-      -\frac{1}{2} < 1 - a < \frac{1}{2}, \\
-      -\frac{3}{2} < -a < -\frac{1}{2}, \\
+    \begin{gather*}
+      -\frac{1}{2} < 1 - a < \frac{1}{2} \\
+      -\frac{3}{2} < -a < -\frac{1}{2} \\
       \frac{1}{2} < a < \frac{3}{2}.
-    \end{align*}
+    \end{gather*}
 
     \underline{Odd $n$.} If $n$ is odd and $n > N$, then we have that
     \[ \abs{-1 - a} < \frac{1}{2}. \]
     Unwinding this:
-    \begin{align*}
-      -\frac{1}{2} < -1 - a < \frac{1}{2}, \\
-      \frac{1}{2} < -a < \frac{3}{2}, \\
+    \begin{gather*}
+      -\frac{1}{2} < -1 - a < \frac{1}{2} \\
+      \frac{1}{2} < -a < \frac{3}{2} \\
       -\frac{3}{2} < a < -\frac{1}{2}.
-    \end{align*}
+    \end{gather*}
 
     But this is a contradiction; clearly no $a$ can be inside of both
     $\left(\frac{1}{2}, \frac{3}{2}\right)$ and $\left(-\frac{3}{2},
@@ -2392,9 +2434,176 @@ quantities).''}}
   A sequence cannot have more than one limit.
 \end{proposition}
 
+\begin{proofidea}
+  The idea is to assume that you have a sequence $a$, that converges
+  to some $a$ and also converges to some other number 6. Since it
+  converges to $a$, after some point all the sequence points are
+  within $\epsilon$ of $a$, for some really tiny $\epsilon$. But
+  since it also converges to $b$, the same thing must happen there
+  too. So if $\epsilon$ is small enough that those two regions are
+  mutually exclusive, we will have a contradiction.
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}
+      % Draw the number line
+      \draw[<->] (-5, 0) -- (5, 0);
+
+      % Draw the points -1 and 1
+      \filldraw (-2, 0) circle (2pt) node[below] {$a$};
+      \filldraw (2, 0) circle (2pt) node[below] {$b$};
+
+      % Draw the circles around -1 and 1
+      \draw[dashed] (-2, 0) circle (1);
+      \draw[dashed] (2, 0) circle (1);
+
+      % Add arrows from the center to the perimeter at 45 degrees
+      \draw[->] (-2, 0) -- ++(45:1) node[midway, above,
+      xshift=-6pt, yshift=-2pt] {$\epsilon$};
+      \draw[->] (2, 0) -- ++(45:1) node[midway, above,
+      xshift=-6pt, yshift=-2pt] {$\epsilon$};
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  And this is how we will reach a contradiction: there is no way for
+  $a_n (n > N)$ to be in both circles at the same time. Of course, if
+  a and b are really close together we will need to choose a smaller
+  $\epsilon$ to make sure the intervals remain disjoint, but that's
+  the only difference.
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}
+      % Draw the number line
+      \draw[<->] (-5, 0) -- (5, 0);
+
+      % Draw the points -1 and 1
+      \filldraw (-2, 0) circle (2pt) node[below, yshift=-6pt] {$a$};
+      \filldraw (-1, 0) circle (2pt) node[below, yshift=-6pt] {$b$};
+
+      % Draw the circles around -1 and 1
+      \draw[dashed] (-2, 0) circle (0.25);
+      \draw[dashed] (-1, 0) circle (0.25);
+
+      % Add arrows from the center to the perimeter at 45 degrees
+      \draw[->] (-2, 0) -- ++(45:0.25) node[above, xshift=4pt,
+      yshift=-2pt] {$\epsilon$};
+      \draw[->] (-1, 0) -- ++(45:0.25) node[above, xshift=4pt,
+      yshift=-2pt] {$\epsilon$};
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  For instance, if the radius of those balls is a third of the
+  distance between $a$ and $b$, it should work out. With that
+  intuition in mind, here's the proof.
+\end{proofidea}
+
+\begin{proof}
+  Suppose for a contradiction that $a_n \to a$ and $a_n \to b$, where
+  $a \neq b$; moreover, without loss of generality let's assume $a <
+  b$. Let $\epsilon = (b - a)/3 > 0$. Since $a_n \to a$ there
+  exists some $N_1$ such that for $n > N_1$ we have $|a_n - a| < (b -
+  a)/3$. Likewise, since $a_n \to b$ there exists some $N_2$ such
+  that for $n > N_2$ we have $|a_n - b| < (b - a)/3$. Let $N =
+  \max\{N_1, N_2\}$. Then for $n > N$ (implying $n > N_1$ and $n >
+  N_2$), we have both $|a_n - a| < (b - a)/3$ and $|a_n - b| < (b -
+  a)/3$. That is, for such $n$ we have
+  \[ -\frac{b-a}{3} < a_n - a < \frac{b-a}{3} \qquad \text{and}
+  \qquad -\frac{b-a}{3} < a_n - b < \frac{b-a}{3}. \]
+  i.e.,
+  \[ a - \frac{b-a}{3} < a_n < a + \frac{b-a}{3} \qquad \text{and}
+  \qquad b - \frac{b-a}{3} < a_n < b + \frac{b-a}{3}. \]
+  In particular,
+  \[ a_n < \frac{b+2a}{3} \qquad \text{and} \qquad \frac{2b+a}{3} < a_n. \]
+  But since $a < b$, we must have $b + 2a < 2b + a$. But this then implies that
+  \[ a_n < \frac{b+2a}{3} < \frac{2b+a}{3} < a_n, \]
+  which is clearly a contradiction.
+\end{proof}
+
+There is a second proof that is even a little shorter.
+
+\begin{proofidea}
+  The idea is to show that $\abs{a - b} < \epsilon$ for all $\epsilon
+  > 0$, and therefore $\abs{a - b} = 0$, implying that $a = b$.
+  Intuitively, the way to show this is to say that if $a$, is getting
+  really close to both $a$ and $b$, then that forces $a$ and $b$ to
+  be close to each other. If we demand that $a_n$, is within
+  $\epsilon/2$ of both $a$ and $b$, then the distance between $a$ and
+  $b$ can't be more than $\epsilon$:
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}
+      % Draw the number line
+      \draw[<->] (-5, 0) -- (5, 0);
+
+      % Draw the points -1 and 1
+      \filldraw (-2, 0) circle (2pt) node[below] {$a$};
+      \filldraw (2, 0) circle (2pt) node[below] {$b$};
+
+      % Draw the circles around -1 and 1
+      \draw[dashed] (-2, 0) circle (2.25);
+      \draw[dashed] (2, 0) circle (2.25);
+
+      % Add arrows from the center to the perimeter at 45 degrees
+      \draw[->] (-2, 0) -- ++(45:2.25) node[midway, above,
+      xshift=-6pt, yshift=-2pt] {$\epsilon$};
+      \draw[->] (2, 0) -- ++(45:2.25) node[midway, above,
+      xshift=-6pt, yshift=-2pt] {$\epsilon$};
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  Using the triangle inequality we can then bound the distance from
+  $a$ to $b$ by finding the distance from $a$ to $a_n$, plus the
+  distance from $a_n$ to $b$.
+\end{proofidea}
+
+\begin{proof}
+  Let $\epsilon > 0$. Since $\epsilon/2 > 0$ and $a_n \to a$,
+  there exists some $N_1$ such that for $n > N_1$ we have $\abs{a_n -
+  a} < \epsilon/2$. Since $\epsilon/2 > 0$ and $a_n \to b$,
+  there exists some $N_2$ such that for $n > N_2$ we have $\abs{a_n -
+  b} < \epsilon/2$. Let $N = \max(N_1, N_2)$ and pick any $n > N$. Then
+  \begin{align*}
+    \abs{a - b} &= \abs{a - a_n + a_n - b} \\
+    &\leq \abs{a - a_n} + \abs{a_n - b} && \text{(triangle inequality)} \\
+    &= \abs{a_n - a} + \abs{a_n - b} \\
+    &< \epsilon/2 + \epsilon/2 && \text{($n > N$ implies $n >
+    N_1$ and $n > N_2$)} \\
+    &= \epsilon.
+  \end{align*}
+  Since this holds for any $\epsilon > 0$, we have shown that
+  $\abs{a - b} < \epsilon$ for all $\epsilon > 0$, which
+  implies that $\abs{a - b} = 0$, and hence $a = b$. So indeed, $a_n$
+  can converge to only a single point.
+\end{proof}
+
 \begin{proposition}
   If $(a_n)$ is a convergent sequence, then $(a_n)$ is bounded.
 \end{proposition}
+
+\begin{proof}
+  Since $(a_n)$ is convergent, let $a$ be the value it is converging
+  to. By the definition of convergence (with $\epsilon = 1$), there
+  is some $N$ where
+  \[ \abs{a_n - a} < 1 \]
+  for all $n > N$. That is, $a - 1 < a_n < a + 1$ for all $n > N$. Let
+  \[ U = \max \{a_1, a_2, a_3, \dots, a_N, a + 1\} \]
+  and
+  \[ L = \min \{a_1, a_2, a_3, \dots, a_N, a - 1\}. \]
+  Note that if $n \leq N$, then $L \leq a_n \leq U$, since each such
+  $a_n$ is included in the sets which we are taking the minimum and
+  maximum of. And if $n > N$, then we already noted that $a - 1 < a_n
+  < a + 1$, which implies that
+  \[ L \leq a - 1 < a_n < a + 1 \leq U, \]
+  and hence $L < a_n < U$. Combining these cases, we have that
+  \[ L \leq a_n \leq U \]
+  for all $n$. And thus, by definition, $(a_n)$ is bounded.
+\end{proof}
+
+\begin{corollary}
+  If $(a_n)$ is an unbounded sequence, then $(a_n)$ is divergent.
+\end{corollary}
 
 \begin{theorem}[Sequence limit laws]
   Assume that $(a_n)$ and $(b_n)$ are convergent sequences of real
@@ -2410,12 +2619,67 @@ quantities).''}}
   \end{enumerate}
 \end{theorem}
 
+\begin{example}
+  What is
+  \[ \lim_{n\to\infty} \frac{1}{2} \cdot \left(\frac{\frac{1}{n} +
+    \frac{1}{n^2} + 4}{5 - \frac{1}{n^2}}\right) \cdot
+  \left(\frac{3n+1}{n+2} + \frac{1}{\sqrt{n}}\right)? \]
+
+  By the limit laws, we have
+  \begin{align*}
+    \lim_{n\to\infty} \frac{1}{2} \cdot \left(\frac{\frac{1}{n} +
+    \frac{1}{n^2} + 4}{5 - \frac{1}{n^2}}\right) \cdot
+    \left(\frac{3n+1}{n+2} + \frac{1}{\sqrt{n}}\right) = \frac{1}{2}
+    \cdot \left(\frac{0 + 0 + 4}{5}\right) \cdot (3 + 0) = \frac{6}{5}.
+  \end{align*}
+\end{example}
+
 \begin{theorem}[Sequence squeeze theorem]
+  \thmlabel{sequence-squeeze}
   Assume $a_n \leq x_n \leq b_n$ for all $n$. Furthermore, assume that
   \[ a_n \to L \qquad \text{and} \qquad b_n \to L. \]
   Then,
   \[ x_n \to L. \]
 \end{theorem}
+
+\begin{proof}
+  Let $\epsilon > 0$.
+  \begin{itemize}
+    \item Since $a_n \to L$, there exists some $N_1$ such that $n >
+      N_1$ implies $\abs{a_n - L} < \epsilon$. That is, $-\epsilon <
+      a_n - L < \epsilon$. Or,
+      \[ L - \epsilon < a_n < L + \epsilon. \tag{1} \]
+
+    \item Since $b_n \to L$, there exists some $N_2$ such that $n >
+      N_2$ implies $\abs{b_n - L} < \epsilon$. That is, $-\epsilon <
+      b_n - L < \epsilon$. Or,
+      \[ L - \epsilon < b_n < L + \epsilon. \tag{2} \]
+  \end{itemize}
+
+  Let $N = \max(N_1, N_2)$, and let $n > N$. Combining the
+  inequality $a_n \leq x_n \leq b_n$ with the left half of (1) and
+  the right half of (2), we get
+  \begin{gather*}
+    L - \epsilon < a_n \leq x_n \leq b_n < L + \epsilon \\
+    L - \epsilon < x_n < L + \epsilon \\
+    -\epsilon < x_n - L < \epsilon \\
+    \abs{x_n - L} < \epsilon.
+  \end{gather*}
+\end{proof}
+
+\begin{example}
+  Prove that
+  \[ \lim_{n \to \infty} \frac{1}{n^{2.7} + \sqrt{n} + \pi} = 0. \]
+
+  \begin{proof}
+    Since
+    \[ 0 \leq \frac{1}{n^{2.7} + \sqrt{n} + \pi} \leq \frac{1}{n},
+      \qquad \lim_{n \to \infty} 0 = 0, \qquad \text{and} \qquad \lim_{n
+    \to \infty} \frac{1}{n} = 0, \]
+    by the sequence squeeze theorem (\thmref{sequence-squeeze}),
+    \[ \lim_{n \to \infty} \frac{1}{n^{2.7} + \sqrt{n} + \pi} = 0. \]
+  \end{proof}
+\end{example}
 
 \begin{definition}
   A sequence $(a_n)$ is \vocab{monotone increasing} if $a_n \leq a_{n
