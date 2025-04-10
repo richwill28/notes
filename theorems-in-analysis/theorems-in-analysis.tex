@@ -2606,6 +2606,7 @@ There is a second proof that is even a little shorter.
 \end{corollary}
 
 \begin{theorem}[Sequence limit laws]
+  \thmlabel{sequence-limit-laws}
   Assume that $(a_n)$ and $(b_n)$ are convergent sequences of real
   numbers such that $a_n \to a$ and $b_n \to b$. Also assume that $c
   \in \RR$. Then,
@@ -2849,6 +2850,51 @@ There is a second proof that is even a little shorter.
   \[ \lim_{n \to \infty} b_n = \inf(S). \]
 \end{proposition}
 
+\begin{proofidea}
+  We need to find elements of $S$ which are getting closer and closer
+  to $\sup(S)$.
+  What was our \textit{super} useful theorem for doing just that? The
+  analytic definition of suprema (\thmref{suprema-analytically})!
+  That was the theorem that said for any $\epsilon > 0$, there exists
+  some $a \in S$ such that $a > \sup(S) - \epsilon$.
+  And since it works for any $\epsilon > 0$, we can choose a sequence
+  of $\epsilon$ values that are getting closer and closer to $0$,
+  which in turn produce a sequence of $a$ values that are getting
+  closer and closer to $\sup(S)$.
+
+  And once we have found a sequence of these elements which are
+  getting closer and closer to $\sup(S)$,
+  how do we formally show they converge to $\sup(S)$? The sequence
+  squeeze theorem (\thmref{sequence-squeeze})
+  sure sounds like it's up to the job.
+\end{proofidea}
+
+\begin{proof}
+  Suppose $S \subseteq \RR$ is bounded above, implying that $\sup(S)$
+  exists. Let $\sup(S) = \alpha$ (implying $a_n \leq \alpha$ for all
+  $n$). By the analytic definition of suprema
+  (\thmref{suprema-analytically}), for any
+  $\epsilon > 0$ there exists some $x \in S$ such that $x > \alpha -
+  \epsilon$. In particular, there exists some $a_1 \in S$ such that
+  $a_1 > \alpha - 1$; and there exists some $a_2 \in S$ such that
+  $a_2 > \alpha - \frac{1}{2}$; and there exists some $a_3 \in S$
+  such that $a_3 > \alpha - \frac{1}{3}$; and, in general, for each
+  $n \in \NN$ there exists some $a_n \in S$ such that $a_n > \alpha -
+  \frac{1}{n}$.
+
+  Thus we obtain a sequence $(a_n)$ from $S$. Moreover, this sequence
+  does indeed converge to $\alpha$. Therefore, by
+  the limit laws (\thmref{sequence-limit-laws}) we have that
+  \[ \alpha - \frac{1}{n} \to \alpha - 0 = \alpha. \]
+  So we have an inequality
+  \[ \alpha - \frac{1}{n} \leq a_n \leq \alpha, \]
+  where both the upper and lower bounds converge to $\alpha$. By the
+  sequence squeeze theorem (\thmref{sequence-squeeze}) we see that $\lim_{n \to
+  \infty} a_n = \alpha$, as desired.
+
+  The infimum case is \textit{very} similar.
+\end{proof}
+
 \begin{definition}
   Let $(a_n)$ be a sequence of real numbers and let
   \[ n_1 < n_2 < n_3 < \dots \]
@@ -2858,27 +2904,335 @@ There is a second proof that is even a little shorter.
 \end{definition}
 
 \begin{proposition}
+  \prplabel{sequence-converges-iff-all-subsequences-converge}
   A sequence $(a_n)$ converges to $a$ if and only if every
   subsequence of $(a_n)$ also converges to $a$.
 \end{proposition}
+
+\begin{proof}
+  \phantom{.}
+
+  $(\Rightarrow)$ Assume that $(a_n)$ converges to $a$ and $(a_{n_k})$ is a
+  subsequence of $(a_n)$. Let $\epsilon > 0$. Then there exists some
+  $N$ such that
+  \[ \abs{a_n - a} < \epsilon \tag{1} \]
+  for all $n > N$.
+
+  We want to show that $a_{n_k} \to a$. That is, we want to show that
+  there exists some $N_1$ such that $\abs{a_{n_k} - a} < \epsilon$ for
+  all $k > N_1$. Notice that since each $n_i \in \NN$ and
+  \[ n_1 < n_2 < n_3 < \dots, \]
+  that we have $n_k \geq k$. Therefore by letting $N_1 = N$, for any
+  $k > N_1$ we then know that $n_k > N$, so by $(1)$ we have
+  \[ \abs{a_{n_k} - a} < \epsilon. \]
+
+  $(\Leftarrow)$ Assume that every subsequence of $(a_n)$ converges
+  to $a$. Suppose, for contradiction, that $(a_n)$ does not converge
+  to $a$. By \outref{how-to-show-sequence-diverges}, this means that
+  there exists some
+  $\epsilon_0 > 0$ such that for every $N \in \NN$, there is some $n > N$ with
+  $\abs{a_n - a} \geq \epsilon_0$. Using this fact, we can
+  inductively construct a subsequence of
+  $(a_n)$ as follows:
+  \begin{enumerate}
+    \item Let $n_1$ be a natural number with $\abs{a_{n_1} - a} \geq
+      \epsilon_0$.
+    \item Having chosen $n_1, \dots, n_k$, let $n_{k+1} > n_k$
+      be a natural number with $\abs{a_{n_{k+1}} - a} \geq \epsilon_0$.
+  \end{enumerate}
+
+  This process yields a subsequence $(a_{n_k})$ with the property that
+  $\abs{a_{n_k} - a} \geq \epsilon_0$ for all $k \in \NN$. But this
+  means that $(a_{n_k})$ cannot converge to $a$, which contradicts
+  our assumption that every subsequence of $(a_n)$ converges to $a$.
+  Therefore, $(a_n)$ must converge to $a$.
+\end{proof}
 
 \begin{corollary}
   If $(a_n)$ has a pair of subsequences converging to different
   limits, then $(a_n)$ diverges.
 \end{corollary}
 
+\begin{proof}
+  Assume for a contradiction that $(a_n)$ converges. Say, $a_n \to
+  L$. By \prpref{sequence-converges-iff-all-subsequences-converge},
+  this implies that every subsequence also converges to $L$. This
+  contradicts the
+  assumption that there are subsequences converging to different limits.
+\end{proof}
+
 \begin{proposition}
   If a monotone sequence $(a_n)$ has a convergent subsequence, then
   $(a_n)$ converges too, and has the same limit.
 \end{proposition}
 
+\begin{proofidea}
+  First recall that by
+  \prpref{sequence-converges-iff-all-subsequences-converge}, a
+  convergent sequence always has the same limit as any of its
+  subsequences. So by this, our task reduces to showing that $(a_n)$ converges.
+
+  A monotone sequence is convergent if and only if it is bounded (by
+  the monotone convergence theorem). We are told that $(a_n)$ is
+  monotone and to show that it's bounded, we use the assumption that
+  it has a convergent subsequence, $(a_{n_k})$. Here's the
+  progression: $(a_n)$ being monotone implies that its subsequence is
+  too, and $(a_{n_k})$ being convergent (and now monotone) will mean
+  that $(a_n)$ is bounded too.
+\end{proofidea}
+
+\begin{proof}
+  Assume that $(a_n)$ is monotone increasing; the case where $(a_n)$
+  is monotone decreasing is \textit{very} similar.
+
+  Let $(a_{n_k})$ be a convergent subsequence of $(a_n)$ and observe
+  that since $(a_n)$ is monotone increasing, being a subsequence
+  means that $(a_{n_k})$'s terms come from $(a_n)$ and do so in the
+  same order as they appear in $(a_n)$, implying that $(a_{n_k})$ is
+  also monotone increasing. That is, $(a_{n_k})$ was assumed to be
+  convergent and was shown to be monotone---by the monotone
+  convergence theorem (\thmref{monotone-convergence}) this means
+  $(a_{n_k})$ converges, and in particular converges to
+  $\sup(\{a_{n_k} : k \in \NN\})$.
+
+  We now show that $(a_n)$ is convergent, again by using the monotone
+  convergence theorem. Since $(a_n)$ is monotone increasing by
+  assumption, we need only show that $(a_n)$ is bounded above. To see
+  this, observe that since the subsequence $(a_{n_k})$ is an infinite
+  list of elements from $(a_n)$, any particular element $a_n$ from
+  the sequence has an element $a_{n_k}$ from this subsequence that
+  comes after it. And since both $a_n$ and $a_{n_k}$ are terms of
+  $(a_n)$, which is monotone increasing, we have $a_n \leq a_{n_k}$. So we have
+  \[ a_n \leq a_{n_k} \leq \sup(\{a_{n_k} : k \in \NN\}), \]
+  which proves that $(a_n)$ is bounded above (by this supremum), and
+  so by the monotone convergence theorem we have proven that $(a_n)$ converges.
+
+  Finally, since we have shown that the sequence $(a_n)$ is
+  convergent, by Proposition 3.32 it has the same limit as any of its
+  subsequences. This means that $(a_n)$ must also be converging to
+  $\sup(\{a_{n_k} : k \in \NN\})$, completing the proof.
+\end{proof}
+
 \begin{lemma}
+  \lemlabel{every-sequence-has-monotone-subsequence}
   Every sequence has a monotone subsequence.
 \end{lemma}
 
+\begin{proofidea}
+  Here's the idea behind it. We draw a sequence of in the $xy$-plane
+  by just plotting the points, and we will connect the dots to make a
+  zig-zagged line:
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}[scale=0.9]
+      % Draw axes
+      \draw[->] (-1,0) -- (10,0) node[right] {};
+      \draw[->] (0,-1) -- (0,6) node[above] {};
+
+      % Plot the points and connect them
+      \draw
+      (0.5,0.5) --
+      (1,2) --
+      (1.5,1.8) --
+      (2,5.5) --
+      (2.5,3.2) --
+      (3,5) --
+      (3.5,-0.5) --
+      (4,4.5) --
+      (4.5,1.2) --
+      (5,1.6) --
+      (5.5,0.5) --
+      (6,4.2) --
+      (6.5,0) --
+      (7,1.4) --
+      (7.5,4) --
+      (8,0.5) --
+      (8.5,3.8) --
+      (9,0.5);
+
+      \draw[dashed] (9,0.5) -- (9.5,1.2);
+
+      % Add points at each vertex
+      \filldraw (0.5,0.5) circle (2pt);
+      \filldraw (1,2) circle (2pt);
+      \filldraw (1.5,1.8) circle (2pt);
+      \filldraw (2,5.5) circle (2pt);
+      \filldraw (2.5,3.2) circle (2pt);
+      \filldraw (3,5) circle (2pt);
+      \filldraw (3.5,-0.5) circle (2pt);
+      \filldraw (4,4.5) circle (2pt);
+      \filldraw (4.5,1.2) circle (2pt);
+      \filldraw (5,1.6) circle (2pt);
+      \filldraw (5.5,0.5) circle (2pt);
+      \filldraw (6,4.2) circle (2pt);
+      \filldraw (6.5,0) circle (2pt);
+      \filldraw (7,1.4) circle (2pt);
+      \filldraw (7.5,4) circle (2pt);
+      \filldraw (8,0.5) circle (2pt);
+      \filldraw (8.5,3.8) circle (2pt);
+      \filldraw (9,0.5) circle (2pt);
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  From this you can maybe spot a nice \textit{decreasing} sequence,
+  which is of course monotone:
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}[scale=0.9]
+      % Draw axes
+      \draw[->] (-1,0) -- (10,0) node[right] {};
+      \draw[->] (0,-1) -- (0,6) node[above] {};
+
+      % Plot the points and connect them
+      \draw
+      (0.5,0.5) --
+      (1,2) --
+      (1.5,1.8) --
+      (2,5.5) --
+      (2.5,3.2) --
+      (3,5) --
+      (3.5,-0.5) --
+      (4,4.5) --
+      (4.5,1.2) --
+      (5,1.6) --
+      (5.5,0.5) --
+      (6,4.2) --
+      (6.5,0) --
+      (7,1.4) --
+      (7.5,4) --
+      (8,0.5) --
+      (8.5,3.8) --
+      (9,0.5);
+
+      \draw[dashed] (9,0.5) -- (9.5,1.2);
+
+      \filldraw (0.5,0.5) circle (2pt);
+      \filldraw (1,2) circle (2pt);
+      \filldraw (1.5,1.8) circle (2pt);
+      \filldraw (2,5.5) circle (2pt) node[above] {$a_{n_1}$};
+      \filldraw (2.5,3.2) circle (2pt);
+      \filldraw (3,5) circle (2pt) node[above] {$a_{n_2}$};
+      \filldraw (3.5,-0.5) circle (2pt);
+      \filldraw (4,4.5) circle (2pt) node[above] {$a_{n_3}$};
+      \filldraw (4.5,1.2) circle (2pt);
+      \filldraw (5,1.6) circle (2pt);
+      \filldraw (5.5,0.5) circle (2pt);
+      \filldraw (6,4.2) circle (2pt) node[above] {$a_{n_4}$};
+      \filldraw (6.5,0) circle (2pt);
+      \filldraw (7,1.4) circle (2pt);
+      \filldraw (7.5,4) circle (2pt) node[above] {$a_{n_5}$};
+      \filldraw (8,0.5) circle (2pt);
+      \filldraw (8.5,3.8) circle (2pt) node[above] {$a_{n_6}$};
+      \filldraw (9,0.5) circle (2pt);
+    \end{tikzpicture}
+  \end{tightfigure}
+
+  The magical definition that will solve everything is that of a
+  \textit{peak}; we want those labeled points to form \textit{peaks},
+  and we want to be able to say that if we have a(n infinite)
+  sequence of peaks, then we do indeed have a decreasing sequence.
+  The definition that does this is this: define a \textit{peak} to be
+  a point $a_n$ which is larger than every later point; that is,
+  $a_n$ is a peak if $a_n \geq a_m$ for all $m > n$.
+
+  So if we have infinitely many peaks, then we obtain a sequence like
+  the one above which will be decreasing. So what if we don't? Then
+  we only have finitely many peaks. In this case, we can find an
+  \textit{increasing} sequence, which is again monotone. To see how,
+  just note that if you're past the last peak, then any point you
+  pick is not a peak, which means there is some point after it which
+  is larger. So one at a time you can pick larger and larger points,
+  giving an increasing sequence.
+
+  \begin{tightfigure}
+    \centering
+    \begin{tikzpicture}[scale=0.9]
+      % Draw axes
+      \draw[->] (-1,0) -- (10,0) node[right] {};
+      \draw[->] (0,-1) -- (0,6) node[above] {};
+
+      % Plot the points and connect them
+      \draw
+      (0.5,0.5) --
+      (1,2) --
+      (1.5,1.8) --
+      (2,5.5) --
+      (2.5,3.2) --
+      (3,5) --
+      (3.5,-0.5) --
+      (4,0.5) --
+      (4.5,-0.5) --
+      (5,1) --
+      (5.5,0) --
+      (6,1.2) --
+      (6.5,0.4) --
+      (7,0) --
+      (7.5,0.2) --
+      (8,2) --
+      (8.5,1.4) --
+      (9,2.8);
+
+      \draw[dashed] (9,2.8) -- (9.5,2.4);
+
+      % Add points at each vertex
+      \filldraw (0.5,0.5) circle (2pt);
+      \filldraw (1,2) circle (2pt);
+      \filldraw (1.5,1.8) circle (2pt);
+      \filldraw (2,5.5) circle (2pt);
+      \filldraw (2.5,3.2) circle (2pt);
+      \filldraw (3,5) circle (2pt);
+      \filldraw (3.5,-0.5) circle (2pt) node[below] {$a_{n_1}$};
+      \filldraw (4,0.5) circle (2pt) node[above] {$a_{n_2}$};
+      \filldraw (4.5,-0.5) circle (2pt);
+      \filldraw (5,1) circle (2pt) node[above] {$a_{n_3}$};
+      \filldraw (5.5,0) circle (2pt);
+      \filldraw (6,1.2) circle (2pt) node[above] {$a_{n_4}$};
+      \filldraw (6.5,0.4) circle (2pt);
+      \filldraw (7,0) circle (2pt);
+      \filldraw (7.5,0.2) circle (2pt);
+      \filldraw (8,2) circle (2pt) node[above] {$a_{n_5}$};
+      \filldraw (8.5,1.4) circle (2pt);
+      \filldraw (9,2.8) circle (2pt) node[above] {$a_{n_6}$};
+    \end{tikzpicture}
+  \end{tightfigure}
+\end{proofidea}
+
+\begin{proof}
+  Call $a_n$ a \textit{peak} if $a_n$ is larger than every later
+  point. That is, if $a_n \geq a_m$ for all $m > n$.
+
+  Either there are infinitely many peaks or finitely many peaks.
+  Assume first that $(a_n)$ has infinitely many peaks. Then let
+  $a_{n_k}$ be the $k$th peak. Then, by the definition of a peak,
+  $a_{n_k} \geq a_{n_{k+1}}$, implying that $(a_{n_k})$ is a
+  decreasing subsequence.
+
+  Now assume that $(a_n)$ has finitely many peaks, and let $a_N$ be
+  the last one. Then let $a_{n_1} = a_{N+1}$. Since $a_N$ was the
+  last peak, $a_{N+1}$ is \textit{not} a
+  peak, implying that there is some later point $a_{n_2}$ that is
+  larger than it. Likewise, since $a_{n_2}$ is after the last peak,
+  it is also not a peak, and so there must be some later point
+  $a_{n_3}$ that is larger than it. Continuing in this way we
+  construct an increasing subsequence $(a_{n_k})$.
+
+  In either case we found a monotone subsequence, so we are done.
+\end{proof}
+
 \begin{theorem}[The Bolzano-Weierstrass theorem]
+  \thmlabel{bolzano-weierstrass}
   Every bounded sequence has a convergent subsequence.
 \end{theorem}
+
+\begin{proof}
+  Assume $(a_n)$ is a bounded sequence. Then by
+  \lemref{every-sequence-has-monotone-subsequence} it has a monotone
+  subsequence, $(a_{n_k})$. Also, since $(a_n)$ is bounded, so is
+  $(a_{n_k})$. Since $(a_{n_k})$ is both bounded and monotone, by the
+  monotone convergence theorem it converges.
+\end{proof}
 
 \begin{definition}
   A sequence $(a_n)$ is \vocab{Cauchy} if for all $\epsilon > 0$
@@ -2888,25 +3242,103 @@ There is a second proof that is even a little shorter.
 \end{definition}
 
 \begin{lemma}
+  \lemlabel{cauchy-implies-bounded}
   If $(a_n)$ is Cauchy, then $(a_n)$ is bounded.
 \end{lemma}
+
+\begin{proof}
+  Assume $(a_n)$ is Cauchy. Then (for $\epsilon = 1$) there exists
+  some $N \in \NN$ such that
+  \[ \abs{a_m - a_n} < 1 \]
+  for all $m, n > N$. In particular, for all $n > N$,
+  \[ \abs{a_n - a_{n+1}} < 1. \]
+  Therefore for $n > N$, we know that the terms are bounded:
+  \[ a_{N+1} - 1 < a_n < a_{N+1} + 1. \]
+  And there are only finitely many points before $a_N$, so these are
+  certainly bounded. Consequently, we can find a general bound on all
+  $a_n$. Indeed, if we let
+  \[ L = \min(\{a_1, a_2, a_3, \dots, a_N, a_{N+1} - 1\}) \]
+  and
+  \[ U = \max(\{a_1, a_2, a_3, \dots, a_N, a_{N+1} + 1\}), \]
+  then
+  \[ L \leq a_n \leq U \]
+  for all $n \in \NN$. So $(a_n)$ is bounded.
+\end{proof}
 
 \begin{theorem}[Cauchy criterion for convergence]
   A sequence converges if and only if it is Cauchy.
 \end{theorem}
 
+\begin{proofsketch}
+  For the forward direction, suppose $a_n$ converges to $a$. If $a_n$
+  and $a_m$ are both within $\epsilon / 2$ of $a$, then they must be
+  within $\epsilon$ of each other. We can formally show this using
+  the triangle inequality.
+
+  For the backwards direction, the idea is this: It will be helpful
+  to identify what the Cauchy sequence is converging to. And by
+  Bolzano-Weierstrass we can find a subsequence that is converging to
+  some $a$. Our goal will then be to prove that $a$ is in fact the
+  sequence's limit. How? Well, that subsequence gets super close to
+  $a$. What about the terms in $(a_n)$ which are not in the
+  subsequence? By the Cauchy criterion, they get super close to the
+  elements of the subsequence! And if a term in the sequence is super
+  close to a term of the subsequence, which is in turn super close to
+  the limit... then the sequence must be close to the limit, too.
+\end{proofsketch}
+
+\begin{proof}
+  \phantom{.}
+
+  $(\Rightarrow)$ Assume that $(a_n)$ converges to some $a \in \RR$.
+  Let $\epsilon > 0$. Since $\epsilon / 2 > 0$, there exists some $N
+  \in \NN$ such that for any $n > N$ we have
+  \[
+    \abs{a_n - a} < \frac{\epsilon}{2}.
+  \]
+  Then, for any $n, m > N$,
+  \[
+    \abs{a_n - a_m} = \abs{a_n - a + a - a_m}
+    \leq \abs{a_n - a} + \abs{a - a_m}
+    < \frac{\epsilon}{2} + \frac{\epsilon}{2}
+    = \epsilon.
+  \]
+
+  $(\Leftarrow)$ Assume that $(a_n)$ is Cauchy, and note that by
+  \lemref{cauchy-implies-bounded}, $(a_n)$ is bounded.
+  Combining these two facts, and applying the Bolzano-Weierstrass
+  theorem (\thmref{bolzano-weierstrass}), we conclude that some
+  subsequence of $(a_n)$ converges. Say, $(a_{n_j})$ converges to
+  $a$. Our goal is to show that $(a_n)$ converges; we will in fact
+  prove that $a_n \to a$.
+
+  Let $\epsilon > 0$. Since $\epsilon / 2 > 0$ and $(a_n)$ is Cauchy,
+  there exists some $N_1$ such that
+  \[
+    \abs{a_n - a_m} < \frac{\epsilon}{2} \tag{$1$}
+  \]
+  for all $n, m > N_1$. Since $\epsilon / 2 > 0$ and $(a_{n_j})$
+  converges to $a$, there exists some $N_2$ such that $j > N_2$ implies
+  \[
+    \abs{a_{n_j} - a} < \frac{\epsilon}{2}. \tag{$2$}
+  \]
+
+  We want to choose some $J$ so that, for subscripts past this point,
+  both $(1)$ and $(2)$ hold. Choose $J = \max(N_1,
+  N_2)$. Notice, from the definition of a subsequence,
+  that $n_j \geq j$. In particular, $n_{J+1} > J$. And so, for any $j > J$,
+  \[
+    \abs{a_j - a} = \abs{a_j - a_{n_{J+1}} + a_{n_{J+1}} - a}
+    \leq \abs{a_j - a_{n_{J+1}}} + \abs{a_{n_{J+1}} - a}
+    < \frac{\epsilon}{2} + \frac{\epsilon}{2}
+    = \epsilon.
+  \]
+\end{proof}
+
 \setchapterpreamble{\dictum[Niels Henrik Abel, in a letter to Holmboe
   (1826)]{``Divergent series are the invention of the devil, and it is
 a shame to base on them any demonstration whatsoever.''}}
 \chapter{Series}
-
-% \chapter{The Topology of $\RR$}
-
-% \chapter{Continuity}
-
-% \chapter{Differentiation}
-
-% \chapter{Integration}
 
 \appendix
 
