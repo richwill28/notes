@@ -95,11 +95,11 @@ has created.''}}
 
   \begin{tightfigure}
     \centering
-    \begin{tikzpicture}[scale=1.2, every node/.style={font=\small}]
+    \begin{tikzpicture}[scale=0.8, every node/.style={font=\small}]
 
       % Draw outer ellipses for A and B
       \draw[thick] (0, 0) ellipse (2.5cm and 3.5cm);
-      \draw[thick] (6, 0) ellipse (2.5cm and 3.5cm);
+      \draw[thick] (8, 0) ellipse (2.5cm and 3.5cm);
 
       % Recursive ellipses for A (shades of red)
       \foreach \i/\label/\shade in {0/X_1/red!40, 1//red!15,
@@ -118,46 +118,46 @@ has created.''}}
       2//blue!15, 3/Y_2/blue!40, 4//blue!15} {
         \pgfmathsetmacro{\xradius}{2.5-\i*0.5}
         \pgfmathsetmacro{\yradius}{3.5-\i*0.7}
-        \draw[fill=\shade] (6, 0) ellipse (\xradius cm and \yradius cm);
+        \draw[fill=\shade] (8, 0) ellipse (\xradius cm and \yradius cm);
         \ifx\label\empty
         \else
-        \node at (6, {\yradius-0.3}) {\(\label\)};
+        \node at (8, {\yradius-0.3}) {\(\label\)};
         \fi
       }
 
       % Arrows for f(X_1) = Y_1
-      \draw[->, thick, blue!70!black] (0, 3.5) -- (6, 2.8)
+      \draw[->, thick, blue!70!black] (0, 3.5) -- (8, 2.8)
       node[midway, above] {\(f(X_1)\)};
-      \draw[->, thick, blue!70!black] (0, -3.5) -- (6, -2.8)
+      \draw[->, thick, blue!70!black] (0, -3.5) -- (8, -2.8)
       node[midway, below] {\(f(X_1)\)};
 
       % Arrows for g(f(X_1)) = X_2.
-      \draw[->, thick, red!70!black] (6, 2.8) -- (0, 2.1)
+      \draw[->, thick, red!70!black] (8, 2.8) -- (0, 2.1)
       node[midway, above] {\(g(f(X_1))\)};
-      \draw[->, thick, red!70!black] (6, -2.8) -- (0, -2.1)
+      \draw[->, thick, red!70!black] (8, -2.8) -- (0, -2.1)
       node[midway, below] {\(g(f(X_1))\)};
 
       % Arrows for f(X_2) = Y_2.
-      \draw[->, thick, blue!70!black] (0, 2.1) -- (6, 1.4)
+      \draw[->, thick, blue!70!black] (0, 2.1) -- (8, 1.4)
       node[midway, above] {\(f(X_2)\)};
-      \draw[->, thick, blue!70!black] (0, -2.1) -- (6, -1.4)
+      \draw[->, thick, blue!70!black] (0, -2.1) -- (8, -1.4)
       node[midway, below] {\(f(X_2)\)};
 
       % Arrows for g(f(X_2)) = X_3.
-      \draw[->, thick, red!70!black] (6, 1.4) -- (0, 0.7)
+      \draw[->, thick, red!70!black] (8, 1.4) -- (0, 0.7)
       node[midway, above] {\(g(f(X_2))\)};
-      \draw[->, thick, red!70!black] (6, -1.4) -- (0, -0.7)
+      \draw[->, thick, red!70!black] (8, -1.4) -- (0, -0.7)
       node[midway, below] {\(g(f(X_2))\)};
 
       % Arrows for f(X_3) = Y_3.
-      \draw[->, thick, dashed, blue!70!black] (0, 0.7) -- (6, 0)
+      \draw[->, thick, dashed, blue!70!black] (0, 0.7) -- (8, 0)
       node[midway, above] {};
-      \draw[->, thick, dashed, blue!70!black] (0, -0.7) -- (6, 0)
+      \draw[->, thick, dashed, blue!70!black] (0, -0.7) -- (8, 0)
       node[midway, below] {};
 
       % Add labels for A and B
       \node at (0, -4) {\(A = (\bigcup_{n = 1}^{\infty} X_n) \cup X'\)};
-      \node at (6, -4) {\(B = (\bigcup_{n = 1}^{\infty} Y_n) \cup Y'\)};
+      \node at (8, -4) {\(B = (\bigcup_{n = 1}^{\infty} Y_n) \cup Y'\)};
     \end{tikzpicture}
   \end{tightfigure}
 
@@ -622,17 +622,17 @@ has created.''}}
   \begin{tightfigure}
     \centering
     \usetikzlibrary{matrix, arrows.meta}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.6, font=\scriptsize]
       % Define the column and row headers
       \foreach \x in {1,...,8} {
-        \node at (\x,0.5) {$\x$};
-        \node at (-0.5,-\x) {$\x$};
+        \node at (\x*1.5,0.5) {$\x$};
+        \node at (-0.5*1.5,-\x) {$\x$};
       }
-      \node at (9,0.5) {$\cdots$};
-      \node at (-0.5,-9) {$\vdots$};
+      \node at (9*1.5,0.5) {$\cdots$};
+      \node at (-0.5*1.5,-9) {$\vdots$};
 
       % Draw horizontal line beneath the column headers
-      \draw (0,0) -- (10,0);
+      \draw (0,0) -- (10*1.5,0);
 
       % Draw vertical line to the right of row headers
       \draw (0,0) -- (0,-10);
@@ -640,18 +640,18 @@ has created.''}}
       % Create the matrix of fractions
       \foreach \x in {1,...,8} {
         \foreach \y in {1,...,8} {
-          \node at (\x,-\y) {$\x/\y$};
+          \node at (\x*1.5,-\y) {$\x/\y$};
         }
       }
 
       % Draw ellipsis
       \foreach \x in {1,...,8} {
-        \node at (\x,-9) {$\vdots$};
+        \node at (\x*1.5,-9) {$\vdots$};
       }
       \foreach \y in {1,...,8} {
-        \node at (9,-\y) {$\cdots$};
+        \node at (9*1.5,-\y) {$\cdots$};
       }
-      \node at (9,-9) {$\ddots$};
+      \node at (9*1.5,-9) {$\ddots$};
 
       % To prevent arrows from touching the numbers
       \def\eps{0.25}
@@ -664,10 +664,12 @@ has created.''}}
           \pgfmathparse{int(mod(\pgfmathresult,2))}
           \ifnum\pgfmathresult=0
           % Diagonal arrows (upward)
-          \draw[->,red,thick] (\x+\eps,-\y+\eps) -- (\x+1-\eps,-\y+1-\eps);
+          \draw[->,red,thick] (\x*1.5+\eps*1.5,-\y+\eps) --
+          (\x*1.5+1*1.5-\eps*1.5,-\y+1-\eps);
           \else
           % Diagonal arrows (downward)
-          \draw[->,red,thick] (\x+1-\eps,-\y+1-\eps) -- (\x+\eps,-\y+\eps);
+          \draw[->,red,thick] (\x*1.5+1*1.5-\eps*1.5,-\y+1-\eps) --
+          (\x*1.5+\eps*1.5,-\y+\eps);
           \fi
           \fi
         }
@@ -677,25 +679,29 @@ has created.''}}
       \foreach \x in {1,...,7} {
         \pgfmathparse{int(mod(\x,2))}
         \ifnum\pgfmathresult=1
-        \draw[->,red,thick,bend left=30] (\x+\eps,-1+\eps) to
-        (\x+1-\eps,-1+\eps);
+        \draw[->,red,thick,bend left=30] (\x*1.5+\eps*1.5,-1+\eps) to
+        (\x*1.5+1*1.5-\eps*1.5,-1+\eps);
         \fi
       }
       \foreach \y in {1,...,7} {
         \pgfmathparse{int(mod(\y,2))}
         \ifnum\pgfmathresult=0
-        \draw[->,red,thick,bend right=30] (1-\eps,-\y-\eps) to
-        (1-\eps,-\y-1+\eps);
+        \draw[->,red,thick,bend right=30] (1*1.5-\eps*1.5,-\y-\eps) to
+        (1*1.5-\eps*1.5,-\y-1+\eps);
         \fi
       }
 
       % Draw dashed arrows
-      \draw[->,red,thick,dashed] (8+\eps,-2+\eps) to (9-\eps,-1-\eps);
-      \draw[->,red,thick,dashed] (9-\eps,-2-\eps) to (8+\eps,-3+\eps);
-      \draw[->,red,thick,dashed,bend right=30] (1-\eps,-8-\eps) to
-      (1-\eps,-9+\eps);
-      \draw[->,red,thick,dashed] (1+\eps,-9+\eps) to (2-\eps,-8-\eps);
-      \draw[->,red,thick,dashed] (3-\eps,-8-\eps) to (2+\eps,-9+\eps);
+      \draw[->,red,thick,dashed] (8*1.5+\eps*1.5,-2+\eps) to
+      (9*1.5-\eps*1.5,-1-\eps);
+      \draw[->,red,thick,dashed] (9*1.5-\eps*1.5,-2-\eps) to
+      (8*1.5+\eps*1.5,-3+\eps);
+      \draw[->,red,thick,dashed,bend right=30] (1*1.5-\eps*1.5,-8-\eps) to
+      (1*1.5-\eps*1.5,-9+\eps);
+      \draw[->,red,thick,dashed] (1*1.5+\eps*1.5,-9+\eps) to
+      (2*1.5-\eps*1.5,-8-\eps);
+      \draw[->,red,thick,dashed] (3*1.5-\eps*1.5,-8-\eps) to
+      (2*1.5+\eps*1.5,-9+\eps);
     \end{tikzpicture}
   \end{tightfigure}
 
