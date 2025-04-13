@@ -1,0 +1,35 @@
+\setchapterpreamble{\dictum[Tina Rapke, \textit{Confronting
+  Analysis}]{``One of my favorite memories of studying was one night
+    when analysis crept into my dreams. I woke up in a panicky cold
+    sweat. In my dream I was being chased by some analysis monster. My
+    only defense was to use the \textit{blancmange function} as a
+    boomerang. I took it as a good sign at the time that analysis
+concepts were finding their way into my subconscious.''}}
+\chapter{Pathological Examples}
+It has been said that one of the most important goals of learning
+real analysis is to collect as many bizarre examples as you can, and
+to keep them in your back pocket. From a practical standpoint they
+will inform your conjectures and guide your proofs, but they will
+also help to demonstrate why real analysis is such a great subject.
+
+\section{An infinite field that cannot be ordered}
+To say that a field $F$ cannot be ordered is to say that it possesses
+no positive subset $P$ satisfying the order axiom
+(\defref{ordered-fields}). A preliminary comment is that since every
+ordered field is infinite, no finite field can be ordered.
+
+An example of an \textit{infinite} field that cannot be ordered is
+the field $\CC$ of complex numbers.
+
+\begin{proof}{7}
+  To show that this is the case, assume that there does exist a
+  positive subset $P$ of $\CC$. Consider the element $i \in \CC$,
+  where $i$ is the imaginary unit. Since $i \neq 0$, there are two
+  alternative possibilities. The first is $i \in P$ (i.e. $i$ is a
+  positive element), in which case $i^2 = -1 \in P$ and $i^4 = 1 \in
+  P$. Since $i^2$ and $i^4$ are additive inverses of each other, and
+  since it is impossible for two additive inverses both to belong to
+  $P$, we have obtained a contradiction. The other option is $-i \in
+  P$, in which case $(-i)^2 = -1 \in P$ and $(-i)^4 = 1 \in P$. We
+  get the same contradiction as before.
+\end{proof}
