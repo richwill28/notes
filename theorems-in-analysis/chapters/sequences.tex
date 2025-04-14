@@ -115,6 +115,16 @@ quantities).''}}
   \end{tightfigure}
 \end{remark}
 
+\begin{remark}
+  The following are notationally equivalent:
+  \begin{itemize}
+    \item The sequence $(a_n)$ \textit{converges} to $a$
+    \item $a_n \to a$ as $n \to \infty$
+    \item $a_n \to a$
+    \item $\lim_{n \to \infty} a_n = a$
+  \end{itemize}
+\end{remark}
+
 \begin{example}
   Show that the sequence
   \[ (a_n) = \left(1, \frac{1}{2}, \frac{1}{3}, \frac{1}{4},
@@ -202,8 +212,8 @@ quantities).''}}
   \begin{align*}
     \abs{a_n - a} &< \epsilon\\
     \left|\frac{3n+1}{n+2} - 3\right| &< \epsilon\\
-    \left|\frac{3n+1}{n+2} - \frac{3(n+2)}{n+2}\right| &< \epsilon\\
-    \left|\frac{3n+1-3n-6}{n+2}\right| &< \epsilon\\
+    % \left|\frac{3n+1}{n+2} - \frac{3(n+2)}{n+2}\right| &< \epsilon\\
+    % \left|\frac{3n+1-3n-6}{n+2}\right| &< \epsilon\\
     \left|\frac{-5}{n+2}\right| &< \epsilon\\
     \frac{5}{n+2} &< \epsilon\\
     \frac{5}{\epsilon} &< n+2\\
@@ -302,7 +312,7 @@ quantities).''}}
   the shaded band; see below.)
   \begin{tightfigure}
     \centering
-    \begin{tikzpicture}[scale=0.8]
+    \begin{tikzpicture}[scale=0.95]
       % Shaded region, drawn first so it goes behind everything
       \fill[gray!20] (0,1-0.5) rectangle (10,1+0.5);
 
@@ -337,8 +347,8 @@ quantities).''}}
 
       % N marker with proper cross (X)
       \node[below, yshift=-2pt] at (6.5,0) {$N$};
-      \draw (6.3,-0.6) -- (6.7,-0.2);
-      \draw (6.3,-0.2) -- (6.7,-0.6);
+      \draw (6.3,-0.55) -- (6.7,-0.15);
+      \draw (6.3,-0.15) -- (6.7,-0.55);
 
       % Tick mark for N on x-axis
       \draw (6.5,-0.1) -- (6.5,0.1);
