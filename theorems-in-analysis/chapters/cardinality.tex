@@ -182,22 +182,22 @@ has created.''}}
   some $f(X_n)$ and thus $y = f(x)$ for some $x \in X_n \subseteq X$.
   Thus $f : A \to B$ is a surjection.
 
-  Let $X' = A \setminus X$ and $Y' = B \setminus Y$. Let $y \in Y'$.
-  Then $y \notin f(X_n)$ for all $n$ (by definition of $Y'$). We also
-  conclude that $g(y) \notin X_{n + 1}$ for all $n$. (Why? Suppose if
-    $g(y) \in X_{n + 1}$ for some $n$, then $g(y) \in g(f(X_n))$. That
-    is, $g(y) = g(z)$ for some $z \in f(X_n)$, and since $g$ is
-    injective, we have $y = z$ and thus $y \in f(X_n)$, which is a
-  contradiction.) Clearly, $g(y) \notin X_1$ either (because $g(y)
-  \subseteq g(B)$ and $X_1 = A \setminus g(B)$) and so $g$ is a
-  mapping from $Y'$ to $X'$. To see that $g$ is a surjection from
-  $Y'$ to $X'$, let $x \in X'$ be arbitrary. Because $X' \subseteq
-  g(Y') \subseteq g(B)$, there exists $y \in B$ with $g(y) = x$.
-  Could $y$ be an element of $Y$? No, because if $y \in Y$, $g(y)$
-  would be in $g(Y)$, and since $g(Y) \subseteq X$ (by definition of
-  $Y$), this would mean $g(y) \in X$. But we're considering an $x \in
-  X'$ with $g(y) = x$, so this is a contradiction as $X \cap X' =
-  \emptyset$. Hence $y \in Y'$ and $g : Y' \to X'$ is a surjection.
+  Let $y \in Y'$. Then $y \notin f(X_n)$ for all $n$ (by definition
+  of $Y'$). We also conclude that $g(y) \notin X_{n + 1}$ for all
+  $n$. (Why? Suppose if $g(y) \in X_{n + 1}$ for some $n$, then $g(y)
+    \in g(f(X_n))$. That is, $g(y) = g(z)$ for some $z \in f(X_n)$, and
+    since $g$ is injective, we have $y = z$ and thus $y \in f(X_n)$,
+  which is a contradiction.) Clearly, $g(y) \notin X_1$ either
+  (because $g(y) \subseteq g(B)$ and $X_1 = A \setminus g(B)$) and so
+  $g$ is a mapping from $Y'$ to $X'$. To see that $g$ is a surjection
+  from $Y'$ to $X'$, let $x \in X'$ be arbitrary. Because $X'
+  \subseteq g(Y') \subseteq g(B)$, there exists $y \in B$ with $g(y)
+  = x$. Could $y$ be an element of $Y$? No, because if $y \in Y$,
+  $g(y)$ would be in $g(Y)$, and since $g(Y) \subseteq X$ (by
+  definition of $Y$), this would mean $g(y) \in X$. But we're
+  considering an $x \in X'$ with $g(y) = x$, so this is a
+  contradiction as $X \cap X' = \emptyset$. Hence $y \in Y'$ and $g :
+  Y' \to X'$ is a surjection.
 \end{proof}
 
 \begin{definition}[Cardinality cont.]
