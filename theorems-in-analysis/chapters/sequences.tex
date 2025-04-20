@@ -8,6 +8,7 @@ quantities).''}}
 \end{definition}
 
 \begin{definition}[Bounded sequences]
+  \deflabel{bounded-sequences}
   A sequence $(a_n)$ is \vocab{bounded} if the range $\set{a_n : n
   \in \NN}$ is bounded. That is, if there exists a lower bound $L \in
   \RR$ and an upper bound $U \in \RR$ where
@@ -589,6 +590,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{proposition}
+  \prplabel{convergence-implies-bounded}
   If $(a_n)$ is a convergent sequence, then $(a_n)$ is bounded.
 \end{proposition}
 
@@ -692,11 +694,11 @@ There is a second proof that is even a little shorter.
   \end{proof}
 \end{example}
 
-\begin{definition}
+\begin{definition}[Monotone sequences]
   A sequence $(a_n)$ is \vocab{monotone increasing} if $a_n \leq a_{n
   + 1}$ for all $n$. Likewise, a sequence $(a_n)$ is \vocab{monotone
   decreasing} if $a_n \geq a_{n + 1}$ for all $n$. If it is either
-  monotone increasing or monotone decreasing, it is monotone.
+  monotone increasing or monotone decreasing, it is \vocab{monotone}.
 \end{definition}
 
 \begin{theorem}[The monotone convergence theorem]
@@ -1276,6 +1278,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{theorem}[Cauchy criterion for convergence]
+  \thmlabel{cauchy-criterion-for-convergence}
   A sequence converges if and only if it is Cauchy.
 \end{theorem}
 

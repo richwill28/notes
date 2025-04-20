@@ -2,3 +2,326 @@
   (1826)]{``Divergent series are the invention of the devil, and it is
 a shame to base on them any demonstration whatsoever.''}}
 \chapter{Series}
+\begin{definition}[Infinite series]
+  \deflabel{infinite-series}
+  A sum of infinitely many numbers is called an \vocab{infinite
+  series} and is denoted by
+  \[ \sum_{k = 1}^{\infty} a_k \qquad {\text{or}} \qquad \lim_{n \to
+  \infty} \sum_{k = 1}^{n} a_k. \]
+\end{definition}
+
+\begin{definition}[Terms]
+  Given an infinite series $\sum_{k = 1}^{\infty} a_k$, the numbers
+  $a_k$ are the \vocab{terms} of the series.
+\end{definition}
+
+\begin{definition}[Sequence of partial sums]
+  Given an infinite series $\sum_{k = 1}^{\infty} a_k$, the
+  \vocab{sequence of partial sums} is the sequence
+  \[ \left(\sum_{k = 1}^{n} a_k\right)_{n = 1}^{\infty}. \]
+  That is, it's the sequence $(s_n)$ where:
+  \begin{align*}
+    s_1 & = a_1 \\
+    s_2 & = a_1 + a_2 \\
+    s_3 & = a_1 + a_2 + a_3 \\
+    s_4 & = a_1 + a_2 + a_3 + a_4 \\
+    & \,\,\, \vdots
+  \end{align*}
+\end{definition}
+
+\begin{definition}[Convergent and divergent series]
+  \deflabel{convergent-divergent-series}
+  Given an infinite series $\sum_{k = 1}^{\infty} a_k$, the series
+  \vocab{converges} to $L \in \RR$, denoted by
+  \[ \sum_{k = 1}^{\infty} a_k = L, \]
+  if the sequence of partial sums $(s_n)$ converges to $L$.
+
+  The series \vocab{diverges} (to $\infty$, to $-\infty$, or does not
+  exist) if $(s_n)$ does.
+\end{definition}
+
+\begin{definition}[Bounded series]
+  Given an infinite series $\sum_{k = 1}^{\infty} a_k$, the series
+  is \vocab{bounded} if the sequence of partial sums $(s_n)$ is bounded.
+\end{definition}
+
+\begin{definition}[Monotone series]
+  Given an infinite series $\sum_{k = 1}^{\infty} a_k$, the series is
+  \vocab{monotone} if the sequence of partial sums $(s_n)$ is monotone.
+\end{definition}
+
+\begin{theorem}[Series limit laws]
+  Assume that $\sum_{k = 1}^{\infty} a_k = \alpha$ and $\sum_{k =
+  1}^{\infty} b_k = \beta$.
+  Also assume that $c \in \RR$. Then,
+  \begin{enumerate}
+    \item $\sum_{k = 1}^{\infty} (a_k + b_k) = \alpha + \beta$,
+    \item $\sum_{k = 1}^{\infty} (a_k - b_k) = \alpha - \beta$, and
+    \item $\sum_{k = 1}^{\infty} (c \cdot a_k) = c \cdot \alpha$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  We proceed with a proof of part 1. Let
+  \[ s_n = \sum_{k = 1}^{n} a_k \qquad \text{and} \qquad t_n =
+  \sum_{k = 1}^{n} b_k. \]
+  Now, $(s_n)$ is the sequence of partial sums of the series $\sum_{k
+  = 1}^{\infty} a_k$ and $(t_n)$ is the sequence of partial sums of
+  the series $\sum_{k = 1}^{\infty} b_k$. Therefore, by assumption
+  and \defref{convergent-divergent-series}, we have that
+  \[ s_n \to \alpha \qquad \text{and} \qquad t_n \to \beta. \]
+  Now let $v_n = \sum_{k = 1}^{n} (a_k + b_k)$, and since we can
+  rearrange finite sums,
+  \begin{align*}
+    s_n + t_n & = (a_1 + a_2 + \dots + a_n) + (b_1 + b_2 + \dots b_n) \\
+    & = (a_1 + b_1) + (a_2 + b_2) + \dots + (a_n + b_n) \\
+    & = v_n.
+  \end{align*}
+  Collecting everything,
+  \begin{align*}
+    \sum_{k = 1}^{\infty} (a_k + b_k) & = \lim_{n \to \infty} \sum_{k = 1}^{n}
+    (a_k + b_k) && \text{(by \defref{infinite-series})} \\
+    & = \lim_{n \to \infty} (v_n) && \text{(by definition of $v_n$)} \\
+    & = \lim_{n \to \infty} (s_n + t_n) && \text{(showed above)} \\
+    & = \alpha + \beta && \text{(by \thmref{sequence-limit-laws})}
+  \end{align*}
+  as desired.
+
+  In almost exactly the same way we can prove part 2 and part 3.
+\end{proof}
+
+\begin{theorem}[Cauchy criterion for series]
+  \thmlabel{cauchy-criterion-for-series}
+  The series $\sum_{k = 1}^{\infty} a_k$ converges if and only if for
+  every $\epsilon > 0$, there exists an $N \in \NN$ such that
+  \[ \left|\sum_{k = n}^{m} a_k\right| < \epsilon \qquad
+  \text{whenever $m \geq n > N$.}\]
+\end{theorem}
+
+\begin{proof}
+  Observe that
+  \[ \abs{s_m - s_{n - 1}} = \left|\sum_{k = 1}^{m} a_k - \sum_{k =
+  1}^{n - 1} a_k\right| = \left|\sum_{k = n}^{m} a_k\right| \]
+  and apply the Cauchy criterion for convergence
+  (\thmref{cauchy-criterion-for-convergence}) to conclude that
+  $(s_n)$ converges, which by \defref{convergent-divergent-series}
+  means that $\sum_{k = 1}^{\infty} a_k$ converges.
+\end{proof}
+
+\begin{theorem}[Necessary condition for convergence]
+  \thmlabel{necessary-condition-for-convergence}
+  If $\sum_{k = 1}^{\infty} a_k$ converges, then $a_k \to 0$.
+\end{theorem}
+
+\begin{proof}
+  Consider the special case $m = n + 1$ in \thmref{cauchy-criterion-for-series}.
+\end{proof}
+
+\begin{proposition}
+  \prplabel{series-with-nonnegative-sequence}
+  If $a_k \geq 0$ for all $k \in \NN$, then $\sum_{k = 1}^{\infty}
+  a_k$ either converges or it diverges to $\infty$.
+\end{proposition}
+
+\begin{proof}
+  Since each $a_k$ is nonnegative, observe that the sequence of
+  partial sums is monotone increasing. Applying the monotone
+  convergence theorem (\thmref{monotone-convergence}) then gives the result.
+\end{proof}
+
+\begin{proposition}[Comparison test]
+  \prplabel{comparison-test}
+  Assume $0 \leq a_k \leq b_k$ for all $k \in \NN$.
+  \begin{enumerate}
+    \item If $\sum_{k = 1}^{\infty} b_k$ converges, then $\sum_{k =
+      1}^{\infty} a_k$ converges.
+    \item If $\sum_{k = 1}^{\infty} a_k$ diverges, then $\sum_{k =
+      1}^{\infty} b_k$ diverges.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+  Let $(s_n)$ be the sequence of partial sums of $\sum_{k =
+  1}^{\infty} a_k$, and let $(t_n)$ be the sequence of partial sums
+  of $\sum_{k = 1}^{\infty} b_k$. And here is an observation that
+  will be useful:
+  Note that since $a_k \leq b_k$ for all $k$,
+  \[ s_n = a_1 + a_2 + \dots + a_n \leq b_1 + b_2 + \dots + b_n = t_n \]
+  for all $n$. That is,
+  \[ s_n \leq t_n \qquad \text{for all $n$.} \tag{$\bigstar$} \]
+  We proceed with a proof of part 1, but first note that by
+  \prpref{series-with-nonnegative-sequence} that all we need to show
+  is that $(s_n)$ is bounded above. If we can do this we know that
+  $s_n \not\to \infty$, which by that proposition implies that it
+  must converge.
+
+  Recall that in \prpref{convergence-implies-bounded} we showed that
+  if a sequence converges, then it is bounded. And so, since by
+  assumption $\sum_{k = 1}^{\infty} b_k$ converges (meaning that
+  $(t_n)$ converges), we deduce that this is series is bounded above
+  by some value $M$. That is, $t_n \leq M$ for all $n$ (this is
+  \defref{bounded-sequences}). And so by $(\bigstar)$, $s_n \leq t_n
+  \leq M$ for all $n$, showing that $(s_n)$ is also bounded above by
+  $M$, completing the proof of part 1.
+
+  The proof of part 2 is similar. Let $M > 0$. Assume that $\sum_{k =
+  1}^{\infty} a_k$ diverges, meaning that $(s_n)$ diverges (and hence
+    by \prpref{series-with-nonnegative-sequence} this means it diverges
+  to $\infty$). And so by \defref{divergent-sequences}, there exists
+  some $N$ for which $M < s_n$ for all $n > N$. And so by
+  $(\bigstar)$, $M < s_n \leq t_n$ for all $n > N$. Thus, again
+  by \defref{divergent-sequences}, $(t_n)$ also diverges to $\infty$.
+\end{proof}
+
+Here's an alternative proof that is much shorter.
+
+\begin{proof}
+  Both part 1 and part 2 follows immediately from
+  \thmref{cauchy-criterion-for-series} and the observation that
+  \[ \left|\sum_{k = n}^{m} a_k\right| \leq \left|\sum_{k = n}^{m}
+  b_k\right| \]
+  for all $m, n \in \NN$.
+\end{proof}
+
+\begin{remark}
+  Observe that if, say, $0 \leq a_k \leq b_k$ for all but the first
+  10 terms, then the conclusion of the theorem would still hold. In
+  general, as long as $a_k \leq b_k$ holds for all but finitely many
+  terms, the theorem still applies, as the following statement
+  asserts. Changing finitely many terms of a sequence or a series
+  does not affect whether or not the sequence or series converges.
+\end{remark}
+
+\begin{proposition}[Ratio comparison test]
+  Assume $0 \leq a_{k + 1}/a_k \leq b_{k + 1}/b_k$ for all $k \in \NN$.
+  \begin{enumerate}
+    \item If $\sum_{k = 1}^{\infty} b_k$ converges, then $\sum_{k =
+      1}^{\infty} a_k$ converges.
+    \item If $\sum_{k = 1}^{\infty} a_k$ diverges, then $\sum_{k =
+      1}^{\infty} b_k$ diverges.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+  By multiplying the inequalities $a_{i + 1}/a_i \leq b_{i + 1}/b_i$
+  from $i = 1$ to $i = k - 1$, we obtain
+  \[ \frac{a_k}{a_1} \leq \frac{b_k}{b_1} \qquad \text{or} \qquad
+  a_k \leq \frac{a_1}{b_1} b_k. \]
+  Since the series $\sum_{k = 1}^{\infty} \frac{a_1}{b_1} b_k$ and
+  $\sum_{k = 1}^{\infty} b_k$ have the same behavior, the result
+  follows directly from \prpref{comparison-test}.
+\end{proof}
+
+\begin{definition}
+  A \vocab{geometric series} is a series of the form
+  \[ \sum_{k = 0}^{\infty} ar^k = a + ar + ar^2 + ar^3 + \dots \]
+  where $a, r \in \RR$.
+\end{definition}
+
+\begin{lemma}
+  \lemlabel{precursor-to-geometric-series-test}
+  The sequence $(r^n)$ converges to 0 if $r \in (-1, 1)$, converges
+  to 1 if $r = 1$, and diverges otherwise.
+\end{lemma}
+
+\begin{proposition}[Geometric series test]
+  Assume $a$ and $r$ are non-zero real numbers. Then
+  \begin{align*}
+    \sum_{k = 0}^{\infty} ar^k =
+    \begin{cases}
+      \frac{a}{1 - r} & \text{if $\abs{r} < 1$} \\
+      \text{diverges} & \text{if $\abs{r} \geq 1$}.
+    \end{cases}
+  \end{align*}
+\end{proposition}
+
+\begin{proof}
+  The case where $\abs{r} > 1$ follows from
+  \lemref{precursor-to-geometric-series-test} and
+  \thmref{necessary-condition-for-convergence}. When $r = 1$, the
+  series $a + a + a + \dots$ which clearly diverges, and when $r =
+  -1$ the series $a - a + a - a + a - \dots$ whose sequence of
+  partial sums, $(a, 0, a, 0, \dots)$, is clearly not converging. We
+  therefore turn to the case that $\abs{r} < 1$. Note that
+  \begin{align*}
+    (1 - r) (1 + r + r^2 + r^3 + \dots + r^n) & = 1 + r + r^2 + r^3 +
+    \dots + r^n \\
+    & \phantom{=} \:\:\:\:\, - r - r^2 - r^3 - \dots - r^{n - 1} -
+    r^{n + 1} \\
+    & = 1 + 0 + 0 + \dots + 0 - r^{n + 1} \\
+    & = 1 - r^{n + 1},
+  \end{align*}
+  which, by dividing over the $1 - r$, shows that
+  \[ 1 + r + r^2 + r^3 + \dots + r^n = \frac{1 - r^{n + 1}}{1 - r}, \]
+  and hence
+  \[ s_n = a + ar + ar^2 + ar^3 + \dots + ar^n = \frac{a(1 - r^{n +
+  1})}{1 - r}, \]
+  where $s_n$ is the $n$-th partial sum of $\sum_{k = 0}^{\infty} ar^k$. Thus,
+  \begin{align*}
+    \sum_{k = 0}^{\infty} ar^k & = \lim_{n \to \infty} s_n \\
+    & = \lim_{n \to \infty} \frac{a(1 - r^{n + 1})}{1 - r} \\
+    & = \frac{a(1 - 0)}{1 - r} && \text{(by
+    \lemref{precursor-to-geometric-series-test})} \\
+    & = \frac{a}{1 - r}.
+  \end{align*}
+\end{proof}
+
+\begin{proposition}[Harmonic series diverges]
+  The harmonic series $\sum_{k = 1}^{\infty} \frac{1}{k}$ diverges.
+\end{proposition}
+
+\begin{proof}
+  Observe that
+  \begin{align*}
+    \sum_{k = 1}^{\infty} \frac{1}{k} & = 1 + \frac{1}{2} +
+    \frac{1}{3} + \frac{1}{4} + \frac{1}{5} + \frac{1}{6} +
+    \frac{1}{7} + \frac{1}{8} + \dots \\
+    & = 1 + \left(\frac{1}{2}\right) + \left(\frac{1}{3} + \frac{1}{4}\right) +
+    \left(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} +
+    \frac{1}{8}\right) + \dots \\
+    & \geq 1 + \left(\frac{1}{2}\right) + \left(\frac{1}{4} +
+    \frac{1}{4}\right) +
+    \left(\frac{1}{8} + \frac{1}{8} + \frac{1}{8} +
+    \frac{1}{8}\right) + \dots \\
+    & = 1 + \left(\frac{1}{2}\right) + \left(\frac{1}{2}\right) +
+    \left(\frac{1}{2}\right) + \dots
+  \end{align*}
+  In particular, if $s_n$ is the $n$-th partial sum of the harmonic
+  series, then $(s_n)$ is monotonically increasing and, by the above,
+  \[ s_{2^n} \geq 1 + n \cdot \frac{1}{2}. \]
+  And since $(1 + n \cdot \frac{1}{2})$ diverges to $\infty$, the
+  comparison test (\prpref{comparison-test}) the subsequence
+  $(s_{2^n})$ diverges to $\infty$. And for a monotonically
+  increasing sequence, if a subsequence diverges to $\infty$,
+  implying that the entire sequence $(s_n)$ is unbounded, then
+  $(s_n)$ is also diverging to $\infty$ by the monotone convergence
+  theorem (\thmref{monotone-convergence}). That is, the harmonic
+  series diverges to $\infty$.
+\end{proof}
+
+Here's another proof that I particularly enjoy.
+
+\begin{proof}
+  Suppose for a contradiction that the harmonic series diverges
+  converges to $S$. Then
+  \begin{align*}
+    S & = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \frac{1}{5} +
+    \frac{1}{6} + \frac{1}{7} + \frac{1}{8} + \dots \\
+    & = \left(1 + \frac{1}{2}\right) + \left(\frac{1}{3} + \frac{1}{4}\right) +
+    \left(\frac{1}{5} + \frac{1}{6}\right) + \left(\frac{1}{7} +
+    \frac{1}{8}\right) + \dots \\
+    & > \left(\frac{1}{2} + \frac{1}{2}\right) + \left(\frac{1}{4} +
+    \frac{1}{4}\right) +
+    \left(\frac{1}{6} + \frac{1}{6}\right) + \left(\frac{1}{8} +
+    \frac{1}{8}\right) + \dots \\
+    & = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \frac{1}{5} +
+    \frac{1}{6} + \frac{1}{7} + \frac{1}{8} + \dots \\
+    & = S.
+  \end{align*}
+  We've shown $S > S$, a contradiction.
+\end{proof}
+
+\begin{proposition}[The $p$-series test]
+  The series $\sum_{k = 1}^{\infty} \frac{1}{k^p}$ converges if and
+  only if $p > 1$.
+\end{proposition}

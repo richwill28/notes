@@ -708,10 +708,10 @@ We will only prove the suprema case. The infima case is analogous.
 \end{proof}
 
 \begin{remark}
-  Despite the persistent rumors, $0.999\ldots$ is not
+  So despite the persistent rumors, $0.999\ldots$ is not
   ``almost exactly 1'' or ``very, very nearly but not quite 1'' or
   ``1's clingy little sibling.'' Rather, $0.999\ldots$ and 1 are, in
-  fact, the same number. So the next time someone insists otherwise,
+  fact, the same number. The next time someone insists otherwise,
   feel free to hand them a copy of these notes.
 \end{remark}
 
@@ -790,6 +790,21 @@ We will only prove the suprema case. The infima case is analogous.
   That is,
   \[ x < \frac{m}{n} < y, \]
   which concludes the proof.
+\end{proof}
+
+\begin{corollary}[$\RR \setminus \QQ$ is dense in $\RR$]
+  The irrational numbers are dense in the real numbers.
+\end{corollary}
+
+\begin{proof}
+  Pick any $x, y \in \RR$ where $x < y$. By \thmref{q-is-dense-in-r},
+  there are rational numbers $r_1, r_2 \in \QQ$ such that $x < r_1 <
+  y$ and  $r_1 < r_2 < y$. Setting
+  \[ s = r_1 + (r_2 - r_1) / \sqrt{2} \]
+  we have $r_1 < s < r_2$ and also $x < s < y$. Finally, $s$ cannot
+  be a rational number since otherwise
+  \[ \sqrt{2} = (r_2 - r_1) / (s - r_1) \]
+  would also be rational.
 \end{proof}
 
 \begin{remark}
