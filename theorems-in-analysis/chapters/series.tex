@@ -212,7 +212,7 @@ Here's an alternative proof that is much shorter.
   follows directly from \prpref{comparison-test}.
 \end{proof}
 
-\begin{definition}
+\begin{definition}[Geometric series]
   A \vocab{geometric series} is a series of the form
   \[ \sum_{k = 0}^{\infty} ar^k = a + ar + ar^2 + ar^3 + \dots \]
   where $a, r \in \RR$.
@@ -225,6 +225,7 @@ Here's an alternative proof that is much shorter.
 \end{lemma}
 
 \begin{proposition}[Geometric series test]
+  \prplabel{geometric-series-test}
   Assume $a$ and $r$ are non-zero real numbers. Then
   \begin{align*}
     \sum_{k = 0}^{\infty} ar^k =
@@ -325,3 +326,287 @@ Here's another proof that I particularly enjoy.
   The series $\sum_{k = 1}^{\infty} \frac{1}{k^p}$ converges if and
   only if $p > 1$.
 \end{proposition}
+
+\begin{proof}
+  \phantom{.}
+
+  $(\Rightarrow)$ If $p \leq 1$, then
+  \[ \frac{1}{k} \leq \frac{1}{k^p} \qquad \text{for all $k \in \NN$}. \]
+  And since $\sum_{k = 1}^{\infty} \frac{1}{k}$ diverges, by the
+  comparison test (\prpref{comparison-test}), $\sum_{k = 1}^{\infty}
+  \frac{1}{k^p}$ diverges too.
+
+  $(\Leftarrow)$ Now assume that $p > 1$. Then
+  \begin{align*}
+    \sum_{k = 1}^{\infty} \frac{1}{k^p} & = 1 + \frac{1}{2^p} +
+    \frac{1}{3^p} + \frac{1}{4^p} + \frac{1}{5^p} + \frac{1}{6^p} +
+    \frac{1}{7^p} + \dots \\
+    & = 1 + \left(\frac{1}{2^p} + \frac{1}{3^p}\right) +
+    \left(\frac{1}{4^p} + \frac{1}{5^p} + \frac{1}{6^p} +
+    \frac{1}{7^p}\right) + \dots \\
+    & < 1 + \left(\frac{1}{2^p} + \frac{1}{2^p}\right) +
+    \left(\frac{1}{4^p} + \frac{1}{4^p} + \frac{1}{4^p} +
+    \frac{1}{4^p}\right) + \dots \\
+    & = 1 + \left(\frac{2}{2^p}\right) + \left(\frac{4}{4^p}\right) + \dots \\
+    & = 1 + \left(\frac{1}{2^{p - 1}}\right) + \left(\frac{1}{4^{p -
+    1}}\right) + \dots \\
+    & = 1 + \left(\frac{1}{2^{p - 1}}\right) + \left(\frac{1}{2^{2(p
+    - 1)}}\right) + \dots \\
+    & = 1 + \left(\frac{1}{2^{p - 1}}\right) + \left(\frac{1}{2^{p -
+    1}}\right)^2 + \dots \\
+    & = 1 + \sum_{k = 0}^{\infty} \left(\frac{1}{2^p}\right)^k.
+  \end{align*}
+  Finally, note that $\sum_{k = 0}^{\infty} (\frac{1}{2^p})^k$ is a
+  geometric series with $\abs{r} = \frac{1}{2^p} < 1$, so by the
+  geometric series test (\prpref{geometric-series-test}), this series
+  converges. And the above also shows that, term-by-term, this
+  geometric series is larger than $\sum_{k = 1}^{\infty}
+  \frac{1}{k^p}$. So by the comparison test
+  (\prpref{comparison-test}), $\sum_{k = 1}^{\infty}
+  \frac{1}{k^p}$ converges too.
+\end{proof}
+
+\begin{proposition}[Ratio test]
+  \prplabel{ratio-test}
+  Assume $a_n > 0$ for all $n \in \NN$. Define
+  \[ r = \lim_{n \to \infty} \frac{a_{n + 1}}{a_n}. \]
+  \begin{enumerate}
+    \item If $r < 1$, the series $\sum_{n = 1}^{\infty} a_n$ converges.
+    \item If $r > 1$, the series $\sum_{n = 1}^{\infty} a_n$ diverges.
+    \item If $r = 1$, the test is inconclusive.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Root test]
+  \prplabel{root-test}
+  Assume $a_n > 0$ for all $n \in \NN$. Define
+  \[ \rho = \lim_{n \to \infty} \sqrt[n]{a_n}. \]
+  \begin{enumerate}
+    \item If $\rho < 1$, the series $\sum_{n = 1}^{\infty} a_n$ converges.
+    \item If $\rho > 1$, the series $\sum_{n = 1}^{\infty} a_n$ diverges.
+    \item If $\rho = 1$, the test is inconclusive.
+  \end{enumerate}
+\end{proposition}
+
+\begin{definition}[Strength of convergence tests]
+  We consider the strength of convergence tests to be its ability to
+  yield a result. That is, for one convergence test $A$ to be
+  \vocab{stronger than} another test $B$, the weaker test $B$
+  giving a result implies that the stronger test $A$ also yields a
+  result. It must also be true that there exists a case where the
+  stronger convergence test $A$ works but the weaker test $B$ does not.
+\end{definition}
+
+\begin{proposition}[Root test is stronger than ratio test]
+  Let $(a_n)$ be a positive sequence. Suppose that $r$ and $\rho$ are
+  given by \prpref{ratio-test} and \prpref{root-test}, respectively.
+  If $r$ exists, then $\rho$ exists and
+  \[ r = \lim_{n \to \infty} \frac{a_{n + 1}}{a_n} = \lim_{n \to
+  \infty} \sqrt[n]{a_n} = \rho. \]
+  The converse, however, is not necessarily true.
+\end{proposition}
+
+\begin{proposition}[Alternating series test]
+  Assume that $(a_k)$ is a monotonically decreasing sequence and $a_k
+  \to 0$. Then $\sum_{k = 1}^{\infty} (-1)^{k + 1} a_k$ converges.
+\end{proposition}
+
+\begin{example}[Hardy \cite{hardy1949divergent}]
+  The alternating series
+  \[ \sum_{n = 2}^{\infty} \frac{(-1)^n}{\sqrt{n} + (-1)^n} \]
+  diverges.
+\end{example}
+
+\begin{proposition}[Absolute convergence test]
+  If $\sum_{k = 1}^{\infty} \abs{a_k}$ converges, then $\sum_{k =
+  1}^{\infty} a_k$ converges too.
+\end{proposition}
+
+\begin{definition}[Absolute convergence]
+  A series $\sum_{k = 1}^{\infty} a_k$ is said to \vocab{converge
+  absolutely} if $\sum_{k = 1}^{\infty} \abs{a_k}$ converges.
+\end{definition}
+
+\begin{definition}[Conditional convergence]
+  A series $\sum_{k = 1}^{\infty} a_k$ is said to \vocab{converge
+  conditionally} if it converges but does not converge absolutely.
+\end{definition}
+
+\begin{proposition}[Raabe's test]
+  \prplabel{raabe-test}
+  Assume $a_n > 0$ for all $n \in \NN$. Define
+  \[ \mathcal{R}_n = n \left(1 - \frac{a_{n + 1}}{a_n}\right). \]
+  \begin{enumerate}
+    \item If $\mathcal{R}_n \geq r > 1$, the series $\sum_{n =
+      1}^{\infty} a_n$ converges.
+    \item If $\mathcal{R}_n \leq 1$, the series $\sum_{n =
+      1}^{\infty} a_n$ diverges.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Raabe's limit test]
+  Assume $a_n > 0$ for all $n \in \NN$. Define
+  \[ \mathcal{R} = \lim_{n \to \infty} \mathcal{R}_n = \lim_{n \to
+  \infty} n \left(1 - \frac{a_{n + 1}}{a_n}\right). \]
+  \begin{enumerate}
+    \item If $\mathcal{R} > 1$, the series $\sum_{n = 1}^{\infty}
+      a_n$ converges.
+    \item If $\mathcal{R} < 1$, the series $\sum_{n = 1}^{\infty} a_n$ diverges.
+    \item If $\mathcal{R} = 1$, the test is inconclusive.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Raabe's limit test corollary]
+  Assume $a_n > 0$ for all $n \in \NN$. Define
+  \[ \mathcal{R}^\ast = \lim_{n \to \infty} \left(\frac{a_{n +
+  1}}{a_n}\right)^n. \]
+  \begin{enumerate}
+    \item If $\mathcal{R}^\ast < 1/e$, the series $\sum_{n = 1}^{\infty}
+      a_n$ converges.
+    \item If $\mathcal{R}^\ast > 1/e$, the series $\sum_{n =
+      1}^{\infty} a_n$ diverges.
+    \item If $\mathcal{R}^\ast = 1/e$, the test is inconclusive.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Logarithmic test]
+  \prplabel{logarithmic-test}
+  Assume $a_n > 0$ for all $n \in \NN$. Define
+  \[ \mathcal{L}_n = \frac{\ln(1/a_n)}{\ln n}. \]
+  \begin{enumerate}
+    \item If $\mathcal{L}_n \geq 1 > 1$, the series converges.
+    \item If $\mathcal{L}_n \leq 1$, the series diverges.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Logarithmic test is stronger than Raabe's test]
+  Let $(a_n)$ be a positive sequence. Suppose that $\mathcal{R}_n$
+  and $\mathcal{L}_n$ are given by \prpref{raabe-test} and
+  \prpref{logarithmic-test}, respectively. If $\lim_{n \to \infty}
+  \mathcal{R}_n$ exists, finite or infinite, then $\lim_{n \to
+  \infty} \mathcal{L}_n$ exists and
+  \[ \lim_{n \to \infty} \mathcal{R}_n = \lim_{n \to \infty} \mathcal{L}_n. \]
+  The converse, however, is not necessarily true.
+\end{proposition}
+
+\begin{proposition}[Kummer's test]
+  Assume $a_n > 0$ for all $n \in \NN$.
+  \begin{enumerate}
+    \item The series $\sum_{n = 1}^{\infty} a_n$ converges if there
+      is a positive sequence $(c_n)$ and some constant $k > 0$ such that
+      \[ \mathcal{K}_n = c_n - \frac{a_{n + 1}}{a_n} c_{n + 1} \geq k. \]
+    \item The series $\sum_{n = 1}^{\infty} a_n$ diverges if there is
+      a positive sequence $(c_n)$ such that $\sum_{n = 1}^{\infty} 1/c_n$
+      diverges and $\mathcal{K}_n \leq 0$.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Kummer's limit test]
+  Assume $a_n > 0$ for all $n \in \NN$. For a positive sequence $(a_n)$, define
+  \[ \kappa = \lim_{n \to \infty} \left(c_n - \frac{a_{n + 1}}{a_n}
+  c_{n + 1}\right). \]
+  \begin{enumerate}
+    \item If $\kappa > 0$, then the series $\sum_{n = 1}^{\infty}$ converges.
+    \item If $\kappa < 0$ and $\sum_{n = 1}^{\infty} 1/c_n$ diverges,
+      then the series $\sum_{n = 1}^{\infty}$ diverges.
+    \item If $\kappa = 0$, the test is inconclusive.
+  \end{enumerate}
+\end{proposition}
+
+\begin{remark}
+  In contrast to all tests we have studied, Kummer's test does not
+  merely give very powerful sufficient conditions for convergence or
+  divergence of a positive series. Surprisingly, the conditions (1)
+  and (2) in the test are indeed necessary. This fact is not well publicized.
+\end{remark}
+
+\begin{theorem}[Necessary condition for convergence]
+  If the series $\sum_{n = 1}^{\infty} a_n$ converges, then there
+  exists a positive sequence $(c_n)$ for which
+  \[ \mathcal{K}_n = c_n - \frac{a_{n + 1}}{a_n} c_{n + 1} \geq 1. \]
+\end{theorem}
+
+\begin{theorem}[Necessary condition for divergence]
+  If the series $\sum_{n = 1}^{\infty} a_n$ diverges, then there
+  exists a positive sequence $(c_n)$ for which
+  $\sum_{n = 1}^{\infty} 1/c_n$ diverges and
+  \[ \mathcal{K}_n = c_n - \frac{a_{n + 1}}{a_n} c_{n + 1} \leq 0. \]
+\end{theorem}
+
+\begin{proposition}[Bertrand's test]
+  Define
+  \[ \mathcal{B}_n = \ln n (\mathcal{R}_n - 1) = \ln n \left(n
+      \left(1 - \frac{a_{n +
+  1}}{a_n}\right) - 1\right). \]
+  Suppose that
+  \[ \mathcal{B} = \lim_{n \to \infty} \mathcal{B}_n. \]
+  \begin{enumerate}
+    \item If $\mathcal{B} > 1$, then the positive series $\sum_{n = 1}^{\infty}
+      a_n$ converges.
+    \item If $\mathcal{B} < 1$, then the positive series $\sum_{n = 1}^{\infty}
+      a_n$ diverges.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Gauss's test]
+  Let $\sum_{n = 1}^{\infty} a_n$ be a positive series. Suppose
+  \[ \frac{a_{n + 1}}{a_n} = 1 - \frac{\mu}{n} + \frac{\theta_n}{n^k} \]
+  where $\theta_n$ is a bounded sequence and $k > 1$.
+  \begin{enumerate}
+    \item If $\mu > 1$, the series converges.
+    \item If $\mu \leq 1$, the series diverges.
+  \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[Cauchy's condensation test]
+  Let $(a_n)$ be a monotononically decreasing sequence where $a_n
+  > 0$ for all $n \in \NN$. Then $\sum_{n = 1}^{\infty} a_n$
+  converges if and only if $\sum_{n = 1}^{\infty} 2^n a_{2^n}$ converges.
+\end{proposition}
+
+\begin{proposition}[Generalization of Cauchy's condensation test]
+  Let $(a_n)$ be a monotonically decreasing sequence where $a_n >
+  0$ for all $n \in \NN$. If there is a strictly increasing sequence
+  $1 \leq n_1 < n_2 < \dots$ such that $(n_{k + 1} - n_k) / (n_{k} -
+  n_{k - 1})$ is bounded as a function of $k$, then $\sum_{n =
+  1}^{\infty} a_n$ converges if and only if $\sum_{k = 1}^{\infty}
+  (n_{k + 1} - n_k) a_{n_k}$ converges.
+\end{proposition}
+
+\begin{proposition}
+  Let $(a_n)$ be a monotonically decreasing sequence where $a_n > 0$
+  for all $n \in \NN$. Define
+  \[ \rho = \lim_{n \to \infty} \frac{a_{2n}}{a_n}. \]
+  \begin{enumerate}
+    \item If $\rho < 1/2$, then the series $\sum_{n = 1}^{\infty}
+      a_n$ converges.
+    \item If $\rho > 1/2$, then the series $\sum_{n = 1}^{\infty} a_n$ diverges.
+    \item If $\rho = 1/2$, the test is inconclusive.
+  \end{enumerate}
+\end{proposition}
+
+\begin{theorem}[Nonexistence of the universal test]
+  There is no universal comparison test that can decide the
+  convergence or divergence of all positive series.
+\end{theorem}
+
+\begin{theorem}
+  The associative law holds for the convergent series.
+\end{theorem}
+
+\begin{definition}[Rearrangements of series]
+  A \vocab{rearrangement} of a series $\sum_{n = 1}^{\infty} a_n$ is
+  a series $\sum_{n = 1}^{\infty} b_n$ for which there is a bijection
+  $f : \NN \to \NN$ such that $a_n = b_{f(n)}$.
+\end{definition}
+
+\begin{theorem}
+  If the series $\sum_{n = 1}^{\infty} a_n$ converges absolutely,
+  then any rearrangement of this series converges to the same limit.
+\end{theorem}
+
+\begin{theorem}[Riemann series theorem]
+  If the series $\sum_{n = 1}^{\infty} a_n$ converges conditionally,
+  then there exists a rearrangement of this series that either
+  converges to any arbitrary real number or diverges to $\pm \infty$.
+\end{theorem}

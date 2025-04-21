@@ -1347,3 +1347,29 @@ There is a second proof that is even a little shorter.
     = \epsilon.
   \]
 \end{proof}
+
+\begin{theorem}[Stolz-Cesàro theorem]
+  Let $(a_n)$ and $(b_n)$ be two sequences.
+  \begin{enumerate}
+    \item Assume that $a_n \to 0$ and $b_n \to 0$. Suppose $b_n$ is
+      strictly decreasing and
+      \[ \lim_{n \to \infty} \frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} = a, \]
+      where $a$ is finite or $+\infty$, then
+      \[ \lim_{n \to \infty} \frac{a_n}{b_n} = \lim_{n \to \infty}
+      \frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} = a. \]
+    \item Assume that $b_n$ is a strictly monotone and divergent
+      sequence, i.e. strictly increasing and approaching $+\infty$,
+      or strictly decreasing and approaching $-\infty$. Suppose
+      \[ \lim_{n \to \infty} \frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} = a, \]
+      where $a$ is finite or $+\infty$ if $b_n$ increases, or $a$ is finite
+      or $-\infty$ if $b_n$ decreases. Then,
+      \[ \lim_{n \to \infty} \frac{a_n}{b_n} = \lim_{n \to \infty}
+      \frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} = a. \]
+  \end{enumerate}
+\end{theorem}
+
+\begin{remark}
+  Stolz-Cesàro theorem provides a powerful tool to evaluate limits of
+  sequences, and is
+  viewed as a discrete form of L'Hôpital's rule.
+\end{remark}
