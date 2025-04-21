@@ -4,10 +4,12 @@
 quantities).''}}
 \chapter{Sequences}
 \begin{definition}[Sequences]
+  \addcontentsline{toc}{section}{Sequences}
   A \vocab{sequence} of real numbers is a function $a : \NN \to \RR$.
 \end{definition}
 
 \begin{definition}[Bounded sequences]
+  \addcontentsline{toc}{section}{Bounded sequences}
   \deflabel{bounded-sequences}
   A sequence $(a_n)$ is \vocab{bounded} if the range $\set{a_n : n
   \in \NN}$ is bounded. That is, if there exists a lower bound $L \in
@@ -47,6 +49,7 @@ quantities).''}}
 \end{proof}
 
 \begin{definition}[Convergent sequences]
+  \addcontentsline{toc}{section}{Convergent sequences}
   \deflabel{convergent-sequences}
   A sequence $(a_n)$ \vocab{converges} to $a \in \RR$ if for all
   $\epsilon > 0$ there exists some $N \in \NN$ such that $\abs{a_n -
@@ -62,6 +65,7 @@ quantities).''}}
 \end{definition}
 
 \begin{definition}[Convergent sequences (topological version)]
+  \addcontentsline{toc}{section}{Convergent sequences (topological version)}
   \deflabel{convergent-sequences-topological-version}
   A sequence $(a_n)$ \textit{converges} to $a \in \RR$ if, given any
   $\epsilon$-neighborhood $V_\epsilon(a)$ of $a$, there exists a
@@ -243,6 +247,7 @@ quantities).''}}
 \end{example}
 
 \begin{definition}[Divergent Sequences]
+  \addcontentsline{toc}{section}{Divergent sequences}
   \deflabel{divergent-sequences}
   If a sequence $(a_n)$ does not converge, then it \vocab{diverges}.
 
@@ -442,6 +447,7 @@ quantities).''}}
 \end{example}
 
 \begin{proposition}[Limits are unique]
+  \addcontentsline{toc}{section}{Limits are unique}
   A sequence cannot have more than one limit.
 \end{proposition}
 
@@ -590,6 +596,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{proposition}
+  \addcontentsline{toc}{section}{Convergent sequences are bounded}
   \prplabel{convergence-implies-bounded}
   If $(a_n)$ is a convergent sequence, then $(a_n)$ is bounded.
 \end{proposition}
@@ -618,6 +625,7 @@ There is a second proof that is even a little shorter.
 \end{corollary}
 
 \begin{theorem}[Sequence limit laws]
+  \addcontentsline{toc}{section}{Sequence limit laws}
   \thmlabel{sequence-limit-laws}
   Assume that $(a_n)$ and $(b_n)$ are convergent sequences of real
   numbers such that $a_n \to a$ and $b_n \to b$. Also assume that $c
@@ -647,6 +655,7 @@ There is a second proof that is even a little shorter.
 \end{example}
 
 \begin{theorem}[Sequence squeeze theorem]
+  \addcontentsline{toc}{section}{Sequence squeeze theorem}
   \thmlabel{sequence-squeeze}
   Assume $a_n \leq x_n \leq b_n$ for all $n$. Furthermore, assume that
   \[ a_n \to L \qquad \text{and} \qquad b_n \to L. \]
@@ -695,6 +704,7 @@ There is a second proof that is even a little shorter.
 \end{example}
 
 \begin{definition}[Monotone sequences]
+  \addcontentsline{toc}{section}{Monotone sequences}
   A sequence $(a_n)$ is \vocab{monotone increasing} if $a_n \leq a_{n
   + 1}$ for all $n$. Likewise, a sequence $(a_n)$ is \vocab{monotone
   decreasing} if $a_n \geq a_{n + 1}$ for all $n$. If it is either
@@ -702,6 +712,7 @@ There is a second proof that is even a little shorter.
 \end{definition}
 
 \begin{theorem}[The monotone convergence theorem]
+  \addcontentsline{toc}{section}{The monotone convergence theorem}
   \thmlabel{monotone-convergence}
   Suppose $(a_n)$ is monotone. Then $(a_n)$ converges if and only if
   it is bounded. Moreover,
@@ -907,7 +918,8 @@ There is a second proof that is even a little shorter.
   The infimum case is \textit{very} similar.
 \end{proof}
 
-\begin{definition}
+\begin{definition}(Subsequences)
+  \addcontentsline{toc}{section}{Subsequences}
   Let $(a_n)$ be a sequence of real numbers and let
   \[ n_1 < n_2 < n_3 < \dots \]
   be an increasing sequence of integers. Then,
@@ -916,6 +928,8 @@ There is a second proof that is even a little shorter.
 \end{definition}
 
 \begin{proposition}
+  \addcontentsline{toc}{section}{A sequence converges iff every
+  subsequence converges}
   \prplabel{sequence-converges-iff-all-subsequences-converge}
   A sequence $(a_n)$ converges to $a$ if and only if every
   subsequence of $(a_n)$ also converges to $a$.
@@ -1026,6 +1040,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{lemma}
+  \addcontentsline{toc}{section}{Every sequence has a monotone subsequence}
   \lemlabel{every-sequence-has-monotone-subsequence}
   Every sequence has a monotone subsequence.
 \end{lemma}
@@ -1234,6 +1249,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{theorem}[The Bolzano-Weierstrass theorem]
+  \addcontentsline{toc}{section}{The Bolzano-Weierstrass theorem}
   \thmlabel{bolzano-weierstrass}
   Every bounded sequence has a convergent subsequence.
 \end{theorem}
@@ -1247,6 +1263,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{definition}
+  \addcontentsline{toc}{section}{Cauchy sequences}
   A sequence $(a_n)$ is \vocab{Cauchy} if for all $\epsilon > 0$
   there exists some $N \in \NN$ such that
   \[ \abs{a_m - a_n} < \epsilon \]
@@ -1255,6 +1272,7 @@ There is a second proof that is even a little shorter.
 
 \begin{lemma}
   \lemlabel{cauchy-implies-bounded}
+  \addcontentsline{toc}{section}{Cauchy sequences are bounded}
   If $(a_n)$ is Cauchy, then $(a_n)$ is bounded.
 \end{lemma}
 
@@ -1278,6 +1296,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{theorem}[Cauchy criterion for convergence]
+  \addcontentsline{toc}{section}{Cauchy criterion for convergence}
   \thmlabel{cauchy-criterion-for-convergence}
   A sequence converges if and only if it is Cauchy.
 \end{theorem}
@@ -1349,6 +1368,7 @@ There is a second proof that is even a little shorter.
 \end{proof}
 
 \begin{theorem}[Stolz-Cesàro theorem]
+  \addcontentsline{toc}{section}{Stolz-Cesàro theorem}
   Let $(a_n)$ and $(b_n)$ be two sequences.
   \begin{enumerate}
     \item Assume that $a_n \to 0$ and $b_n \to 0$. Suppose $b_n$ is
