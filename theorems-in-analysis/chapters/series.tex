@@ -125,11 +125,11 @@ a shame to base on them any demonstration whatsoever.''}}
   Consider the special case $m = n + 1$ in \thmref{cauchy-criterion-for-series}.
 \end{proof}
 
-\begin{proposition}
-  \prplabel{series-with-nonnegative-sequence}
+\begin{lemma}
+  \lemlabel{series-with-nonnegative-sequence}
   If $a_k \geq 0$ for all $k \in \NN$, then $\sum_{k = 1}^{\infty}
   a_k$ either converges or it diverges to $\infty$.
-\end{proposition}
+\end{lemma}
 
 \begin{proof}
   Since each $a_k$ is nonnegative, observe that the sequence of
@@ -159,7 +159,7 @@ a shame to base on them any demonstration whatsoever.''}}
   for all $n$. That is,
   \[ s_n \leq t_n \qquad \text{for all $n$.} \tag{$\bigstar$} \]
   We proceed with a proof of part 1, but first note that by
-  \prpref{series-with-nonnegative-sequence} that all we need to show
+  \lemref{series-with-nonnegative-sequence} that all we need to show
   is that $(s_n)$ is bounded above. If we can do this we know that
   $s_n \not\to \infty$, which by that proposition implies that it
   must converge.
@@ -175,7 +175,7 @@ a shame to base on them any demonstration whatsoever.''}}
 
   The proof of part 2 is similar. Let $M > 0$. Assume that $\sum_{k =
   1}^{\infty} a_k$ diverges, meaning that $(s_n)$ diverges (and hence
-    by \prpref{series-with-nonnegative-sequence} this means it diverges
+    by \lemref{series-with-nonnegative-sequence} this means it diverges
   to $\infty$). And so by \defref{divergent-sequences}, there exists
   some $N$ for which $M < s_n$ for all $n > N$. And so by
   $(\bigstar)$, $M < s_n \leq t_n$ for all $n > N$. Thus, again
@@ -279,10 +279,10 @@ Here's an alternative proof that is much shorter.
   \end{align*}
 \end{proof}
 
-\begin{proposition}[Harmonic series diverges]
+\begin{theorem}[Harmonic series diverges]
   \addcontentsline{toc}{section}{Harmonic series diverges}
   The harmonic series $\sum_{k = 1}^{\infty} \frac{1}{k}$ diverges.
-\end{proposition}
+\end{theorem}
 
 \begin{proof}
   Observe that
@@ -616,14 +616,88 @@ Here's another proof that I particularly enjoy.
   \end{enumerate}
 \end{proposition}
 
+\begin{definition}[Rates of convergence and divergence]
+  \addcontentsline{toc}{section}{Rates of convergence and divergence}
+  Consider two positive series
+  \[ \sum_{n = 1}^{\infty} a_n \qquad \text{and} \qquad \sum_{n =
+  1}^{\infty} a_n^\ast. \]
+  \begin{enumerate}
+    \item Suppose both series converge. Let
+      \[ R_n = \sum_{i = n + 1}^{\infty} a_i \qquad \text{and} \qquad
+      R_n^\ast = \sum_{i = n + 1}^{\infty} a_i^\ast. \]
+      We say that $\sum_{n = 1}^{\infty} a_n^\ast$ \vocab{converges more
+      slowly} than $\sum_{n = 1}^{\infty} a_n$ if
+      \[ \lim_{n = \infty} \frac{R_n}{R_n^\ast} = 0. \]
+    \item Suppose both series diverge. Let
+      \[ S_n = \sum_{i = 1}^{n} a_i \qquad \text{and} \qquad S_n^\ast
+      = \sum_{i = 1}^{n} a_i^\ast. \]
+      We say that $\sum_{n = 1}^{\infty} a_n^\ast$ \vocab{diverges more
+      slowly} than $\sum_{n = 1}^{\infty} a_n$ if
+      \[ \lim_{n \to \infty} \frac{S_n^\ast}{S_n} = 0. \]
+  \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+  Let $\sum_{n = 1}^{\infty} a_n$ be a positive series.
+  \begin{enumerate}
+    \item If $\sum_{n = 1}^{\infty} a_n$ converges, then there is a
+      monotone sequence $(b_n)$ such that \\
+      $\lim_{n \to \infty} b_n = \infty$ and the series $\sum_{n =
+      1}^{\infty} a_n b_n$ converges.
+    \item If $\sum_{n = 1}^{\infty} a_n$ diverges, then there is a
+      monotone sequence $(b_n)$ such that \\
+      $\lim_{n \to \infty} b_n = 0$ and the series $\sum_{n =
+      1}^{\infty} a_n b_n$ diverges.
+  \end{enumerate}
+\end{lemma}
+
 \begin{theorem}[Nonexistence of the universal test]
   \addcontentsline{toc}{section}{Nonexistence of the universal test}
   There is no universal comparison test that can decide the
   convergence or divergence of all positive series.
 \end{theorem}
 
+\begin{theorem}[Abel's summation formula]
+  \addcontentsline{toc}{section}{Abel's summation formula}
+  Let $(a_n)$ and $(b_n)$ be arbitrary sequences. Define $(s_n)$ to
+  be the sequence of partial sums of $(a_n)$. That is, $s_n = \sum_{k
+  = 1}^{n} a_k$. Then
+  \[ \sum_{k = 1}^{n} a_k b_k = \sum_{k = 1}^{n - 1} s_k (b_k - b_{k
+  + 1}) + s_n b_n. \]
+\end{theorem}
+
+\begin{proposition}[Abel's test]
+  \addcontentsline{toc}{section}{Abel's test}
+  Let $\sum_{n = 1}^{\infty} a_n$ be a convergent series, and let
+  $(b_n)$ be a bounded and monotone sequence. Then $\sum_{n =
+  1}^{\infty} a_n b_n$ converges.
+\end{proposition}
+
+\begin{proposition}[Dirichlet's test]
+  \addcontentsline{toc}{section}{Dirichlet's test}
+  Let $\sum_{n = 1}^{\infty} a_n$ be a bounded series, and let
+  $(b_n)$ be a positive and monotonically decreasing sequence with
+  $\lim_{n \to \infty} b_n = 0$. Then $\sum_{n = 1}^{\infty} a_n b_n$ converges.
+\end{proposition}
+
+\begin{proposition}[Comparison test for general series]
+  \addcontentsline{toc}{section}{Comparison test for general series}
+  Let $\sum_{n = 1}^{\infty} a_n$ and $\sum_{n = 1}^{\infty} b_n$ satisfy
+  \[ \text{$\lim_{n \to \infty} \frac{a_n}{b_n} = c_n$ and
+  $\frac{a_n}{b_n}$ is monotone.} \]
+  Then
+  \begin{enumerate}
+    \item If $\sum_{n = 1}^{\infty} b_n$ converges, then $\sum_{n =
+      1}^{\infty} a_n$ converges.
+    \item If $c \neq 0$, then both series are either both divergent,
+      both conditionally convergent, or both absolutely convergent.
+  \end{enumerate}
+\end{proposition}
+
 \begin{theorem}
-  The associative law holds for the convergent series.
+  \addcontentsline{toc}{section}{The associative law holds for
+  convergent series}
+  The associative law holds for convergent series.
 \end{theorem}
 
 \begin{definition}[Rearrangements of series]
@@ -637,6 +711,12 @@ Here's another proof that I particularly enjoy.
   If the series $\sum_{n = 1}^{\infty} a_n$ converges absolutely,
   then any rearrangement of this series converges to the same limit.
 \end{theorem}
+
+\begin{corollary}
+  \addcontentsline{toc}{section}{The commutative law holds for
+  absolutely convergent series}
+  The commutative law holds for absolutely convergent series.
+\end{corollary}
 
 \begin{theorem}[Riemann series theorem]
   \addcontentsline{toc}{section}{Riemann series theorem}
