@@ -1,0 +1,158 @@
+\setchapterpreamble{\dictum[David S. Richeson, \textit{Euler's Gem:
+  The Polyhedron Formula and the Birth of Topology}]{``If geometry is
+dressed in a suit coat, topology dons jeans and a T-shirt.''}}
+\chapter{Basic Topology of $\RR$}
+\begin{definition}[Open sets]
+  \deflabel{open-sets}
+  \addcontentsline{toc}{section}{Open sets}
+  A set $O \subseteq \RR$ is \vocab{open} if for all points $x \in O$
+  there exists an $\epsilon$-neighborhood $V_\epsilon(x) \subseteq O$.
+\end{definition}
+
+\begin{example}
+  Below are some examples and some non-examples of open sets.
+  \begin{enumerate}
+    \item The set $\RR$ is open.
+    \item The empty set $\emptyset$ is open.
+    \item The open interval $(a, b)$ is open.
+    \item The intervals $(a, \infty)$ and $(-\infty, b)$ are open.
+    \item The closed interval $[a, b]$ is \textit{not} open.
+  \end{enumerate}
+\end{example}
+
+\begin{proposition}
+  \prplabel{open-sets-via-union-and-intersection}
+  1. The union of an arbitrary collection of open sets is open.
+
+  2. The intersection of a finite collection of open sets is open.
+\end{proposition}
+
+\begin{proof}
+  To prove part 1, we let $\set{O_\lambda : \lambda \in \Lambda}$ be
+  a collection of open sets and let $O = \bigcup_{\lambda \in
+  \Lambda} O_\lambda$. Let $x$ be an arbitrary element of $O$. In
+  order to show that $O$ is open, \defref{open-sets} insists that we
+  produce an $\epsilon$-neighborhood of $x$ completely contained in
+  $O$. Since $x \in O$, we know that $x \in O_\lambda$ for some
+  $\lambda \in \Lambda$. By definition of $O_\lambda$ being open,
+  this implies that there is an $\epsilon$-neighborhood
+  $V_\epsilon(x) \subseteq O_\lambda$. The fact that $O_\lambda
+  \subseteq O$ allows us to conclude that $V_\epsilon(x) \subseteq
+  O$. This completes the proof of part 1.
+
+  For part 2, let $\set{O_1, O_2, \dots, O_N}$ be a finite collection
+  of open sets. Now, if $x \in \bigcup_{k = 1}^{N} O_k$, then $x$ is
+  an element of each of the open sets. By the definition of an open
+  set, we know that, for each $1 \leq k \leq N$, there exists
+  $V_{\epsilon_k}(x) \subseteq O_k$. We are in search of a single
+  $\epsilon$-neighborhood of $x$ that is contained in every $O_k$, so
+  the trick is to take the smallest one. Letting $\epsilon =
+  \min(\epsilon_1, \epsilon_2, \dots, \epsilon_N)$, it follows that
+  $V_\epsilon(x) \subseteq V_{\epsilon_k}(x)$ for all $k$, and hence
+  $V_\epsilon(x) \subseteq \bigcap_{k = 1}^{N} O_k$, as desired.
+\end{proof}
+
+\begin{example}
+  Some more examples of open sets.
+  \begin{enumerate}
+    \item All intervals $(a, b)$ are open, so by
+      \prpref{open-sets-via-union-and-intersection}, $(a, b) \cup (c,
+      d)$ is open, $(a, b) \cup (c, d) \cup (e, f)$ is open, $(a_1,
+      b_1) \cup (a_2, b_2) \cup \dots$ is open, and any other union
+      of open intervals is open.
+    \item Likewise, $(a, b) \cap (c, d)$ is open.
+  \end{enumerate}
+\end{example}
+
+\begin{theorem}[Characterization of open sets]
+  \addcontentsline{toc}{section}{Characterization of open sets}
+  Every open set is a countable union of disjoint open intervals.
+\end{theorem}
+
+\begin{proof}
+  Let $O$ be an open set. Then by \defref{open-sets}, each $x \in
+  O$ is contained inside some open interval $(x - \epsilon, x +
+  \epsilon) \subseteq O$. There may be a larger open interval that
+  contains $x$, though, so let $I_x \subseteq O$ be the largest open
+  interval containing $x$. Formally, $I_x = (\alpha, \beta)$ where
+  \[ \alpha = \inf\set{a : (a, x) \subseteq O} \qquad \text{and} \qquad
+  \beta = \sup\set{b : (x, b) \subseteq O}. \]
+  Note that, given any pair $x$ and $y$, either $I_x = I_y$ or $I_x
+  \cap I_y = \emptyset$. The reason for this is that, if instead you
+  had two intervals overlapping but not equal, then you could expand
+  at least one of them, contradicting the fact that we had chosen the
+  largest intervals.
+
+  We claim that these $I_x$ intervals are the ones we are looking
+  for. To see this, first note that since each $x \in O$ is in $I_x
+  \subseteq O$, the union of all $I_x$ intervals does indeed equal to
+  $O$. Moreover, there are only countably many such disjoint
+  intervals due to \thmref{open-intervals-countable}. This completes the proof.
+\end{proof}
+
+\begin{definition}[Limit points]
+  \addcontentsline{toc}{section}{Limit points}
+  \deflabel{limit-points}
+  A point $x$ is a \vocab{limit point} of a set $A$ if and only if
+  every $\epsilon$-neighborhood $V_\epsilon(x)$ of $x$ intersects the
+  set $A$ at some point other than $x$.
+\end{definition}
+
+\begin{theorem}
+  \thmlabel{limit-points-alternative}
+  A point $x$ is a limit point of a set $A$ if and only if there is a
+  sequence $(a_n)$ contained in $A \setminus \set{x}$ such that $a_n \to x$.
+\end{theorem}
+
+\begin{proof}
+  \phantom{.}
+
+  $(\Rightarrow)$ Assume $x$ is a limit point of $A$. In order to
+  produce a sequence
+  $(a_n)$ converging to $x$, we are going to consider the particular
+  $\epsilon$-neighborhoods
+  obtained using $\epsilon = 1/n$. By \defref{limit-points}, every
+  neighborhood of $x$ intersects
+  $A$ in some point other than $x$. This means that, for each $n \in
+  \NN$, we are justified
+  in picking a point
+  \[ a_n \in V_{1/n}(x) \cap A \]
+  with the stipulation that $a_n \neq x$. It should not be too
+  difficult to see why $a_n \to x$. Given an arbitrary $\epsilon >
+  0$, choose $N$ such that $1/N \leq \epsilon$. It follows that
+  $\abs{a_n - x} < \epsilon$ for all $n > N$.
+
+  $(\Leftarrow)$ We assume $a_n \to x$ where $a_n \in A
+  \setminus \set{x}$, and let $V_\epsilon(x)$ be an arbitrary
+  $\epsilon$-neighborhood. The definition of convergence assures us
+  that there exists a term $a_N$ in the sequence satisfying $a_N \in
+  V_\epsilon(x)$, and the proof is complete.
+\end{proof}
+
+\begin{remark}
+  The restriction that an $a_n \neq x$ in
+  \thmref{limit-points-alternative} deserves a comment. Given a
+  point $a \in A$, it is always the case that $a$ is the limit of a
+  sequence in $A$ if we are allowed to consider the constant sequence
+  $(a, a, a, \dots)$. There will be occasions where we will want to
+  avoid this somewhat uninteresting situation, so it is important to
+  have a vocabulary that can distinguish limit points of a set from
+  \textit{isolated points}.
+\end{remark}
+
+\begin{definition}[Isolated points]
+  \addcontentsline{toc}{section}{Isolated points}
+  A point $a \in A$ is an \vocab{isolated point} of $A$ if it is not
+  a limit point of $A$.
+\end{definition}
+
+\begin{definition}[Closed sets]
+  \addcontentsline{toc}{section}{Closed sets}
+  A set $F \subseteq \RR$ is \vocab{closed} if it contains its limit points.
+\end{definition}
+
+\begin{theorem}[Characterization of closed sets]
+  \addcontentsline{toc}{section}{Characterization of closed sets}
+  A set $F \subseteq \RR$ is closed if and only if every Cauchy
+  sequence contained in $F$ has a limit that is also an element of $F$.
+\end{theorem}
