@@ -57,6 +57,7 @@ a shame to base on them any demonstration whatsoever.''}}
 
 \begin{theorem}[Series limit laws]
   \addcontentsline{toc}{section}{Series limit laws}
+  \thmlabel{series-limit-laws}
   Assume that $\sum_{k = 1}^{\infty} a_k = \alpha$ and $\sum_{k =
   1}^{\infty} b_k = \beta$.
   Also assume that $c \in \RR$. Then,
@@ -95,6 +96,14 @@ a shame to base on them any demonstration whatsoever.''}}
 
   In almost exactly the same way we can prove part 2 and part 3.
 \end{proof}
+
+\begin{remark}
+  Define $\sum_{k = 1}^{\infty} a_k$ and $\sum_{k = 1}^{\infty} b_k$
+  as in \thmref{series-limit-laws}. We cannot conclude that $\sum_{k
+  = 1}^{\infty} (a_k \cdot b_k) = \alpha \cdot \beta$ since, in general,
+  \[ \left(\sum_{k = 1}^{n} a_k\right) \left(\sum_{k = 1}^{n}
+  b_k\right) \neq \sum_{k = 1}^{n} (a_k \cdot b_k). \]
+\end{remark}
 
 \begin{theorem}[Cauchy criterion for series]
   \addcontentsline{toc}{section}{Cauchy criterion for series}
@@ -194,11 +203,20 @@ Here's an alternative proof that is much shorter.
 
 \begin{remark}
   Observe that if, say, $0 \leq a_k \leq b_k$ for all but the first
-  10 terms, then the conclusion of the theorem would still hold. In
-  general, as long as $a_k \leq b_k$ holds for all but finitely many
-  terms, the theorem still applies, as the following statement
-  asserts. Changing finitely many terms of a sequence or a series
-  does not affect whether or not the sequence or series converges.
+  10 terms, then the conclusion of the theorem would still hold.
+  Based on the Cauchy criterion, pbserve that the behavior of a series is
+  determined only by its tails. Thus, in the comparison test, the
+  requirement that $a_k \leq b_k$ does not really need to hold for
+  all $n \in \NN$ but just needs to be eventually true, i.e. as long
+  as $a_k \leq b_k$ holds for all but finitely many terms.
+\end{remark}
+
+\begin{remark}
+  When the ratio between consecutive terms is simpler than the terms
+  themselves, which
+  is especially true when the terms are in product form, the
+  following test is often more
+  convenient to apply.
 \end{remark}
 
 \begin{proposition}[Ratio comparison test]
@@ -380,6 +398,12 @@ Here's another proof that I particularly enjoy.
   \frac{1}{k^p}$ converges too.
 \end{proof}
 
+\begin{example}
+  The series
+  \[ \sum_{n = 2}^{\infty} \frac{1}{n \ln n} \]
+  diverges.
+\end{example}
+
 \begin{proposition}[Ratio test]
   \addcontentsline{toc}{section}{Ratio test}
   \prplabel{ratio-test}
@@ -403,6 +427,11 @@ Here's another proof that I particularly enjoy.
     \item If $\rho = 1$, the test is inconclusive.
   \end{enumerate}
 \end{proposition}
+
+\begin{example}
+  Let $a$ and $b$ be distinct positive numbers. Determine the convergence of
+  \[ 1 + a + ab + a^2b + a^2b^2 + \dots + a^nb^{n - 1} + a^nb^n + \dots. \]
+\end{example}
 
 \begin{definition}[Strength of convergence tests]
   \addcontentsline{toc}{section}{Strength of convergence tests}
@@ -479,7 +508,19 @@ Here's another proof that I particularly enjoy.
   \end{enumerate}
 \end{proposition}
 
+\begin{example}
+  The series
+  \[ \sum_{n = 1}^{\infty} \frac{1}{2^{\sqrt{n}}} \]
+  converges.
+\end{example}
+
+\begin{example}
+  Determine the convergence of
+  \[ \sum_{n = 1}^{\infty} \frac{1}{n!} \left(\frac{n}{e}\right)^n. \]
+\end{example}
+
 \begin{proposition}[Raabe's limit test corollary]
+  \prplabel{raabe-limit-test-cor}
   Assume $a_n > 0$ for all $n \in \NN$. Define
   \[ \mathcal{R}^\ast = \lim_{n \to \infty} \left(\frac{a_{n +
   1}}{a_n}\right)^n. \]
@@ -492,6 +533,12 @@ Here's another proof that I particularly enjoy.
   \end{enumerate}
 \end{proposition}
 
+\begin{example}
+  Using \prpref{raabe-limit-test-cor}, show that the series
+  \[ \sum_{n = 1}^{\infty} \frac{1}{2^{\sqrt{n}}} \]
+  converges.
+\end{example}
+
 \begin{proposition}[Logarithmic test]
   \addcontentsline{toc}{section}{Logarithmic test}
   \prplabel{logarithmic-test}
@@ -502,6 +549,11 @@ Here's another proof that I particularly enjoy.
     \item If $\mathcal{L}_n \leq 1$, the series diverges.
   \end{enumerate}
 \end{proposition}
+
+\begin{example}
+  Let $p > 1$. Determine the convergence of
+  \[ \sum_{n = 1}^{\infty} \frac{\ln n}{n^p}. \]
+\end{example}
 
 \begin{proposition}[Logarithmic test is stronger than Raabe's test]
   \addcontentsline{toc}{section}{Logarithmic test is stronger than Raabe's test}
@@ -588,6 +640,19 @@ Here's another proof that I particularly enjoy.
   \end{enumerate}
 \end{proposition}
 
+\begin{example}
+  Check the convergence of the \textit{hypergeometric series}
+  \[ F(\alpha, \beta, \gamma) = 1 + \sum_{n = 1}^{\infty}
+    \frac{\alpha (\alpha + 1) \dots (\alpha + n - 1) \beta (\beta + 1)
+  \dots (\beta + n - 1)}{n! \gamma (\gamma + 1) \dots (\gamma + n - 1)}. \]
+\end{example}
+
+\begin{example}
+  Consider the convergence of
+  \[ \sum_{n = 2}^{\infty} \frac{1}{n \ln n} \]
+  using Gauss's test.
+\end{example}
+
 \begin{proposition}[Cauchy's condensation test]
   \addcontentsline{toc}{section}{Cauchy's condensation test}
   Let $(a_n)$ be a monotononically decreasing sequence where $a_n
@@ -604,6 +669,12 @@ Here's another proof that I particularly enjoy.
   (n_{k + 1} - n_k) a_{n_k}$ converges.
 \end{proposition}
 
+\begin{example}
+  Consider the convergence of
+  \[ \sum_{n = 2}^{\infty} \frac{1}{n \ln n} \]
+  using Cauchy's condensation test.
+\end{example}
+
 \begin{proposition}
   Let $(a_n)$ be a monotonically decreasing sequence where $a_n > 0$
   for all $n \in \NN$. Define
@@ -615,6 +686,11 @@ Here's another proof that I particularly enjoy.
     \item If $\rho = 1/2$, the test is inconclusive.
   \end{enumerate}
 \end{proposition}
+
+\begin{example}
+  Let $p > 0$. Study the convergence of
+  \[ \sum_{n = 1}^{\infty} \frac{\ln n}{n^p}. \]
+\end{example}
 
 \begin{definition}[Rates of convergence and divergence]
   \addcontentsline{toc}{section}{Rates of convergence and divergence}
@@ -680,6 +756,13 @@ Here's another proof that I particularly enjoy.
   $\lim_{n \to \infty} b_n = 0$. Then $\sum_{n = 1}^{\infty} a_n b_n$ converges.
 \end{proposition}
 
+\begin{example}
+  Determine the convergence of
+  \[ \sum_{n = 1}^{\infty} b_n \sin(nx) \qquad \text{and} \qquad
+  \sum_{n = 1}^{\infty} b_n \cos(nx) \]
+  where $(b_n)$ is positve, monotonically decreasing, and converges to zero.
+\end{example}
+
 \begin{proposition}[Comparison test for general series]
   \addcontentsline{toc}{section}{Comparison test for general series}
   Let $\sum_{n = 1}^{\infty} a_n$ and $\sum_{n = 1}^{\infty} b_n$ satisfy
@@ -724,3 +807,163 @@ Here's another proof that I particularly enjoy.
   then there exists a rearrangement of this series that either
   converges to any arbitrary real number or diverges to $\pm \infty$.
 \end{theorem}
+
+\begin{definition}[Finite decimal representations of real numbers]
+  A real number of the form
+  \[ x = a_0 + \frac{a_1}{10} + \frac{a_2}{10^2} + \dots + \frac{a_n}{10^n}, \]
+  where $a_0$ is a nonnegative integer and $a_1, \dots, a_n$ are
+  integers satisfying $0 \leq a_i \leq 9$ and is usually written more briefly as
+  \[ x = a_0. a_1 a_2 \ldots a_n. \]
+  This is said to be the \vocab{finite decimal representation} of $x$.
+\end{definition}
+
+\begin{proposition}
+  Real numbers with a finite decimal representation are necessary rational.
+\end{proposition}
+
+\begin{proof}
+  Trivial.
+\end{proof}
+
+\begin{proposition}[Finite decimal approximations of real numbers]
+  \prplabel{finite-decimal-appox-real}
+  Assume $x$ is a nonnegative real number.
+  \begin{enumerate}
+    \item Then there is a finite decimal $r_n = a_0. a_1 a_2 \ldots
+      a_n$ such that
+      \[ r_n \leq x < r_n + \frac{1}{10^n} \qquad \text{for all $n \in \NN$}. \]
+    \item Then there is a finite decimal $s_n = b_0. b_1 b_2 \ldots
+      b_n$ such that
+      \[ s_n < x \leq s_n + \frac{1}{10^n} \qquad \text{for all $n \in \NN$}. \]
+  \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+  We proceed with a proof of part 1. Let $S$ be the set of
+  nonnegative integers less than or equal to $x$. Then $S$ is
+  nonempty since $0 \in S$, and $S$ is bounded above by $x$. By the
+  completeness of $\RR$, $S$ has a supremum, which we denote as $a_0
+  = \sup(S)$. Since $S$ contains only integers and has $a_0$ as its
+  least upper bound, $a_0$ must itself be an integer in $S$. That is,
+  $a_0 = \floor{x}$. This gives us our first approximation:
+  \[ a_0 \leq x < a_0 + 1. \tag{1} \]
+
+  For the first decimal digit, we define $a_1 = \floor{10x - 10a_0}$.
+  This gives us
+  \[ a_1 \leq 10x - 10a_0 < a_1 + 1. \tag{2} \]
+  From (1) and (2), we can deduce that $0 \leq a_1 \leq 9$, confirming
+  that $a_1$ is indeed a single decimal digit. Rearranging (2)
+  gives us our second approximation:
+  \[ a_0 + \frac{a_1}{10} \leq x < a_0 + \frac{a_1}{10} + \frac{1}{10}. \]
+
+  This process extends naturally to subsequent decimal places.
+  After selecting digits $a_1, a_2, \dots, a_{n - 1}$ with $0 \leq a_i
+  \leq 9$ for each $i$, we define
+  \[ a_n = \floor{10^n x - (10^n a_0 + 10^{n - 1} a_1 + \dots + 10
+  a_{n - 1})}. \]
+  This gives us
+  \[ a_n \leq 10^n x - (10^n a_0 + 10^{n - 1} a_1 + \dots + 10 a_{n -
+  1}) < a_n + 1. \tag{3} \]
+  Rearranging (3) gives us the following approximation:
+  \[ a_0 + \frac{a_1}{10} + \frac{a_2}{10^2} + \dots +
+    \frac{a_n}{10^n} \leq x < a_0 + \frac{a_1}{10} + \frac{a_2}{10^2} +
+  \dots + \frac{a_n}{10^n} + \frac{1}{10^n}. \]
+  By construction, observe that $0 \leq a_n \leq 9$ for each $n$, and so we have
+  \[ r_n \leq x < r_n + \frac{1}{10^n}, \]
+  where $r_n = a_0. a_1 a_2 \ldots a_n$ represents our finite decimal
+  approximation of $x$ with $n$ decimal places. This completes the
+  proof of part 1.
+
+  The proof of part 2 is quite similar.
+\end{proof}
+
+\begin{theorem}[Infinite decimal representations of real numbers]
+  Every real number admits at least one infinite decimal representation.
+\end{theorem}
+
+\begin{proof}
+  First, let's consider any nonnegative real number $x$. By
+  \prpref{finite-decimal-appox-real}, for each $n \in \mathbb{N}$,
+  there exists a finite decimal $r_n = a_0.a_1a_2\ldots a_n$ such that
+  \[ r_n \leq x < r_n + \frac{1}{10^n}, \]
+  where $a_0 = \floor{x}$ and each $a_i$ ($1 \leq i \leq n$) is a
+  digit between $0$ and $9$.
+
+  Let's define the infinite decimal representation $r = a_0.a_1 a_2
+  a_3 \ldots$ as the series
+  \[ r = a_0 + \frac{a_1}{10} + \frac{a_2}{10^2} + \frac{a_3}{10^3} +
+  \cdots = a_0 + \sum_{i=1}^{\infty} \frac{a_i}{10^i}. \]
+  We claim that $r = x$. To prove this, we need to show that $|r - x| = 0$.
+
+  Choose an arbitrary natural number $N$. By our construction, we have
+  \[ r_N \leq x < r_N + \frac{1}{10^N}. \tag{1} \]
+
+  Since all digits $a_i$ are between $0$ and $9$, we have
+  \begin{align*}
+    r - r_N = \sum_{i=N+1}^{\infty} \frac{a_i}{10^i} & \leq
+    \sum_{i=N+1}^{\infty} \frac{9}{10^i} \\
+    & = \frac{9}{10^{N+1}} \cdot \frac{1}{1-\frac{1}{10}} &&
+    \text{(by \prpref{geometric-series-test})} \\
+    & = \frac{1}{10^N}
+  \end{align*}
+  which implies that
+  \[ r_N \leq r \leq r_N + \frac{1}{10^N}. \tag{2} \]
+
+  Combining (1) and (2) gives us
+  \[ -\frac{1}{10^N} \leq r - x \leq \frac{1}{10^N} \qquad \text{or}
+  \qquad \abs{r - x} \leq \frac{1}{10^N}. \]
+
+  Since $N$ was arbitrary, by the Archimedean principle
+  (\lemref{archimedean-principle}), we must have $\abs{r - x} = 0$,
+  which means that $r = x$.
+
+  For negative real numbers, we simply prepend a negative sign to
+  obtain $-a_0. a_1 a_2 a_3 \ldots$ where the $a_i$ are determined from
+  $\abs{x}$ as above.
+\end{proof}
+
+\begin{theorem}[$0.999\ldots = 1$]
+  $0.999\ldots$ is an infinite decimal representation of the real number 1.
+\end{theorem}
+
+\begin{proof}
+  Consider the real number $x = 1$. By \prpref{finite-decimal-appox-real},
+  for each $n \in \NN$, there exists a finite decimal $s_n = b_0. b_1
+  b_2 \ldots b_n$ such that
+  \[ s_n < x \leq s_n + \frac{1}{10^n} \]
+
+  For $x = 1$, we can identify that $b_0 = 0$ and $b_i = 9$ for all
+  $i \geq 1$. Thus,
+  \[ s_n = 0.\underbrace{99\ldots9}_{\text{n times}} < 1 \leq
+  0.\underbrace{99\ldots9}_{\text{n times}} + \frac{1}{10^n}. \]
+
+  Define the infinite decimal $s = 0.999\ldots$ as the series
+  \[ s = \frac{9}{10} + \frac{9}{10^2} + \frac{9}{10^3} + \dots =
+  \sum_{i=1}^{\infty}\frac{9}{10^i}. \]
+
+  Choose an arbitrary natural number $N$. We have
+  \[ s_N < 1 \leq s_N + \frac{1}{10^N} \tag{1} \]
+  and
+  \[ s - s_N = \sum_{i=N+1}^{\infty}\frac{9}{10^i} =
+  \frac{9}{10^{N+1}} \cdot \frac{1}{1-\frac{1}{10}} = \frac{1}{10^N}. \tag{2} \]
+
+  Combining (1) and (2), we get
+  \[ s_N < 1 \leq s_N + \frac{1}{10^N} = s. \]
+
+  Since $N$ was arbitrary, we have $s \geq 1$. Obviously, $s \leq 1$
+  as well, hence $s = 1$.
+\end{proof}
+
+\begin{remark}
+  Many struggle to accept that $0.999\ldots = 1$. Some believe
+  numbers must have unique decimal representations, making two
+  different-looking expressions for the same value seem
+  contradictory. Others misinterpret the notion of limits, viewing
+  $0.999\ldots$ as an ongoing process that forever approaches 1
+  without reaching it, rather than as the fixed value that is the
+  limit. These misconceptions stem from intuitive but imprecise
+  understandings of infinity and limits. Within the standard definition
+  of real numbers, $0.999\ldots$ represents the limit of some
+  sequence and equals exactly 1---not approximately, not infinitely
+  close, but identical in value.
+\end{remark}
