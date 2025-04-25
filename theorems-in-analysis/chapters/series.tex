@@ -253,6 +253,34 @@ Here's an alternative proof that is much shorter.
   to 1 if $r = 1$, and diverges otherwise.
 \end{lemma}
 
+\begin{proof}
+  \phantom{.}
+
+  \textbf{Case 1.} For $r > 1$, the sequence $(r^n)$ is strictly
+  increasing and unbounded. By monotone convergence
+  (\thmref{monotone-convergence}), the sequence diverges to $\infty$.
+
+  \textbf{Case 2.} For $r = 1$, we have $r^n = 1$ for all $n \in
+  \NN$. Thus, the sequence converges to 1.
+
+  \textbf{Case 3.} For $0 < r < 1$, the sequence $(r^n)$ is strictly
+  decreasing and bounded below by 0. By monotone convergence
+  (\thmref{monotone-convergence}), the sequence converges to 0.
+
+  \textbf{Case 4.} For $r = 0$, we have $r^n = 0$ for all $n \in
+  \NN$. Thus, the sequence converges to 0.
+
+  \textbf{Case 5.} For $-1 < r < 0$, we can bound the sequence as follows:
+  \[ -\abs{r}^n \leq r^n \leq \abs{r}^n. \]
+  Since $0 < \abs{r} < 1$, by Case 3, we have $\lim_{n \to
+  \infty} \abs{r}^n = 0$. Thus, $\lim_{n \to \infty} -\abs{r}^n =
+  0$ as well. By the sequence squeeze theorem
+  (\thmref{sequence-squeeze}), the sequence $(r^n)$ converges to 0.
+
+  \textbf{Case 6.} For $r \leq -1$, the proof similar to the one
+  presented in \expref{alternating-minus-one-diverges}.
+\end{proof}
+
 \begin{proposition}[Geometric series test]
   \addcontentsline{toc}{section}{Geometric series test}
   \prplabel{geometric-series-test}
@@ -404,6 +432,13 @@ Here's another proof that I particularly enjoy.
   diverges.
 \end{example}
 
+\begin{remark}
+  The ratio comparison test yields two simple and powerful tests that
+  are closely related. Both tests work exclusively with the terms of
+  the given series---they require neither an initial guess about
+  convergence nor the discovery of a series for comparison.
+\end{remark}
+
 \begin{proposition}[Ratio test]
   \addcontentsline{toc}{section}{Ratio test}
   \prplabel{ratio-test}
@@ -467,6 +502,7 @@ Here's another proof that I particularly enjoy.
 
 \begin{proposition}[Absolute convergence test]
   \addcontentsline{toc}{section}{Absolute convergence test}
+  \prplabel{absolute-convergence-test}
   If $\sum_{k = 1}^{\infty} \abs{a_k}$ converges, then $\sum_{k =
   1}^{\infty} a_k$ converges too.
 \end{proposition}
@@ -482,6 +518,34 @@ Here's another proof that I particularly enjoy.
   A series $\sum_{k = 1}^{\infty} a_k$ is said to \vocab{converge
   conditionally} if it converges but does not converge absolutely.
 \end{definition}
+
+\begin{example}
+  Determine the convergene of
+  \[ \sum_{n = 1}^{\infty} \frac{1}{2^{\sqrt{n}}}. \]
+  converges.
+\end{example}
+
+\begin{remark}
+  Historically, the most interesting series mathematicians were
+  encountering in the early 19th Century all fell into the
+  inconclusive category of the above tests. To overcome the principal
+  drawback of these tests, various sophisticated and finer tests were
+  developed. For example, Gauss's test (\prpref{gauss-test})
+  completely sets the convergence for all hypergeometric series.
+  Kummer's test (\prpref{kummer-test}) gives characterizations for
+  convergence or divergence of all positive series. Cauchy's
+  condensation test (\prpref{cauchy-condensation-test}) provides an
+  approach to study the convergence or divergence of a class of
+  series via a rather ``thin'' subsequence. To demonstrate the
+  progression of these sophisticated and finer tests, we will first
+  introduce the Raabe (\prpref{raabe-test}) and logarithmic
+  (\prpref{logarithmic-test}) tests. Then, we present the Kummer
+  (\prpref{kummer-test}) and Gauss (\prpref{gauss-test}) tests. For
+  series with monotonically decreasing terms, we formulate a few
+  simple and interesting tests based on Cauchy's condensation test
+  (\prpref{cauchy-condensation-test}). Finally, we show that no
+  single test can determine convergence or divergence for all positive series.
+\end{remark}
 
 \begin{proposition}[Raabe's test]
   \addcontentsline{toc}{section}{Raabe's test}
@@ -568,6 +632,7 @@ Here's another proof that I particularly enjoy.
 
 \begin{proposition}[Kummer's test]
   \addcontentsline{toc}{section}{Kummer's test}
+  \prplabel{kummer-test}
   Assume $a_n > 0$ for all $n \in \NN$.
   \begin{enumerate}
     \item The series $\sum_{n = 1}^{\infty} a_n$ converges if there
@@ -592,21 +657,26 @@ Here's another proof that I particularly enjoy.
 \end{proposition}
 
 \begin{remark}
-  In contrast to all tests we have studied, Kummer's test does not
+  The drawback of Kummer's test is the choice of $c_n$, which has to
+  come from the user, and usually there is no particular motivation.
+  Thus, using Kummer's test is equally as difficult as using the
+  comparison test.
+
+  However, in contrast to all tests we have studied, Kummer's test does not
   merely give very powerful sufficient conditions for convergence or
   divergence of a positive series. Surprisingly, the conditions (1)
   and (2) in the test are indeed necessary. This fact is not well publicized.
 \end{remark}
 
-\begin{theorem}[Necessary condition for convergence]
-  \addcontentsline{toc}{section}{Necessary condition for convergence
-  and divergence}
+\begin{theorem}[Kummer's characterization of convergent series]
+  \addcontentsline{toc}{section}{Kummer's characterization of convergent series}
   If the series $\sum_{n = 1}^{\infty} a_n$ converges, then there
   exists a positive sequence $(c_n)$ for which
   \[ \mathcal{K}_n = c_n - \frac{a_{n + 1}}{a_n} c_{n + 1} \geq 1. \]
 \end{theorem}
 
-\begin{theorem}[Necessary condition for divergence]
+\begin{theorem}[Kummer's characterization of divergent series]
+  \addcontentsline{toc}{section}{Kummer's characterization of divergent series}
   If the series $\sum_{n = 1}^{\infty} a_n$ diverges, then there
   exists a positive sequence $(c_n)$ for which
   $\sum_{n = 1}^{\infty} 1/c_n$ diverges and
@@ -631,6 +701,7 @@ Here's another proof that I particularly enjoy.
 
 \begin{proposition}[Gauss's test]
   \addcontentsline{toc}{section}{Gauss's test}
+  \prplabel{gauss-test}
   Let $\sum_{n = 1}^{\infty} a_n$ be a positive series. Suppose
   \[ \frac{a_{n + 1}}{a_n} = 1 - \frac{\mu}{n} + \frac{\theta_n}{n^k} \]
   where $\theta_n$ is a bounded sequence and $k > 1$.
@@ -655,6 +726,7 @@ Here's another proof that I particularly enjoy.
 
 \begin{proposition}[Cauchy's condensation test]
   \addcontentsline{toc}{section}{Cauchy's condensation test}
+  \prplabel{cauchy-condensation-test}
   Let $(a_n)$ be a monotononically decreasing sequence where $a_n
   > 0$ for all $n \in \NN$. Then $\sum_{n = 1}^{\infty} a_n$
   converges if and only if $\sum_{n = 1}^{\infty} 2^n a_{2^n}$ converges.
@@ -732,6 +804,19 @@ Here's another proof that I particularly enjoy.
   There is no universal comparison test that can decide the
   convergence or divergence of all positive series.
 \end{theorem}
+
+\begin{remark}
+  Under the absolute convergence test
+  (\prpref{absolute-convergence-test}), all of the preceding tests
+  for positive series become tests for absolute convergence of
+  general series. But none of the convergence tests that we have
+  examined so far are applicable to a series that is not alternating
+  and does not converge absolutely. We now present two tests that are
+  applicable to the general series of the form
+  \[ \sum_{n = 1}^{\infty} a_n b_n = a_1 b_1 + a_2 b_2 + a_3 b_3 + \dots. \]
+  Both tests are based on the following algebraic manipulation, which
+  is often called the \textit{Abel's summation formula}.
+\end{remark}
 
 \begin{theorem}[Abel's summation formula]
   \addcontentsline{toc}{section}{Abel's summation formula}
