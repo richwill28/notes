@@ -1,0 +1,441 @@
+\documentclass[11pt,twoside=off,numbers=noenddot]{scrbook}
+
+\input{preamble}
+\input{macros}
+
+\title{Notes on Efficient Enumeration, Counting, and Uniform Generation of Logspace Classes}
+\author{Richard Willie}
+
+\begin{document}
+
+\maketitle
+
+\chapter*{Preface}
+These notes are simply a summary of \cite{arenas2021nfa} for my own reference. They are \textit{not} endorsed by the authors, and I strongly recommend reading the original work. Any errors here are almost certainly mine.
+
+\tableofcontents
+
+\newpage
+
+\chapter{Preliminaries}
+\chplabel{prelims}
+Given a natural numbers $n \leq m$, we use notation $[n, m]$ for the $\set{n, \dots, m}$. Besides, we use $\log(x)$ to refer to the logarithm of $x$ to base $e$.
+
+\section{Relations and Problems}
+\seclabel{rels-and-probs}
+As usual, $\set{0, 1}^\ast$ denotes the set of all strings over the binary alphabet $\set{0, 1}$, $\len{x}$ denotes the length of a string $x \in \set{0, 1}^\ast$, $x_1 \concat x_2$ denotes the concatenation of two strings $x_1, x_2 \in \set{0, 1}^\ast$, and $\set{0, 1}^n$ denotes the set of all strings $x \in \set{0, 1}^\ast$ such that $\len{x} = n$. A problem is represented as a relation $R \subseteq \set{0, 1}^\ast \times \set{0, 1}^\ast$. For every, pair $(x, y) \in R$, we interpret $x$ as being the encoding of an input to some problem, and $y$ as being the encoding of a solution to that input. For each $x \in \set{0, 1}^\ast$, we define the set $W_R(x) = \set{y \in \set{0, 1}^\ast \mid (x, y) \in R}$ and call it the set of solutions for $x$. Also, if $y \in W_R(x)$, then we call $y$ a solution to $x$.
+
+This is a very general framework, so we work with \vocab{$p$-relations} (see \cite{jerrum1986random}).
+
+\begin{definition}[$p$-relation]
+    Formally, a relation $R \subseteq \set{0, 1}^\ast \times \set{0, 1}^\ast$ is a \emph{$p$-relation} if
+    \begin{enumerate}
+        \item there exists a polynomial $q$ such that $(x, y) \in R$ implies that $\len{y} \leq q(\len{x})$ and
+        \item there exists a deterministic Turing Machine (TM) that receives as input $(x, y) \in \set{0, 1}^\ast \times \set{0, 1}^\ast$ runs in polynomial time, and accepts if, and only if, $(x, y) \in R$. In other words, the TM is a verifier that accepts as input an instance of a problem $x$ and its witness $y$.
+    \end{enumerate}
+\end{definition}
+
+Without loss of generality, from now on we assume that for a $p$-relation in $R$, there exists a polynomial $q$ such that $\len{y} = q(\len{x})$ for every $(x, y) \in R$. This is not a strong requirement, since all solutions can be made to have the same length through padding.
+
+\section{Enumeration, Counting, and Uniform Generation}
+Given a $p$-relation $R$, we are interested in the following problems:
+
+\begin{definition}[$\ENUM$]
+    \begin{tabbing}
+        \\[3pt]
+        \textbf{Problem:} \= \quad $\ENUM(R)$ \\
+        \textbf{Input:} \> \quad A word $x \in \set{0, 1}^\ast$ \\
+        \textbf{Output:} \> \quad Enumerate all $y \in W_R(x)$ without repetitions
+    \end{tabbing}
+\end{definition}
+
+\begin{definition}[$\COUNT$]
+    \begin{tabbing}
+        \\[3pt]
+        \textbf{Problem:} $\COUNT(R)$ \\
+        \textbf{Input:} A word $x \in \set{0, 1}^\ast$ \\
+        \textbf{Output:} The size $\size{W_R(x)}$
+    \end{tabbing}
+\end{definition}
+
+\begin{definition}[$\GEN$]
+    \begin{tabbing}
+        \\[3pt]
+        \textbf{Problem:} $\GEN(R)$ \\
+        \textbf{Input:} A word $x \in \set{0, 1}^\ast$ \\
+        \textbf{Output:} Generate uniformly, at random, a word in $W_R(x)$
+    \end{tabbing}
+\end{definition}
+
+Given that $\len{y} = q(\len{x})$ for every $(x, y) \in R$, we have that $W_R(x)$ is finite and these three problems are well defined. Notice that in the case of $\ENUM(R)$, we do not assume a specific order on words, so the elements of $W_R(x)$ can be enumerated in any order (but without repetitions). Moreover, in the case $\COUNT(R)$, we assume that $\size{W_R(x)}$ is encoded in binary and, therefore, the size of the output is logarithmic in the size of $W_R(x)$. Finally, in the case of $\GEN(R)$, we generate a word $y \in W_R(x)$ with probability $\frac{1}{\size{W_R(x)}}$ if the set $W_R(x)$ is not empty; otherwise, we return a special symbol $\bot$ to indicate that $W_R(x) = \emptyset$.
+
+\section{Enumeration with Polynomial and Constant Delay}
+An enumeration algorithm for $\ENUM(R)$ is a procedure that receives an input $x \in \set{0, 1}^\ast$ and, during the computation, it outputs each word in $W_R(x)$, one-by-one and without repetitions. The time between two consecutive outputs is called the delay of the enumeration. We consider two restrictions on the delay: \vocab{polynomial delay} and \vocab{constant delay}. \vocab{Polynomial delay enumeration} is the standard notion of polynomial time efficiency in enumeration algorithms (see \cite{johnson1988generating}) and is defined as follows.
+
+\begin{definition}[Polynomial delay enumeration]
+    \deflabel{poly-delay-enum}
+    An enumeration algorithm is of \emph{polynomial delay} if there exists a polynomial $p$ such that for every input $x \in \set{0, 1}^\ast$, the time between the beginning of the algorithm and the initial output, between any two consecutive outputs, and between the last output and end of the algorithm, is bounded by $p(\len{x})$.
+\end{definition}
+
+\vocab{Constant delay enumeration} is another notion of efficiency for enumeration algorithms that has attracted a lot attention in recent years (see \cite{bagan2006mso,courcelle2009linear,segoufin2013enumerating}). This notion has stronger guarantees compared to polynomial delay: The enumeration done in a second phase after the processing of the input and taking constant-time between two consecutive outputs in a very precise sense. Several notions of constant delay enumeration have been given, most of them in database theory where it is important to divide the analysis between query and data. Here, we want a definition of constant delay that is agnostic of the distinction between query and data (i.e. combined complexity) and, for this reason, we use a more general notion of constant delay enumeration than the one in \cite{bagan2006mso,courcelle2009linear,segoufin2013enumerating}.
+
+Constant delay enumeration cannot be achieved in general with a standard Turing Machine, because merely moving the head through the tape will take up more than constant time. So, as it is standard in the literature \cite{segoufin2013enumerating}, for the notion of constant delay enumeration, we consider enumeration algorithms on \emph{Random Access Machines (RAM)} with addition and uniform cost measure (see \cite{aho1974design}).
+
+\begin{definition}[Constant delay enumeration]
+    Given a relation $R \subseteq \set{0, 1}^\ast \times \set{0, 1}^\ast$, an enumeration algorithm $E$ for $R$ has \emph{constant delay} if $E$ runs in two phases over the input $x$.
+    \begin{enumerate}
+        \item The first phase (precomputation), which does not produce output.
+        \item The second phase (enumeration), which occurs immediately after the precomputation phase, where all words in $W_R(x)$ are enumerated without repetitions and satisfying the following conditions, for a fixed constant $c$:
+              \begin{enumerate}
+                  \item the time it takes to generate the first output $y$ is bounded by $c \cdot \len{y}$;
+                  \item the time between two consecutive outputs $y$ and $y'$ is bounded by $c \cdot \len{y'}$ and does not depend on $y$; and
+                  \item the time between the final element $y$ that is returned and the end of the enumeration phase is bounded by $c \cdot \len{y}$,
+              \end{enumerate}
+    \end{enumerate}
+    We say that $E$ is a constant delay algorithm for $R$ with precomputation phase $f$ if $E$ has constant delay and the precomputation phase takes time $O(f(\len{x}))$. Moreover, we say that $\ENUM(R)$ can be solved with constant delay if there exists a constant delay algorithm for $R$ with precomputation phase $p$ for some polynomial $p$.
+\end{definition}
+
+Our definition of constant delay algorithm differ from the definitions in \cite{segoufin2013enumerating} in two aspects.
+\begin{enumerate}
+    \item First, in our definition the input is not divided into some components, so the preprocessing phase must take polynomial time in the size of the entire input.
+    \item Second, our definition of constant delay is what in \cite{bagan2006mso,courcelle2009linear} is called \emph{\vocab{linear delay} in the size of the output}, namely, writing the next output is linear in its size and does not depend on the size of the input. This is a natural assumption, since each output must at least be written down to return it to the user.
+\end{enumerate}
+
+Notice that, given an input $x$ and an output $y$, the notion of polynomial delay above (see \defref{poly-delay-enum}) means polynomial in $\len{x}$ and, instead, the notion of linear delay from \cite{bagan2006mso,courcelle2009linear} means linear in $\len{y}$, i.e. constant in the size of $\len{x}$. Thus, we have decided to call the two-phase enumeration from above \emph{constant delay}, as it does not depend on the size of the input $x$, and the delay is just what is needed to write the output (which is the minimum requirement for such an enumeration algorithm).
+
+\section{Approximate Counting and Las Vegas Uniform Generation with Preprocessing}
+Given a relation $R \subseteq \set{0, 1}^\ast \times \set{0, 1}^\ast$, the problem $\COUNT(R)$ can be solved efficiently if there exists a polynomial-time algorithm that, given $x \in \set{0, 1}^\ast$, computes $\size{W_R(x)}$. In other words, if we think of $\COUNT(R)$ as a function that maps $x$ to the value $\size{W_R(x)}$, then $\COUNT(R)$ can be computed efficiently if $\COUNT(R) \in \FP$, the class of functions that can be computed in polynomial time. As such a condition does not hold for many fundamental problems, we also consider the possibility of efficiently approximating the value of the function $\COUNT(R)$.
+
+\begin{definition}[FPRAS]
+    More precisely, $\COUNT(R)$ is said to admit an \vocab{FPRAS} (see \cite{jerrum1986random}) if there exists a randomized algorithm $\randalg : \set{0, 1}^\ast \times (0, 1) \to \NN$ and a polynomial $q(u, v)$ such that for every $x \in \set{0, 1}^\ast$ and $\delta \in (0, 1)$, it holds that:
+    \[ \Pr(\abs{\randalg(x, \delta) - \size{W_R(x)}} \leq \delta \cdot \size{W_R(x)}) \geq \frac{3}{4}, \]
+    and the time needed to compute $\randalg(x, \delta)$ is at most $q(x, \frac{1}{\delta})$. Thus, $\randalg(x, \delta)$ approximates the value $\size{W_R(x)}$ with a relative error of $\delta$, and it can be computed in polynomial time in the size of $x$ and the value $\frac{1}{\delta}$.
+\end{definition}
+
+The problem $\GEN(R)$ can be solved efficiently if there exists a polynomial-time randomized algorithm such that, given $x \in \set{0, 1}^\ast$, generates an element of $\size{W_R(x)}$ with uniform probability distribution (if $W_R(x) = \emptyset$, then it returns $\bot$). However, as in the case of $\COUNT(R)$, the existence of such a generator is not guaranteed for many fundamental problems, so we also consider a relaxed notion of generation that has a probability of failing in returning a solution.
+
+\begin{definition}[PPLVUG]
+    More precisely, $\GEN(R)$ is said to admit a \vocab{preprocessing polynomial-time Las Vegas uniform generator (PPLVUG)} if there exists a pair of randomized algorithms $\prealg : \set{0, 1}^\ast \times (0, 1) \to (\set{0, 1}^\ast \cup \set{\bot})$, $\genalg : \set{0, 1}^\ast \to (\set{0, 1}^\ast \cup \set{\fail})$ and a pair of polynomials $q(u, v)$, $r(u)$ such that for every $x \in \set{0, 1}^\ast$ and $\delta \in (0, 1)$:
+    \begin{enumerate}
+        \item The preprocessing algorithm $\prealg$ receives as inputs $x$ and $\delta$ and runs in time bounded by $q(\len{x}, \log(1 / \delta))$. If $W_R(x) \neq \emptyset$, $\prealg(x, \delta)$ returns a string $\advice$ such that $\advice$ is \vocab{good-for-generation} with probability $1 - \delta$. If $W_R(x) = \emptyset$, then $\prealg(x, \delta)$ returns $\bot$.
+        \item The generator algorithm $\genalg$ receives as input $\advice$ and runs in time bounded by $r(\len{\advice})$. Moreover, if $\advice$ is good-for-generation, then:
+              \begin{enumerate}
+                  \item $\genalg(\advice)$ returns $\fail$ with a probability of at most $\frac{1}{2}$, and \label{pplvug-2a}
+                  \item conditioned on not returning $\fail$, $\genalg(\advice)$ returns a truly uniform sample $y \in W_R(x)$, i.e. with a probability $\frac{1}{\size{W_R(x)}}$ for each $y \in W_R(x)$.
+              \end{enumerate}
+              Otherwise, if $\advice$ is not good-for-generation, then $\genalg(\advice)$ outputs a string without any guarantee.
+    \end{enumerate}
+\end{definition}
+
+Notice that by condition (\cref{pplvug-2a}), we know that this probability of failing is smaller than $\frac{1}{2}$, so by invoking $\genalg(\advice)$ several times, we can make this probability arbitrarily small (for example, the probability that $\genalg(\advice)$ returns $\fail$ in $1000$ consecutive independent invocations is at most $(\frac{1}{2})^{1000}$). Moreover, we have that $\prealg(x, \delta)$ can be computed in time $q(\len{x}, \log(1 / \delta))$, so we can consider an exponentially small value of $\delta$ such as
+\[ \frac{1}{2^{\len{x} + 1000}}, \]
+and still obtain that $\prealg(x, \delta)$ can be computed in time polynomial in $\len{x}$. Notice that with such a value of $\delta$, the probability of producing a good-for-generation string $D$ is at least
+\[ 1 - \frac{1}{2^{\len{x} + 1000}}, \]
+which is an extremely high probability. Finally, it is important to notice that the size of $\advice$ is at most $q(\len{x}, \log{1 / \delta})$, so $\genalg(\advice)$ can be computed in time polynomial in $\len{x}$ and $\log(1 / \delta)$. Therefore, $\genalg(\advice)$ can be computed in time polynomial in $\len{x}$ even if we consider an exponentially small value for $\delta$ such as $1 / 2^{\len{x} + 1000}$.
+
+It is important to notice that the notion of preprocessing polynomial-time Las Vegas uniform generator imposes stronger requirements than the notion of fully polynomial-time almost uniform generator introduced in \cite{jerrum1986random}. In particular, the latter not only has a probability of failing, but also considers the possibility of generating a solution with a probability distribution that is \emph{almost uniform}, that is, an algorithm that generates a string $y \in W_R(x)$ with a probability in an interval $[1 / \size{W_R(x)} - \epsilon, 1 / \size{W_R(x)} + \epsilon]$ for a given error $\epsilon \in (0, 1)$.
+
+\chapter{$\NLOGSPACE$ Transducers: Definitions and Main Results}
+\chplabel{main-results}
+\begin{definition}[$\NL$-transducer]
+    An \vocab{$\NL$-transducer} $M$ is a non-deterministic Turing Machine with input and output alphabet, a read-only input tape, a write-only output tape where the head is always moved to the right once a symbol is written in it (so the output cannot be read by $M$), and a work-tape of which, on input $x$, only the first $f(\len{x})$ cells can be used, where $f(n) \in O(\log(n))$. A string $y \in \set{0, 1}^\ast$ is said to be an output of $M$ on input $x$ if there exists a run of $M$ on input $x$ that halts in an accepting state with $y$ as the string in the output tape. The set of all outputs of $M$ on input $x$ is denoted by $M(x)$ (notice that $M(x)$ can be empty). Finally, the relation accepted by $M$, denoted by $\rel(M)$, is defined as $\set{(x, y) \in \set{0, 1}^\ast \times \set{0, 1}^\ast \mid y \in M(x)}$.
+\end{definition}
+
+\begin{definition}[$\RelationNL$]
+    A relation $R$ is in \vocab{$\RelationNL$} if, and only if, there exists an $\NL$-transducer $M$ such that $\rel(M) = R$.
+\end{definition}
+
+\dubious{Cycles are forbidden in $\NL$-transducers to ensure polynomial-size solutions for each input (see {\cite{alvarez1993very}}). However, we do not need to impose this restriction here, as we only work with $p$-relations.} \todo{I don't get it.}
+
+The class $\RelationNL$ should be general enough to contain some natural and well-studied problems. One such problem is the satisfiability of propositional formula in DNF. As a relation, this problem can be represented as follows:
+
+\begin{definition}[SAT-DNF]
+    \begin{align*}
+        \vocab{\SATDNF} = \{(\phi, \sigma) \mid & \ \text{$\phi$ is a propositional formula in DNF,}                 \\
+                                                & \ \text{$\sigma$ is a truth assignment, and $\sigma(\phi)$ = 1}\}.
+    \end{align*}
+\end{definition} \todo{Fix this cosmetic bug.}
+
+Thus, we have that $\ENUM(\SATDNF)$ corresponds to the problem of enumerating the truth assignments satisfying a propositional formula $\phi$ in DNF, while $\COUNT(\SATDNF)$ and $\GEN(\SATDNF)$ correspond to the problems of counting and uniformly generating such truth assignments, respectively.
+
+\begin{lemma}
+    $\SATDNF \in \RelationNL$.
+\end{lemma}
+
+\begin{proof}
+    Assume that we are given a propositional formula $\phi$ of the form $D_1 \vee \dots \vee D_m$, where each $D_i$ is a conjunction of literals, that is, a conjunction of propositional variables and negation of propositional variables. Moreover, assume that each propositional variable in $\phi$ is of the form $x_k$ where $k$ is a binary number, and that $x_1, \dots, x_n$ are the variables occurring in $\phi$. Notice that $\phi$ is a string over the alphabet $\set{x, 0, 1, \wedge, \vee, \neg}$. We define as follows an $\NL$-transducer $M$ such that $M(\phi)$ is a set of truth assignments satisfying $\phi$. On input $\phi$, the $\NL$-transducer $M$ nondeterministically chooses a disjunct $D_i$.  Then it checks whether $D_i$ is satisfiable, that is, whether $D_i$ does not contain complementary literals. Notice that this can be done in logarithmic space by checking every $j \in \set{1, \dots, n}$, whether $x_j$ and $\neg x_j$ are both literals in $D_i$. If $D_i$ is not satisfiable, then $M$ halts in a non-accepting state. Otherwise, $M$ returns a satisfying truth assignment of $D_i$ as follows: A truth assignment for $\phi$ is represented by a string of length $n$ over the alphabet $\set{0, 1}$, where the $j$-th symbol of this string is the truth value assigned to variable $x_j$. Then for every $j \in \set{0, \dots, 1}$, if $x_j$ is a conjunct in $D_i$, then $M$ writes the symbol $1$ to the output tape, and if $\neg x_j$ is a conjunct in $D_i$, then $M$ writes the symbol $0$ in the output tape. Finally, if neither $x_j$ nor $\neg x_j$ is a conjunct in $D_i$, then $M$ nondeterministically writes the symbol $0$ or $1$ in the output tape.
+\end{proof}
+
+Given that $\COUNT(\SATDNF)$ is a $\SharpP$-complete problem (see \cite{provan1983complexity}), we cannot expect $\COUNT(R)$ to be solvable in polynomial time for every $R \in \RelationNL$. However, $\COUNT(\SATDNF)$ admits an FPRAS (see \cite{karp1983monte}), so we can still hope for $\COUNT(R)$ to admit an FPRAS for every $R \in \RelationNL$. It turns out that proving such a result involves providing an FPRAS for another natural and fundamental problem: \vocab{$\SharpNFA$}. More specifically, $\SharpNFA$ is the problem of counting the number of words of length $k$ accepted by a nondeterministic finite automaton without epsilon transitions (NFA), where $k$ is given in unary (that is, $k$ is given as a string $0^k$). It is known that $\SharpNFA$ is $\SharpP$-complete (see \cite{alvarez1993very}), but it is open whether it admits an FPRAS; in fact, the best randomized approximation scheme known for $\SharpNFA$ runs in time $n^{O(\log(n))}$ (see \cite{kannan1995counting}). In our notation, this problem is represented by the following relation:
+
+\begin{definition}[$\MEMNFA$]
+    \begin{align*}
+        \vocab{\MEMNFA} = \{((A, 0^k), w) \mid & \ \text{$A$ is an NFA with alphabet $\set{0, 1}$,}          \\
+                                               & \ \text{$w \in \set{0, 1}^k$ and $w$ is accepted by $A$}\},
+    \end{align*}
+\end{definition} \todo{Fix this cosmetic bug.}
+
+that is, we have
+
+\begin{definition}[$\SharpNFA$]
+    $\SharpNFA = \COUNT(\MEMNFA)$.
+\end{definition}
+
+It is easy to see that
+
+\begin{lemma}
+    \lemlabel{memnfa-in-relationnl}
+    $\MEMNFA \in \RelationNL$.
+\end{lemma}
+
+\begin{moral}
+    Hence, we give a \ul{positive answer} to the open question of whether $\SharpNFA$ admits an FPRAS by proving the following general result about $\RelationNL$.
+\end{moral}
+
+\begin{theorem}
+    \thmlabel{relationnl-admits-pdelay-fpras-pplvug}
+    If $R \in \RelationNL$, then $\ENUM(R)$ can be solved with polynomial delay, $\COUNT(R)$ admits an FPRAS, and $\GEN(R)$ admits a PPLVUG.
+\end{theorem}
+
+\begin{proof}
+    Refer to \chpref{sharpnfa-fpras-proof}.
+\end{proof}
+
+It is worth mentioning a fundamental consequence of this result in computational complexity. The class of functions \vocab{$\SpanL$} was introduced in \cite{alvarez1993very} to provide a characterization of some functions that are hard to compute.
+
+\begin{definition}[$\SpanL$]
+    More specifically, a function $f : \set{0, 1}^\ast \to \NN$ is in $\SpanL$ if there exists an $\NL$-transducer $M$ with input alphabet $\set{0, 1}$ such that $f(x) = \size{M(x)}$ for every $x \in \set{0, 1}^\ast$.
+\end{definition}
+
+The complexity class $\SpanL$ is contained in $\SharpP$, and it is a hard class in the sense that if $\SpanL \subseteq \FP$, then $\P = \NP$ (see \cite{alvarez1993very}), where $\FP$ is the class of functions that can be computed in polynomial time. In fact, $\SpanL$ has been instrumental in proving that some functions are difficult to compute (see \cite{alvarez1993very,arenas2012counting,hemaspaandra1995satanic,losemann2013complexity}).
+
+\begin{lemma}
+    $\SharpNFA$ belongs to $\SpanL$.
+\end{lemma}
+
+\begin{proof}
+    This is a corollary of \lemref{memnfa-in-relationnl} (see \cite{alvarez1993very}).
+\end{proof}
+
+\begin{definition}[Parsimonious reduction]
+    Given functions $f, g : \set{0, 1}^\ast \to \NN$, $f$ is said to be \vocab{parsimoniously reducible} to $g$ in polynomial time if there exists a polynomial-time computable function $h : \set{0, 1}^\ast \to \set{0, 1}^\ast$ such that, for every $x \in \set{0, 1}^\ast$, it holds that $f(x) = g(h(x))$.
+\end{definition}
+
+It is known that $\SharpNFA$ is $\SpanL$-complete under polynomial-time parsimonious reductions, which in particular implies that if $\SharpNFA$ can be computed in polynomial time, then $\P = \NP$ (see \cite{alvarez1993very}). Moreover, given that $\SharpNFA$ admits an FPRAS and parsimonious reductions preserve the existence of FPRAS, we obtain the following corollary from \thmref{relationnl-admits-pdelay-fpras-pplvug}:
+
+\begin{corollary}
+    Every function in $\SpanL$ admits an FPRAS.
+\end{corollary}
+
+A natural question at this point is whether a simple syntactic restriction on the definition of $\RelationNL$ gives rise to a class of relations with better properties in terms of enumeration, counting, and uniform generation. Fortunately, the answer to this question comes by imposing a natural and well-studied restriction on Turing Machines, which allows the definition of a class that contains many natural problems. More precisely, we consider the notion of \vocab{$\UL$-transducer}, where the letter ``U'' stands for ``unambiguous''.
+
+\begin{definition}[$\UL$-transducer]
+    Formally, $M$ is a $\UL$-transducer if $M$ is an $\NL$-transducer such that for every input $x$ and $y \in M(x)$, there exists exactly one run of $M$ on input $x$ that halts in an accepting state with $y$ as the string in the output tape.
+\end{definition}
+
+Notice that this notion of transducer is based on well-known classes of decision problems (e.g. $\UP$ (see \cite{valiant1976relative}) and $\UL$ (see \cite{reinhardt2000making})), adapted to our case, namely, adapted to problems defined as relations.
+
+\begin{definition}[$\RelationUL$]
+    A relation $R$ is in \vocab{$\RelationUL$} if, and only if, there exists a $\UL$-transducer $M$ such that $\rel(M) = R$.
+\end{definition}
+
+For the class $\RelationUL$, we obtain the following result:
+
+\begin{theorem}
+    \thmlabel{relationul-props}
+    If $R \in \RelationUL$, then $\ENUM(R)$ can be solved with constant delay, there exists a polynomial-time algorithm for $\COUNT(R)$, and there exists a polynomial-time randomized algorithm for $\GEN(R)$.
+\end{theorem}
+
+\textit{On the relationship of $\RelationNL$ and $\RelationUL$ with known complexity classes.} It is well-known that a function $f$ is in $\SharpP$ if and only if there exists a $p$-relation $R$ such that $f = \COUNT(R)$ (recall the definition of $p$-relation from \secref{rels-and-probs}). In the same way, there exists a tight relationship between $\SpanL$ and $\RelationNL$, as it is easy to see that a function $f$ is in $\SpanL$ if and only if there exists a relation $R \in \RelationNL$ such that $f = \COUNT(R)$. Hence, one may wonder why it is necessary to introduce $\RelationNL$ and $\RelationUL$, considering further that such classes are defined in terms of well-known Turing Machine models. The key issue to consider here is that function complexity classes, such as $\SharpP$ and $\SpanL$, are not appropriate to state results about the enumeration and uniform generation problems. For instance, it would not be correct to state that every function in $\SpanL$ admits a PPLVUG, as the definition of $\SpanL$ does not provide a unique notion of solution for an input, which is the object to be generated in this case. In this respect, we introduce $\RelationNL$ and $\RelationUL$ to have a unified framework to study the counting, enumeration, and uniform generation problems. The definition of such classes should only be seen as our way of following the guidance of \cite{jerrum1986random}, which, as mentioned before, urges the use of relations to formalize the notion of solution for an input of a problem.
+
+\chapter{Applications of the Main Results}
+
+
+\chapter{Completeness, Self-Reducibility, and Their Implications for the Class $\RelationNL$}
+The goal of this chapter is to establish the good algorithmic properties of $\RelationUL$, that is, to prove \thmref{relationul-props}. To this end, we start by introducing a simple notion of reduction for the classes $\RelationNL$ and $\RelationUL$, which allow for much simpler proofs. A natural question to ask is which notions of ``completeness'' and ``reduction'' are appropriate for our framework. Let $\class$ be a complexity class of relations $R, S \in \class$, and recall that $W_R(x)$ is defined as the set of solutions for input $x$, that is, $W_R(x) = \set{y \mid (x, y) \in R}$.
+
+\begin{definition}[Reduction and completeness]
+    We say that $R$ is \emph{reducible} to $S$ if there exists a function $f : \set{0, 1}^\ast \to \set{0, 1}^\ast$, computable in polynomial time, such that for every $x \in \set{0, 1}^\ast$: $W_R(x) = W_S(f(x))$. Also, if $T$ is reducible to $S$ for every $T \in \class$, then we say $S$ is \emph{complete} for $\class$.
+\end{definition}
+
+Notice that this definition is very restricted, since the notion of reduction requires the set of solutions to be exactly the same for both relations (it is not sufficient that they have the same size, for example). The benefit of this kind of reduction is that it preserves all the properties of efficient enumeration, counting, and uniform generation that we introduced in \chpref{prelims} and \chpref{main-results}, as stated in the following proposition.
+
+\begin{proposition}
+    \prplabel{reduction-preserves}
+    If a relation $R$ can be reduced to a relation $S$, then:
+    \begin{itemize}
+        \item If $\ENUM(S)$ can be solved with a constant (respectively, polynomial) delay, then $\ENUM(R)$ can be solved with constant (respectively, polynomial) delay.
+        \item If there exists a polynomial-time algorithm (respectively, an FPRAS) for $\COUNT(S)$, then there exists a polynomial-time algorithm (respectively, an FPRAS) for $\COUNT(R)$.
+        \item If there exists a polynomial-time randomized algorithm (respectively, a PPLVUG) for $\GEN(S)$, then there exists a polynomial-time randomized algorithm (respectively, a PPLVUG) for $\GEN(R)$.
+    \end{itemize}
+\end{proposition}
+
+Therefore, by finding a complete relation $S$ for a class $\class$ under the notion of reduction just defined, we can study the aforementioned problems for $S$ knowing that the obtained results will extend to every relation in class $\class$. In what follows, we identify complete problems for the classes $\RelationNL$ and $\RelationUL$ and use them first to establish the good algorithmic properties of $\RelationUL$. Moreover, we prove that the identified problems are \vocab{self-reducible} (see \cite{jerrum1986random}), which will be useful in establishing some of the results of this section as well as for some of the results proved in \chpref{sharpnfa-fpras-proof} for the class $\RelationNL$.
+
+\section{Complete Problems for $\RelationNL$ and $\RelationUL$}
+The notion of reduction just defined is useful for us, because $\RelationNL$ and $\RelationUL$ admit natural complete problems under this notion. These complete problems are defined in terms of NFAs and we call them $\MEMNFA$ and $\MEMUFA$. We already introduced $\MEMNFA$ in \chpref{main-results}, and we now define $\MEMUFA$ as
+
+\begin{definition}[$\MEMUFA$]
+    \begin{align*}
+        \MEMUFA = \{((A, 0^k), w) \mid & \ \text{$A$ is an unambiguous NFA with alphabet $\set{0, 1}$,} \\
+                                       & \ \text{$w \in \set{0, 1}^k$ and $w$ is accepted by $A$}\},
+    \end{align*}
+    where NFA is said to be unambiguous if there exists only one accepting run for every string accepted by it.
+\end{definition} \todo{Fix this cosmetic bug.}
+
+Recall from \chpref{main-results} that $\MEMNFA \in \RelationNL$. Besides, it is easy to see that
+
+\begin{lemma}
+    $\MEMUFA \in \RelationUL$.
+\end{lemma}
+
+We now state the main result of this section.
+
+\begin{proposition}
+    \prplabel{memnfa-memufa-complete}
+    $\MEMNFA$ is \emph{complete} for $\RelationNL$ and $\MEMUFA$ is \emph{complete} for $\RelationUL$.
+\end{proposition}
+
+We will prove the result only for the case of $\RelationUL$ and $\MEMUFA$, as the other case is completely analogous. The following lemma is the key ingredient to our argument.
+
+\begin{lemma}
+    \lemlabel{relationul-nfa}
+    Let $R$ be a relation in $\RelationUL$. Then there exists a polynomial-time algorithm that, given $x \in \set{0, 1}^\ast$, produces an unambiguous NFA $A_x$ such that $y \in W_R(x)$ if and only if $y$ is accepted by $A_x$.
+\end{lemma}
+
+\begin{proof}
+    Let $x$ be any element in $\set{0, 1}^\ast$. Since $R$ is a in $\RelationUL$, we know there exists a $\UL$-transducer $M$ such that $W_R(x) = M(x)$. Without loss of generality, we can assume that $M$ has only one accepting state, so it can be written as a tuple $M = (Q, \Gamma, \blank, \set{0, 1}, \delta, q_0, \set{q_F})$. If it has more than one accepting state, say, a set $F$ then we can define a transducer $M'$ that is identical to $M$ with one difference. It has only one final state $q_F$ and whenever it reaches a state in $F$, it makes one last transition to $q_F$ and stops. It is clear that $M(x) = M'(x)$, so we do not lose any generality with this assumption.
+
+    Let $n = \len{x}$, $f(n)$ be the function that bounds the number of cells in the work tape that can be used, and assume that $f(n)$ is $O(log(n))$. Consider now an execution of $M$ on input $x$. Since the input tape never changes (its content is always $x$), we can completely characterize the configuration of the machine at any given moment as a tuple $(q, i, j, w) \in Q \times \set{1, \dots, n} \times \set{1, \dots, f(n)} \times \Gamma^{f(n)}$ where
+    \begin{itemize}
+        \item $q$ stores the state the machines is in.
+        \item $i$ indicates the position of the head on the input tape.
+        \item $j$ indicates the position of the head on the work tape.
+        \item $w$ stores the contents of the work tape.
+    \end{itemize}
+
+    With the previous notation, the initial configuration of $M$ on input $x$ is represented by $c_I = (q_0, 1, 1, \blank^{f(n)})$, that is, $M$ is in its initial state, the heads are at the first position of their respective tapes, and the work tape is empty (that is, it only contains the blank symbol $\blank$). The accepting configuration is represented by a tuple of the form $C_F = (q_F, i_F, j_F, w_F)$. Notice that without loss of generality, we can assume the accepting configuration to be unique by changing $M$ so it runs for a little longer to reach it. If $C_x$ is the set of possible configuration tuples, then we have that
+    \begin{align*}
+        \size{C_x} & \leq \size{Q} \cdot n \cdot f(n) \cdot \size{\Gamma}^{f(n)}                                     \\
+                   & = \size{Q} \cdot n \cdot f(n) \cdot \size{\Gamma}^{O(\log(n))}                                  \\
+                   & = \size{Q} \cdot n \cdot f(n) \cdot O(n^l),                    & \text{where $l$ is a constant} \\
+                   & = O(n^{l + 1} \log(n)),
+    \end{align*}
+    which is polynomial in $\len{x}$. We now define the NFA $A_x = (C_x, \set{0, 1}, \Delta_x, c_I,\set{c_F})$ where $C_x$, $c_i$, and $c_F$ are defined as above and the transition relation $\Delta_x$ is constructed in the following way:
+    \begin{itemize}
+        \item Let $c, d \in C_x$. Consider any possible run of $M$ on input $x$. Suppose there is a valid transition, during that run, that goes from $c$ to $d$ while outputting symbol $\gamma \in \Gamma$. Then, $(c, \gamma, d)$ is in $\Delta_x$.
+        \item Let $c, d \in C_x$. Consider any possible run of $M$ on input $x$. Suppose there is a valid transition, during that run, that goes from $c$ to $d$ while making no output. Then, $(c, \epsilon, d)$ is in $\Delta_x$.
+    \end{itemize}
+
+    We already showed that $C_x$ has polynomial size in $\len{x}$, and it clearly can be constructed explicitly in polynomial time. The same is true for $\Delta_x$. Given a pair of configurations $c, d \in C_x$, it can be checked in polynomial time whether there is a possible transition from $c$ to $d$ during an execution of $M$ on input $x$ (it suffices to check $\delta$, the transition relation for $M$). And there are just $\size{C_x}^2$ such pairs of configurations that we need to check, so the whole construction of $A_x$ can be done in polynomial time. It only rests to show that $W_R(x) = \lang(A_x)$ and that $A_x$ is unambiguous.
+
+    Let $y \in W_R(x)$. That means there is an accepting run of $M$ on input $x$ that yields $y$ as output. Equivalently, there is a sequence of configurations $\set{c_k}^{m}_{k = 0}$ and a sequence $\set{w_k}^{m}_{k = 0}$ of symbols such that:
+    \begin{itemize}
+        \item $c_0 = c_I$.
+        \item $c_m = c_F$.
+        \item For each $k \in \set{0, \dots, m - 1}$, the transition from $c_k$ to $c_{k + 1}$ is valid on input $x$ given the transition relation $\delta$ on $M$.
+        \item For each $k \in \set{0, \dots, m - 1}$, we have that $w_k$ is equal to the symbol output when going from configurations $c_k$ to $c_{k + 1}$ if a symbol was output. Otherwise, $w_k = \epsilon$.
+        \item $y = w_0 \concat w_1 \concat \dots \concat w_m$.
+    \end{itemize}
+    By definition, this means that y is accepted by $A_x$. That is, $y \in \lang(A_x)$ and so we can conclude that $W_R(x) \subseteq \lang(A_x)$. Since all the previous implications are clearly equivalences, we can also conclude that $\lang(A_x) \subseteq W_R(x)$. Hence, $W_R(x) = \lang(A_x)$ as needed. What the previous argument is saying is that every accepting run of $M$ that outputs a string $y$ has a unique corresponding accepting run of $A_x$ on input $y$. That implies that $A_x$ is unambiguous. Otherwise, there would be some $y \in \lang(A_x)$ such that two different runs of $A_x$ accept $y$. But that would mean that there are two different runs of $M$ on input $x$ that output $y$, which cannot occur, since $M$ is a $\UL$-transducer.
+
+    Finally, notice that $A_x$ is actually not an NFA (under the definition given in \chpref{main-results}), since we explicitly allowed for the possibility of $\epsilon$-transitions. But recall that the $\epsilon$-transitions of any NFA can be removed in polynomial time without changing the accepted language, which is a standard result from automata theory (see \cite{hopcroft2001introduction}). This concludes the proof of the lemma.
+\end{proof}
+
+We now prove \prpref{memnfa-memufa-complete}.
+
+\begin{proof}
+    Let $R$ be a relation in $\RelationUL$ and $x$ be a string in $\set{0, 1}^\ast$. We know by \lemref{relationul-nfa} that we can construct in polynomial time an unambiguous NFA $A_x$ such that $y \in W_R(x)$ if and and only if $y$ is accepted by $A_x$. Now, since $R$ is a $p$-relation, there exists a polynomial $q$ such that $\len{y} = q(\len{x})$ for all $y \in W_R(x)$. Thus, we have that all words accepted by $A_x$ have the same length $q(\len{x})$. We conclude that $W_R(x) = W_{\MEMUFA}((A_x, 0^{q(\len{x})}))$. Since this works for every $R \in \RelationUL$ and every input $x$, by definition of completeness, we deduce that $\MEMUFA$ is complete for $\RelationUL$.
+\end{proof}
+
+\section{$\MEMNFA$ and $\MEMUFA$ are Self-Reducible}
+\vocab{Self-reducibility} is a property of many natural relations, and it plays a key role in proving some important results, like the tight relationship between counting and uniform generation established in \cite{jerrum1986random}. There are different ways of formalizing this concept, and they can get rather technical, but the intuition is pretty straightforward.
+
+\begin{definition}[Self-reducibility, informal version]
+    We say that a (decision) problem is \emph{self-reducible}, if it can be solved by referring to smaller instances of the same problem.
+\end{definition}
+
+\begin{example}
+    $\SAT$ is self-reducible. Given a propositional formula $\phi$, consider its satisfiability problem. We can easily reduce that problem to smaller instances of $\SAT$ as follows. Take the first variable of $\phi$ and replace it by $0$ to set a new formula $\phi_0$. Do the same with $1$ to get a new formula $\phi_1$. Notice that $\phi$ is satisfiable if and only if $\phi_0$ or $\phi_1$ is satisfiable. Moreover, both $\phi_0$ and $\phi_1$ have one less variable then $\phi$, so they are smaller instances.
+\end{example}
+
+Now, self-reducibility does not imply the existence of a polynomial-time solution for a problem, as $\SAT$ well illustrates. It is true that the instances get smaller, until they eventually become trivially easy to solve. But the number of instances is multiplied, so recursively applying self-reducibility can lead to an exponential number of smaller instances to solve. Rather than a solution method, self-reducibility is thought of as a structural feature of a problem.
+
+Definitions (and proofs) of self-reducibility can get very technical, partly because they have to formalize the notion of ``smaller instance''. Hence, they crucially depend on the way that the problems are encoded.\footnote{Thus, saying something like ``$\SAT$ is self-reducible'' is slightly inaccurate. We need to specify the way in which the problem, inputs, and solutions are encoded before we can assert something like that.} We now state the main result of this section.
+
+\begin{proposition}
+    \prplabel{memnfa-memufa-self-reducible}
+    $\MEMNFA$ and $\MEMUFA$ are self-reducible.
+\end{proposition}
+
+\begin{proofidea}
+    To see the intuition behind the result, consider first a deterministic finite automaton (DFA) $D$ over the alphabet $\set{0, 1}$, and suppose it accepts a string $w = 0 \concat w'$, where $w' \in \set{0, 1}^\ast$. Then assuming that $q_0$ is the initial state of $D$, we know that the accepting run for $w$ moves from $q_0$ to a state $q_1$ by reading symbol $0$, then it continues processing $w'$ from $q_1$. Now, if we change the initial state to $q_1$ to get a new DFA $D_0$, then $D_0$ accepts the string $w'$. In other words, if $\lang(D)$ is the language accepted by $D$, then we have that:
+    \[ \lang(D) = \set{0 \concat w' \mid w' \in \lang(D_0)} \cup \set{1 \concat w' \mid w' \mid w' \in \lang(D_1)}, \]
+    where DFA $D_1$ is defined the same way as $D_0$. Besides, notice that if the length of the strings to be accepted by $D$ is given as a parameter, as in the case of $\MEMNFA$, then we can assume that $D$ does not contain any cycles, and each automaton $D_i$ $(i = 0, 1)$ can be made smaller than $D$ by removing $q_0$ and updating the transition function of $D$ accordingly. Hence, the above equality shoes that the language accepted by $D$ can be defined in terms of the languages accepted by smaller deterministic finite automata. The same idea can be applied to an NFA $N$, although constructing each NFA $N_i$ $(i = 0, 1)$ is a little more complicated, as there can be several transitions from a state that read the same symbol. Intuitively, this shows that $\MEMNFA$ is self-reducible.
+\end{proofidea}
+
+\section{Establishing the Good Algorithmic Properties of $\RelationUL$}
+\thmref{relationul-props} is a consequence of \prpref{reduction-preserves}, \prpref{memnfa-memufa-complete}, and the following result:
+
+\begin{proposition}
+    \prplabel{memufa-good-algo-props}
+    $\ENUM(\MEMUFA)$ can be solved with a constant delay, there exists a polynomial-time algorithm for $\COUNT(\MEMUFA)$, and there exists a polynomial-time randomized algorithm for $\GEN(\MEMUFA)$.
+\end{proposition}
+
+To sum up all the results just mentioned: $\MEMUFA$ is complete for $\RelationUL$, it has good algorithmic properties, and our notion of reduction (and completeness) preserves all the algorithmic properties we have discussed. In what follows, we prove each of the three results stated in \prpref{memufa-good-algo-props}.
+
+\subsection{$\ENUM(\MEMUFA)$ Can Be Solved with Constant Delay}
+We now provide a sketch for the constant delay algorithm. The idea is conceptually simple. Remember what we want: to output all strings of a certain length accepted by an unambiguous NFA, without repetition. We may use a preprocessing phase of polynomial time, but afterwards, there can be at most linear time between one string and the next.
+
+\subsection{There Exists a Polynomial-Time Algorithm for $\COUNT(\MEMUFA)$}
+
+\subsection{There Exists a Polynomial-Time Randomized Algorithm for $\GEN(\MEMUFA)$}
+
+\chapter{$\SharpNFA$ Admits a Fully Polynomial-Time Randomized Approximation Scheme and Its Implications to the Class $\RelationNL$}
+\chplabel{sharpnfa-fpras-proof}
+The goal of this chapter is to prove \thmref{relationnl-admits-pdelay-fpras-pplvug}, which considers the class $\RelationNL$ defined in terms of $\NL$-transducers. Given that we showed in \prpref{memnfa-memufa-complete} that $\MEMNFA$ is complete for $\RelationNL$, we have by \prpref{reduction-preserves} that \thmref{relationnl-admits-pdelay-fpras-pplvug} is a consequence of the following result:
+
+\begin{theorem}
+    \thmlabel{memnfa-admits-pdelay-fpras-pplvug}
+    $\ENUM(\MEMNFA)$ can be solved with polynomial delay, $\COUNT(\MEMNFA)$ admits an FPRAS, and $\GEN(\MEMNFA)$ admits a PPLVUG.
+\end{theorem}
+
+The existence problem for $\MEMNFA$ has as input an NFA $A$ and a value $k$ given in unary (as the string $0^k$), the question to answer is whether $W_{\MEMNFA}((A, 0^k)) \neq \emptyset$ (that is, whether there are any solutions for $(A, 0^k)$ according to the relation $\MEMNFA$). It is easy to prove that such a task can be solved in polynomial time, as the nonemptiness problem for NFA can be solved in polynomial time (see \cite{hopcroft2001introduction}). Moreover, we proved in \prpref{memnfa-memufa-self-reducible} that $\MEMNFA$ is a self-reducible relation. Given all the above, a polynomial delay algorithm for $\ENUM(\MEMNFA)$ can be derived from the folklore result that such an enumeration algorithm exists for a self-reducible relation if the associated existence problem for this relation can be solved in polynomial time (a precise statement of this result can be found in Lemma 4.10 in \cite{schmidt2009enumeration}).
+
+In this chapter, we focus on the remaining part of the proof of \thmref{memnfa-admits-pdelay-fpras-pplvug}. More specifically, we provide an algorithm that approximately counts the number of words of a given length accepted by an NFA, where this length is given in unary. This constitutes an FPRAS for $\COUNT(\MEMNFA)$, as formally stated in the following theorem:
+
+\begin{theorem}
+    \thmlabel{count-memnfa-admits-fpras}
+    $\SharpNFA$ (and, thus, $\COUNT(\MEMNFA)$) admits an FPRAS.
+\end{theorem}
+
+The algorithm mentioned in this theorem works by simultaneously counting and doing uniform generation of solutions. Then its existence not only gives us an FPRAS for $\COUNT(\MEMNFA)$, but also a PPLVUG for $\GEN(\MEMNFA)$, as formally stated in the following theorem:
+
+\begin{theorem}
+    \thmlabel{gen-memnfa-admits-pplvug}
+    $\GEN(\MEMNFA)$ admits a PPLVUG.
+\end{theorem}
+
+In the rest of this chapter, we prove \thmref{count-memnfa-admits-fpras} and \thmref{gen-memnfa-admits-pplvug}. More specifically, we start by providing in \secref{algorithmic-techniques} an overview of the algorithmic techniques used in the proof of \thmref{count-memnfa-admits-fpras}. Then, we present in \secref{algorithm-template} the template for the FPRAS for $\SharpNFA$, whose main components are given in \secref{estimate-vertices} and \secref{sampling-vertex}. A complete version of the FPRAS for $\SharpNFA$ is finally given in \secref{algo-correctness-complexity}, where its correctness and polynomial-time complexity are established. Moreover, the proof of \thmref{gen-memnfa-admits-pplvug} is also given in \secref{algo-correctness-complexity}.
+
+\section{An Overview of the Algorithmic Techniques}
+\seclabel{algorithmic-techniques}
+
+\section{The Algorithm Template}
+\seclabel{algorithm-template}
+
+\section{Computing an Estimate for a Set of Vertices}
+\seclabel{estimate-vertices}
+
+\section{Uniform Sampling from a Vertex}
+\seclabel{sampling-vertex}
+
+\section{Bounding the Probability of Breaking the Main Assumption}
+\seclabel{bounding-probability}
+
+\section{The Main Algorithm, Its Correctness, and Its Complexity}
+\seclabel{algo-correctness-complexity}
+
+\printbibliography[nottype=image]
+
+\end{document}
