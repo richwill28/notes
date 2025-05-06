@@ -1408,6 +1408,141 @@ There is a second proof that is even a little shorter.
   \end{enumerate}
 \end{theorem}
 
+\begin{proof}[Proof of part 2]
+  \phantom{.}
+
+  \textbf{Case 1.} Suppose $(b_n)$ is strictly increasing and
+  diverging to $+\infty$, and $a$ is finite. By hypothesis, we have
+  that for all $\epsilon / 2 > 0$ there exists an integer $N_1$ such that
+  \[ \left|\frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} - a\right| <
+  \frac{\epsilon}{2} \qquad \text{for all $n > N_1$}, \]
+  which is to say
+  \[ a - \epsilon / 2 < \left|\frac{a_{n + 1} - a_n}{b_{n + 1} -
+  b_n}\right| < a + \epsilon / 2 \qquad \text{for all $n > N_1$}. \]
+  Since $(b_n)$ is strictly increasing, we have that $b_{n + 1} - b_n
+  > 0$, and the following holds
+  \[ (a - \epsilon / 2)(b_{n + 1} - b_n) < a_{n + 1} - a_n < (a +
+  \epsilon / 2)(b_{n + 1} - b_n) \qquad \text{for all $n > N_1$}. \]
+  Next we notice that
+  \[ a_n = [(a_n - a_{n - 1}) + \dots + (a_{N_1 + 2} - a_{N_1 + 1})]
+  + a_{N_1 + 1} \]
+  thus, by applying the above inequality to each of the terms in the
+  square brackets, we obtain
+  \[ (a - \epsilon / 2)(b_n - b_{N_1 + 1}) + a_{N_1 + 1} = (a - \epsilon
+    / 2)[(b_n - b_{n - 1}) + \dots + (b_{N_1 + 2} + b_{N_1 + 1})] +
+  a_{N_1 + 1} < a_n \]
+  and
+  \[ a_n < (a + \epsilon / 2)[(b_n - b_{n - 1}) + \dots + (b_{N_1 + 2}
+    + b_{N_1 + 1})] + a_{N_1 + 1} = (a + \epsilon / 2)(b_n - b_{N_1 + 1}) +
+  a_{N_1 + 1}. \]
+  Now, since $b_n \to +\infty$ as $n \to \infty$, there is an $N_2$
+  such that $b_n > 0$ for all $n > N_2$, and we can divide the two
+  inequalities by $b_n$ for all $n > \max(N_1, N_2)$
+  \[ (a - \epsilon / 2) + \frac{a_{N_1 + 1} - b_{N_1 + 1} (a - \epsilon /
+    2)}{b_n} < \frac{a_n}{b_n} < (a + \epsilon / 2) + \frac{a_{N_1 + 1} -
+  b_{N_1 + 1} (a + \epsilon / 2)}{b_n}. \]
+  Define
+  \[ c_n^+ := \frac{a_{N_1 + 1} - b_{N_1 + 1} (a + \epsilon / 2)}{b_n}
+    \qquad \text{and} \qquad c_n^- := \frac{a_{N_1 + 1} - b_{N_1 + 1} (a +
+  \epsilon / 2)}{b_n}. \]
+  Since $b_n \to +\infty$ and the numerator is a constant number,
+  hence for all $\epsilon / 2 > 0$, there exist $N_{\pm} > N_2 > 0$ such that
+  \begin{align*}
+    \abs{c_n^+} < \epsilon / 2 \qquad \text{for all $n > N_+$}, \\
+    \abs{c_n^-} < \epsilon / 2 \qquad \text{for all $n > N_-$},
+  \end{align*}
+  therefore
+  \[ a - \epsilon < a - \epsilon / 2 + c_n^- < \frac{a_n}{b_n} < a +
+    \epsilon / 2 + c_n^+ < l + \epsilon \qquad \text{for all $n >
+  \max(N_1, N_{\pm})$}, \]
+  which concludes the proof. The case with $(b_n)$ strictly
+  decreasing and diverging to $-\infty$, and $a$ is finite, is similar.
+
+  \textbf{Case 2.} Suppose $(b_n)$ is strictly increasing and
+  diverging to $+\infty$, and $a = +\infty$. Proceeding as before,
+  for all $2M > 0$ there exists $N_1 > 0$ such that
+  \[ \frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} > 2M \qquad \text{for
+  all $n > N_1$}. \]
+  Again, by applying the above inequality to each of the terms inside
+  the square brackets we obtain
+  \[ a_n > 2M (b_n - b_{N_1 + 1}) + a_{N + 1} \qquad \text{for all $n
+  > N_1$}, \]
+  and
+  \[ \frac{a_n}{b_n} > 2M + \frac{a_{N_1 + 1} - 2M b_{N_1 + 1}}{b_n}
+  \qquad \text{for all $n > \max(N_1, N_2)$}. \]
+  Define
+  \[ c_n := \frac{a_{N_1 + 1} - 2M b_{N_1 + 1}}{b_n}. \]
+  Since $b_n \to +\infty$ and the numerator is a constant number,
+  hence for all $M > 0$, there exists $\overline{N} > N_2 > 0$ such that
+  \[ \abs{c_n} < M \qquad \text{for all $n > \overline{N}$}, \]
+  combining this inequality with the previous one we conclude that
+  \[ \frac{a_n}{b_n} > 2M + c_n > M \qquad \text{for all n >
+  $\max(N_1, \overline{N})$}. \]
+
+  The proofs of the other cases with $(b_n)$ strictly increasing and
+  approaching $+\infty$ or $-\infty$ respectively and $a = \pm\infty$
+  all proceed in the same way.
+\end{proof}
+
+\begin{proof}[Proof of part 1]
+  \phantom{.}
+
+  \textbf{Case 1.} We first consider the case with finite $a$ and
+  $(b_n)$ strictly decreasing. This time, for each $N_1 > 0$, we can write
+  \[ a_n = (a_n - a_{n + 1}) + \dots + (a_{n + N_1 - 1} - a_{n +
+  N_1}) + a_{n + N_1}, \]
+  and for any $\epsilon / 2 > 0$, there exists $N_2$ such that for
+  all $n > N_2$ we have
+  \[ (a - \epsilon / 2) (b_n - b_{n + N_1}) + a_{n + N_1} = (a -
+    \epsilon / 2) [(b_n - b_{n + 1}) + \dots + (b_{n + N_1 - 1} -
+  b_{n + N_1})] + a_{n + N_1} < a_n \]
+  and
+  \[ a_n < (a + \epsilon / 2) [(b_n - b_{n + 1}) + \dots + (b_{n +
+    N_1 - 1} - b_{n + N_1})] + a_{n + N_1} = (a + \epsilon / 2) (b_n -
+  b_{n + N_1}) + a_{n + N_1}. \]
+  Define
+  \[ c_{N_1}^+ := \frac{a_{n + N_1} - b_{n + N_1} (a + \epsilon /
+    2)}{b_n} \qquad \text{and} \qquad c_{N_1}^- = \frac{a_{n + N_1} -
+  b_{n + N_1} (a - \epsilon / 2)}{b_n}. \]
+  Since by hypothesis, $a_{n + N_1} \to 0$ and $b_{n + N_1} \to 0$ as
+  $N_1 \to \infty$, thus for all $\epsilon / 2 > 0$ there exist
+  $N_{\pm} > 0$ such that
+  \begin{align*}
+    \abs{c_{N_1}^+} < \epsilon / 2 \qquad \text{for all $N_1 > N_+$}, \\
+    \abs{c_{N_1}^-} < \epsilon / 2 \qquad \text{for all $N_1 > N_-$},
+  \end{align*}
+  thus, choosing $N_1$ appropriately (which is to say, taking the
+  limit with respect to $N_1$) we obtain
+  \[ a - \epsilon < a - \epsilon / 2 + c_{N_1}^- < \frac{a_n}{b_n} <
+    a + \epsilon / 2 + c_{N_1}^+ < a + \epsilon \qquad \text{for all $n
+  > N_2$}, \]
+  which concludes the proof.
+
+  \textbf{Case 2.} Suppose $a = +\infty$ and $(b_n)$ strictly
+  decreasing. For all $2M > 0$ there exists $N_1 > 0$ such that for
+  all $n > N_1$,
+  \[ \frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} > 2M \implies a_n - a_{n
+  + 1} > 2M (b_n - b_{n + 1}). \]
+  Therefore, for each $N_2 > 0$,
+  \[ \frac{a_n}{b_n} > 2M + \frac{a_{n + N_2} - 2M b_{n + N_2}}{b_n}
+  \qquad \text{for all $n > N_1$}. \]
+  The sequence
+  \[ c_{N_2} := \frac{a_{n + N_2} - 2M b_{n + N_2}}{b_n} \]
+  converges to 0 (keeping $n$ fixed). Hence, for all $M > 0$, there
+  exists $\overline{N} > 0$ such that
+  \[ \abs{c_{N_2}} < M \qquad \text{for all $N_2 > \overline{N}$}, \]
+  and chooging $N_2$ conveniently, we conclude the proof
+  \[ \frac{a_n}{b_n} > 2M + c_{N_2} > M \qquad \text{for all $n > N_1$}. \]
+\end{proof}
+
+\begin{remark}
+  The converse of this theorem does not hold, i.e. $\lim_{n \to
+  \infty} a_n / b_n = a$ does not necessarily imply
+  \[ \lim_{n \to \infty} \frac{a_{n + 1} - a_n}{b_{n + 1} - b_n} = a. \]
+  Here is a counterexample:
+  \[ a_n = 3n - (-1)^n \qquad \text{and} \qquad b_n = 3n + (-1)^n. \]
+\end{remark}
+
 \begin{remark}
   Stolz-Cesàro theorem provides a powerful tool to evaluate limits of
   sequences, and is
