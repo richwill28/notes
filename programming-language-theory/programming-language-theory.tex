@@ -1,0 +1,1109 @@
+\documentclass[11pt,twoside=off,numbers=noenddot]{scrbook}
+
+\input{preamble}
+\input{macros}
+
+\title{Notes on Programming Language Theory}
+\author{Richard Willie}
+
+\begin{document}
+
+\maketitle
+
+\chapter*{Preface}
+These notes are a loose amalgamation of ideas, concepts, and
+explanations drawn from various books, papers, and personal
+reflections. They were originally meant for my own understanding and
+organization of thoughts, and as such, they may be unpolished,
+incomplete, or even occasionally incorrect.
+
+I share them in the hope that they may serve as a useful reference,
+but they should not be treated as a primary source of learning.
+Readers are strongly encouraged to consult original texts and
+authoritative resources for a more rigorous and accurate treatment of
+the topics discussed.
+
+Use these notes as a companion to your studies, not as a substitute
+for the depth and clarity provided by well-established literature.
+
+\tableofcontents
+
+\newpage
+
+\chapter{Typed Arithmetic Expressions}
+\chplabel{typed-arithmetic-expressions}
+
+\section{Types}
+The syntax for arithmetic expressions:
+\begin{align*}
+  \ttt{t} ::= & \quad && \text{term} \\
+  & \quad \ttt{true} && \text{constant true} \\
+  & \quad \ttt{false} && \text{constant false} \\
+  & \quad \ttt{if t then t else t} && \text{conditional} \\
+  & \quad \ttt{0} && \text{constant zero} \\
+  & \quad \ttt{succ t} && \text{successor} \\
+  & \quad \ttt{pred t} && \text{predecessor} \\
+  & \quad \ttt{iszero t} && \text{zero test}
+\end{align*}
+
+Evaluating a term can either result in a value...
+\begin{align*}
+  \ttt{v} ::= & \quad && \text{value} \\
+  & \quad \ttt{true} && \text{true value} \\
+  & \quad \ttt{false} && \text{false value} \\
+  & \quad \ttt{nv} && \text{numeric value} \\
+  \\
+  \ttt{nv} ::= & \quad && \text{numeric value} \\
+  & \quad \ttt{0} && \text{zero value} \\
+  & \quad \ttt{succ nv} && \text{successor value}
+\end{align*}
+or else get \textit{stuck} at some stage, by reaching a term for
+which no evaluation rule applies.
+
+Stuck terms correspond to meaningless or erroneous programs. We would
+therefore like to be able to tell, without actually evaluating a
+term, that its evaluation will definitely \textit{not} get stuck. To
+do this, we introduce two types, $\ttt{Nat}$ and $\ttt{Bool}$, to
+distinguish between terms whose result will be a numeric value and
+terms whose result will be a boolean.
+
+\section{The Typing Relation}
+The typing relation for arithmetic expressions, written $\texttt{t} :
+\texttt{T}$, is defined by a set of inference rules assigning types
+to terms, summarized as follows.
+
+New syntactic forms:
+\begin{align*}
+  \texttt{T} ::= & \quad && \text{type} \\
+  & \quad \texttt{Bool} && \text{type of booleans} \\
+  & \quad \texttt{Nat} && \text{type of natural numbers}
+\end{align*}
+
+New typing rules:
+\begin{prooftree}
+  \AxiomC{$\ttt{true} : \ttt{Bool}$ (\tsc{T-True})}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{false} : \ttt{Bool}$ (\tsc{T-False})}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 : \ttt{Bool}$}
+  \AxiomC{$\ttt{t}_2 : \ttt{T}$}
+  \AxiomC{$\ttt{t}_3 : \ttt{T}$}
+  \RightLabel{(\tsc{T-If})}
+  \TrinaryInfC{$\ttt{if $\ttt{t}_1$ then $\ttt{t}_2$ else
+  $\ttt{t}_3$} : \ttt{T}$}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{0} : \ttt{Nat}$ (\tsc{T-Zero})}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 : \ttt{Nat}$}
+  \RightLabel{(\tsc{T-Succ})}
+  \UnaryInfC{$\ttt{succ $\ttt{t}_1$} : \ttt{Nat}$}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 : \ttt{Nat}$}
+  \RightLabel{(\tsc{T-Pred})}
+  \UnaryInfC{$\ttt{pred $\ttt{t}_1$} : \ttt{Nat}$}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 : \ttt{Nat}$}
+  \RightLabel{(\tsc{T-IsZero})}
+  \UnaryInfC{$\ttt{iszero $\ttt{t}_1$} : \ttt{Bool}$}
+\end{prooftree}
+
+\begin{definition}
+  Formally, the \vocab{typing relation} for arithmetic expressions is
+  the smallest binary relation between terms and types satisfying all
+  instances of the rules above. A term $\ttt{t}$ is \vocab{well
+  typed} if there is some $\ttt{T}$ such that $\ttt{t} : \ttt{T}$.
+\end{definition}
+
+When reasoning about the typing relation, we will often make
+statements like ``If a term of the form $\ttt{succ\,$\ttt{t}_1$}$ has
+any type at all, then it has type $\ttt{Nat}$.'' The following lemma
+gives us a compendium of basic statements of this form, each
+following immediately from the shape of the corresponding typing rule.
+
+\begin{lemma}[Inversion lemma for typed arithmetic expressions]
+  1. If $\ttt{true} : \ttt{R}$, then $\ttt{R} = \ttt{Bool}$.
+
+  2. If $\ttt{false} : \ttt{R}$, then $\ttt{R} = \ttt{Bool}$.
+
+  3. If $\ttt{if $\ttt{t}_1$ then $\ttt{t}_2$ else $\ttt{t}_3$} :
+  \ttt{R}$, then $\ttt{t}_1 : \ttt{Bool}$ and $\ttt{t}_2 : \ttt{R}$
+  and $\ttt{t}_3 : \ttt{R}$.
+
+  4. If $\ttt{0} : \ttt{R}$, then $\ttt{R} = \ttt{Nat}$.
+
+  5. If $\ttt{succ $\ttt{t}_1$} : \ttt{R}$, then $\ttt{t}_1 :
+  \ttt{Nat}$ and $\ttt{R} = \ttt{Nat}$.
+
+  6. If $\ttt{pred $\ttt{t}_1$} : \ttt{R}$, then $\ttt{t}_1 :
+  \ttt{Nat}$ and $\ttt{R} = \ttt{Nat}$.
+
+  7. If $\ttt{iszero $\ttt{t}_1$} : \ttt{R}$, then $\ttt{t}_1 :
+  \ttt{Nat}$ and $\ttt{R} = \ttt{Bool}$.
+\end{lemma}
+
+\begin{proof}
+  Immediate from the definition of the typing relation.
+\end{proof}
+
+The inversion lemma is sometimes called the \textit{generation lemma}
+for the typing relation, since, given a valid typing statement, it
+shows how a proof of this statement could have been generated. The
+inversion lemma leads directly to a recursive algorithm for
+calculating the types of terms, since it tells us, for a term of each
+syntactic form, how to calculate its type (if it has one) from the
+types of its subterms.
+
+\begin{theorem}[Uniqueness of types for typed arithmetic expressions]
+  Each term $\ttt{t}$ has at most one type. That is, if $\ttt{t}$ is
+  typable, then its type is unique. Moreover, there is just one
+  derivation of this typing built from the inference rules above.
+\end{theorem}
+
+\begin{proof}
+  Straightforward structural induction on $\ttt{t}$, using the
+  appropriate clause of the inversion lemma (plus the induction
+  hypothesis) for each case.
+\end{proof}
+
+\section{Safety = Progress + Preservation}
+The most basic property of this type system or any other is
+\textit{safety} (or \textit{soundness}), i.e. well-typed terms do not
+go wrong. We have already chosen how to formalize what it means for a
+term to go wrong: it means reaching a stuck state that is not
+designated as a final value but where evaluation rules do not tell us
+what do next. What we want to know, then, is that well-typed terms do
+not get stuck. We show this in two steps, commonly known as the
+\textit{progress} and \textit{preservation} theorems.
+
+\begin{theorem}[Progress]
+  \thmlabel{progress-for-typed-arithmetic-expressions}
+  A well-typed term is not stuck (either it is a value or it can take
+  a step according to the evaluation rules). Formally, suppose
+  $\ttt{t}$ is a well-typed term (that is, $\ttt{t} : \ttt{T}$ for
+  some $\ttt{T}$). Then either $\ttt{t}$ is a value, or else there is
+  some $\ttt{t}'$ with $\ttt{t} \rightarrow \ttt{t}'$.
+\end{theorem}
+
+\begin{proof}
+  By induction on a derivation of $\ttt{t} : \ttt{T}$. The
+  \tsc{T-True}, \tsc{T-False}, and \tsc{T-Zero} cases are immediate,
+  since $\ttt{t}$ in these cases is a value. For the other caes, we
+  argue as follows.
+
+  Case \tsc{T-If}: $\ttt{t} = \ttt{if $\ttt{t}_1$ then $\ttt{t}_2$ else
+  $\ttt{t}_3$}$, where $\ttt{t}_1 : \ttt{Bool}$, $\ttt{t}_2 :
+  \ttt{T}$, and $\ttt{t}_3 : \ttt{T}$.
+  By the induction hypothesis, either $\ttt{t}_1$ is a value or else
+  there is some $\ttt{t}_1'$ such that $\ttt{t}_1 \rightarrow
+  \ttt{t}_1'$. If $\ttt{t}_1$ is a value, then it must be either
+  $\ttt{true}$ or $\ttt{false}$, in which case either \tsc{E-IfTrue}
+  or \tsc{E-IfFalse} applies to $\ttt{t}$. On the other hand, if
+  $\ttt{t}_1 \rightarrow \ttt{t}_1'$, then by \tsc{E-If}, we have
+  $\ttt{t} \rightarrow \ttt{if $\ttt{t}_1'$ then $\ttt{t}_2$ else $\ttt{t}_3$}$.
+
+  Case \tsc{T-Succ}: $\ttt{t} = \ttt{succ $\ttt{t}_1$}$, where
+  $\ttt{t}_1 : \ttt{Nat}$. By the induction hypothesis, either
+  $\ttt{t}_1$ is a value or else there is some $\ttt{t}_1'$ such that
+  $\ttt{t}_1 \rightarrow \ttt{t}_1'$. If $\ttt{t}_1$ is a value, then
+  it must be a numeric value, in which case so is $\ttt{t}$. On the
+  other hand, if $\ttt{t}_1 \rightarrow \ttt{t}_1'$, then by
+  \tsc{E-Succ}, we have $\ttt{t} \rightarrow \ttt{succ $\ttt{t}_1'$}$.
+
+  Case \tsc{T-Pred}: $\ttt{t} = \ttt{pred $\ttt{t}_1$}$, where
+  $\ttt{t}_1 : \ttt{Nat}$. By the induction hypothesis, either
+  $\ttt{t}_1$ is a value or else there is some $\ttt{t}_1'$ such that
+  $\ttt{t}_1 \rightarrow \ttt{t}_1'$. If $\ttt{t}_1$ is a value, then
+  it must be a numeric value, either $\ttt{0}$ or $\ttt{succ
+  $\ttt{nv}_1$}$ for some $\ttt{nv}_1$, in which case either
+  \tsc{E-PredZero} or \tsc{E-PredSucc} applies to $\ttt{t}$. On the
+  other hand, if $\ttt{t}_1 \rightarrow \ttt{t}_1'$, then by
+  \tsc{E-Pred}, we have $\ttt{t} \rightarrow \ttt{pred $\ttt{t}_1'$}$.
+
+  Case \tsc{T-IsZero}: $\ttt{t} = \ttt{iszero $\ttt{t}_1$}$, where
+  $\ttt{t}_1 : \ttt{Nat}$. Similar.
+\end{proof}
+
+\begin{theorem}[Preservation]
+  If a well-typed term takes a step of evaluation, then the resulting
+  term is also well typed. Formally, if $\ttt{t} : \ttt{T}$ and
+  $\ttt{t} \rightarrow \ttt{t}'$, then $\ttt{t}' : \ttt{T}$.
+\end{theorem}
+
+\begin{proof}
+  By induction on a derivation of $\ttt{t} : \ttt{T}$. At each step
+  of the induction, we assume that the desired property holds for all
+  subderivations and proceed by case analysis on the final rule of
+  the derivation.
+
+  Case \tsc{T-True}: $\ttt{t} = \ttt{true}$ and $\ttt{T} =
+  \ttt{Bool}$. Vacuously true.
+
+  Case \tsc{T-False}: $\ttt{t} = \ttt{false}$ and $\ttt{T} =
+  \ttt{Bool}$. Vacuously true.
+
+  Case \tsc{T-If}: $\ttt{t} = \ttt{if $\ttt{t}_1$ then $\ttt{t}_2$ else
+  $\ttt{t}_3$}$, where $\ttt{t}_1 : \ttt{Bool}$,
+  $\ttt{t}_2 : \ttt{T}$, and $\ttt{t}_3 : \ttt{T}$. There are three
+  rules by which $\ttt{t} \rightarrow \ttt{t}'$ can be derived: \tsc{E-IfTrue},
+  \tsc{E-IfFalse}, and \tsc{E-If}. We consider each case separately
+  (omitting \tsc{E-IfFalse}).
+  \begin{itemize}
+    \item Subcase \tsc{E-IfTrue}: $\ttt{t}_1 = \ttt{true}$ and
+      $\ttt{t}' = \ttt{t}_2$. If $\ttt{t} \rightarrow \ttt{t}'$ is
+      derived using \tsc{E-IfTrue}, then from the form of this rule
+      we see that $\ttt{t}_1$ must be $\ttt{true}$ and the resulting
+      term $\ttt{t}'$ is the second subexpression $\ttt{t}_2$. This
+      means we are done, since we know (by the assumption of the
+      \tsc{T-If} case) that $\ttt{t}_2 : \ttt{T}$, which is what we need.
+    \item Subcase \tsc{E-If}: $\ttt{t}_1 \rightarrow
+      \ttt{t}_1'$ and $\ttt{t}' = \ttt{if $\ttt{t}_1'$ then
+      $\ttt{t}_2$ else $\ttt{t}_3$}$. From the assumptions of the
+      \tsc{T-If} case, we have a subderivation of the original typing
+      derivation whose conclusion is $\ttt{t}_1 : \ttt{Bool}$. We can
+      apply the induction hypothesis to this subderivation, obtaining
+      $\ttt{t}_1' : \ttt{Bool}$. Combining this with the facts (from
+      the assumptions of the \tsc{T-If} case) that $\ttt{t}_2 :
+      \ttt{T}$ and $\ttt{t}_3 : \ttt{T}$, we can apply rule
+      \tsc{T-If} to conclude that $\ttt{if $\ttt{t}_1'$ then
+      $\ttt{t}_2$ else $\ttt{t}_3$} : \ttt{T}$.
+  \end{itemize}
+
+  Case \tsc{T-Zero}: $\ttt{t} = \ttt{0}$ and $\ttt{T} = \ttt{Nat}$.
+  Vacuously true.
+
+  Case \tsc{T-Succ}: $\ttt{t} = \ttt{succ $\ttt{t}_1$}$, where
+  $\ttt{T} = \ttt{Nat}$ and $\ttt{t}_1 : \ttt{Nat}$. There is just
+  one rule, \tsc{E-Succ}, that can be used to derive $\ttt{t}
+  \rightarrow \ttt{t}'$. The form of this rule tells us that
+  $\ttt{t}_1 \rightarrow \ttt{t}_1'$. Since we also know $\ttt{t}_1 :
+  \ttt{Nat}$, we can apply the induction hypothesis to obtain
+  $\ttt{t}_1' : \ttt{Nat}$, from which we obtain $\ttt{succ
+  $\ttt{t}_1'$} : \ttt{Nat}$ by applying rule \tsc{T-Succ}.
+
+  Case \tsc{T-Pred}: $\ttt{t} = \ttt{pred $\ttt{t}_1$}$, where
+  $\ttt{T} = \ttt{Nat}$ and $\ttt{t}_1 : \ttt{Nat}$. Similar.
+
+  Case \tsc{T-IsZero}: $\ttt{t} = \ttt{iszero $\ttt{t}_1$}$, where
+  $\ttt{T} = \ttt{Bool}$ and $\ttt{t}_1 : \ttt{Nat}$. Similar.
+\end{proof}
+
+\chapter{Simply Typed Lambda Calculus}
+\chplabel{simply-typed-lambda-calculus}
+
+\section{The Typing Relation}
+\seclabel{simply-typed-lambda-calculus-the-typing-relation}
+Since terms may contain nested $\lambda$-abstractions, we will need,
+in general, to talk about several assumptions. This changes the
+typing relation from a two-place relation, $\ttt{t} : \ttt{T}$, to a
+three-place relation, $\Gamma \vdash \ttt{t} : \ttt{T}$, where
+$\Gamma$ is a set of assumptions about the types of the free
+variables in $\ttt{t}$.
+
+\begin{definition}
+  Formally, a \vocab{typing context} (or a \vocab{type environment})
+  $\Gamma$ is a sequence of variables and their types, and the comma
+  operator extends $\Gamma$ by adding a new binding on the right.
+\end{definition}
+
+The rule of typing abstraction has the general form:
+\begin{prooftree}
+  \AxiomC{$\Gamma, \ttt{x:$\ttt{T}_1$} \vdash \ttt{t}_2 : \ttt{T}_2
+  \quad$} \RightLabel{(\tsc{T-Abs})}
+  \UnaryInfC{$\Gamma \vdash \ttt{$\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$}
+  : \ttt{$\ttt{T}_1$$\rightarrow$$\ttt{T}_2$}$}
+\end{prooftree}
+where the premise adds one more assumption to those in the conclusion.
+
+The typing rules for variables:
+\begin{prooftree}
+  \AxiomC{$\ttt{x:T} \in \Gamma$}
+  \RightLabel{(\tsc{T-Var})}
+  \UnaryInfC{$\Gamma \vdash \ttt{x} : \ttt{T}$}
+\end{prooftree}
+
+The typing rules for applications:
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash \ttt{t}_1 :
+  \ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{T}_{12}$}$}
+  \AxiomC{$\Gamma \vdash \ttt{t}_2 : \ttt{T}_{11}$}
+  \RightLabel{(\tsc{T-App})}
+  \BinaryInfC{$\Gamma \vdash \ttt{$\ttt{t}_1$\,$\ttt{t}_2$} : \ttt{T}_{12}$}
+\end{prooftree}
+
+For completeness, we summarize the syntax and evaluation rules for
+simply-typed lambda calculus as follows.
+
+Syntax:
+\begin{align*}
+  \ttt{t} ::= & \quad && \text{term} \\
+  & \quad \ttt{x} && \text{variable} \\
+  & \quad \ttt{$\lambda$x:T.t} && \text{abstraction} \\
+  & \quad \ttt{t\,t} && \text{application} \\
+  \\
+  \ttt{v} ::= & \quad && \text{value} \\
+  & \quad \ttt{$\lambda$x:T.t} && \text{abstraction value} \\
+  \\
+  \ttt{T} ::= & \quad && \text{type} \\
+  & \quad \ttt{T$\rightarrow$T} && \text{type of functions}
+\end{align*}
+
+Evaluation:
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 \rightarrow \ttt{t}_1'$}
+  \RightLabel{(\tsc{E-App1})}
+  \UnaryInfC{$\ttt{$\ttt{t}_1$\,$\ttt{t}_2$} \rightarrow
+  \ttt{$\ttt{t}_1'$\,$\ttt{t}_2$}$}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_2 \rightarrow \ttt{t}_2'$}
+  \RightLabel{(\tsc{E-App2})}
+  \UnaryInfC{$\ttt{$\ttt{v}_1$\,$\ttt{t}_2$} \rightarrow
+  \ttt{$\ttt{v}_1$\,$\ttt{t}_2'$}$}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{($\lambda$x:$\ttt{T}_{11}$.$\ttt{t}_{2}$)\,$\ttt{v}_2$}
+  \rightarrow \ttt{[x$\mapsto$$\ttt{v}_2$]}\ttt{t}_{2}$ (\tsc{E-AppAbs})}
+\end{prooftree}
+
+\section{Properties of Typing}
+As in \chpref{typed-arithmetic-expressions}, we need to develop a few
+basic lemmas before we can prove type safety. Most of these are
+similar to what we saw before, we just need to add contexts to the
+typing relation and add clauses to each proof for $\lambda$-
+abstractions, applications, and variables. The only significant new
+requirement is a substitution lemma for the typing relation
+(\lemref{substitution-lemma-for-simply-typed-lambda-calculus}).
+
+First off, an inversion lemma records a collection of observations
+about how typing derivations are built: the clause for each syntactic
+form tells us ``if a term of this form is well typed, then its
+subterms must have types of these forms...''
+
+\begin{lemma}[Inversion lemma for simply typed lambda calculus]
+  \lemlabel{inversion-lemma-for-simply-typed-lambda-calculus}
+  1. If $\Gamma \vdash \ttt{x} : \ttt{R}$, then $\ttt{x:R} \in \Gamma$.
+
+  2. If $\Gamma \vdash \ttt{$\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$} :
+  \ttt{R}$, then $\ttt{R} =
+  \ttt{$\ttt{T}_1$$\rightarrow$$\ttt{R}_2$}$ for some $\ttt{R}_2$
+  with $\Gamma, \ttt{x:$\ttt{T}_1$} \vdash \ttt{t}_2 : \ttt{R}_2$.
+
+  3. If $\Gamma \vdash \ttt{$\ttt{t}_1$\,$\ttt{t}_2$} : \ttt{R}$,
+  then $\Gamma \vdash \ttt{t}_1 :
+  \ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{R}$}$ and $\Gamma \vdash
+  \ttt{t}_2 : \ttt{T}_{11}$ for some type $\ttt{T}_{11}$.
+\end{lemma}
+
+\begin{proof}
+  Immediate from the definition of the typing relation.
+\end{proof}
+
+In \secref{simply-typed-lambda-calculus-the-typing-relation}, we
+chose an explicitly typed presentation of the calculus to simplify
+the job of typechecking. This involved adding type annotations to
+bound variables in function abstractions, but nowhere else. In what
+sense is this ``enough''? One answer is provided by the ``uniqueness
+of types'' theorem, which tells us that well-typed terms are in
+one-to-one correspondence with their typing derivations: the typing
+derivation can be recovered uniquely from the term (and, of course,
+vice versa). In fact, the correspondence is so straightforward that,
+in a sense, there is little difference between the term and the derivation.
+
+\begin{theorem}[Uniqueness of types for simply typed lambda calculus]
+  \thmlabel{uniqueness-of-types-for-simply-typed-lambda-calculus}
+  In a given typing context $\Gamma$, a term $\ttt{t}$ (with free
+  variables all in the domain of $\Gamma$) has at most one type. That
+  is, if a term is typable, then its type is unique. Moreover, there
+  is just one derivation of this typing built from the inference
+  rules that generate the typing relation.
+\end{theorem}
+
+\begin{proof}
+  Straightforward.
+\end{proof}
+
+We can prove a progress theorem analogous to
+\thmref{progress-for-typed-arithmetic-expressions}. The statement of
+the theorem needs one small change: we are interested only in
+\textit{closed} terms, with no free variables. For open terms, the
+progress theorem actually fails: a term like $\ttt{x}$ is a normal
+form, but not a value. However, this failure does not represent a
+defect in the language, since complete programs, which are the terms
+we actually care about evaluating, are always closed.
+
+\begin{theorem}[Progress]
+  Suppose $\ttt{t}$ is a closed, well-typed term (that is, $\vdash
+  \ttt{t} : \ttt{T}$ for some $\ttt{T}$). Then either $\ttt{t}$ is a
+  value or else there is some $\ttt{t}'$ with $\ttt{t} \rightarrow \ttt{t}'$.
+\end{theorem}
+
+\begin{proof}
+  Straightforward induction on typing derivations. The variable case
+  cannot occur (because $\ttt{t}$ is closed). The abstraction case is
+  immediate, since abstractions are values. The only interesting case
+  is the one for application, where $\ttt{t} = \ttt{$\ttt{t}_1$\,$\ttt{t}_2$}$
+  with $\vdash \ttt{t}_1 :
+  \ttt{$\ttt{T}_{11}\rightarrow\ttt{T}_{12}$}$ and $\vdash \ttt{t}_2
+  : \ttt{T}_{11}$. By the induction hypothesis, either $\ttt{t}_1$ is
+  a value or else it can make a step of evaluation, and likewise
+  $\ttt{t}_2$. If $\ttt{t}_1$ can take a step, then rule \tsc{E-App1}
+  applies to $\ttt{t}$. If $\ttt{t}_1$ is a value and $\ttt{t}_2$ can
+  take a step, then rule \tsc{E-App2} applies. Finally, if both
+  $\ttt{t}_1$ and $\ttt{t}_2$ are values, then $\ttt{t}_1$ must be an
+  abstraction of the form
+  $\ttt{$\lambda$x:$\ttt{T}_{11}$.$\ttt{t}_{12}$}$, and so rule
+  \tsc{E-AppAbs} applies to $\ttt{t}$.
+\end{proof}
+
+Our next job is to prove that evaluation preserves types. We begin by
+stating a couple of ``structural lemmas'' for the typing relation.
+These are not particularly interesting in themselves, but will permit
+us to perform some useful manipulations of typing derivations in later proofs.
+
+\begin{lemma}[Permutation]
+  If $\Gamma \vdash \ttt{t} : \ttt{T}$ and $\Delta$ is a permutation of
+  $\Gamma$, then $\Delta \vdash \ttt{t} : \ttt{T}$. Moreover, the
+  latter derivation has the same depth as the former.
+\end{lemma}
+
+\begin{proof}
+  Straightforward induction on typing derivations.
+\end{proof}
+
+\begin{lemma}[Weakening]
+  If $\Gamma \vdash \ttt{t} : \ttt{T}$ and $\ttt{x} \notin \text{dom}(\Gamma)$,
+  then $\Gamma, \ttt{x:S} \vdash \ttt{t} : \ttt{T}$ for any type
+  $\ttt{S}$. Moreover, the latter derivation has the same depth as the former.
+\end{lemma}
+
+\begin{proof}
+  Straightforward induction on typing derivations.
+\end{proof}
+
+Using these technical lemmas, we can prove a crucial property of the
+typing relation: that well-typedness is preserved when variables are
+substituted with terms of appropriate types.
+
+\begin{lemma}[Preservation of types under substitution]
+  \lemlabel{substitution-lemma-for-simply-typed-lambda-calculus}
+  If $\Gamma, \ttt{x:S} \vdash \ttt{t} : \ttt{T}$ and $\Gamma \vdash
+  \ttt{s} : \ttt{S}$, then $\Gamma \vdash \ttt{[x$\mapsto$s]t} : \ttt{T}$.
+\end{lemma}
+
+\begin{proof}
+  By induction on a derivation of the statement $\Gamma, \ttt{x:S}
+  \vdash \ttt{t} : \ttt{T}$. For a given derivation, we proceed by
+  cases on the final typing rule used in the proof. The most
+  interesting cases are the ones for variables and abstractions.
+
+  Case \tsc{T-Var}: $\ttt{t} = \ttt{z}$ with $\ttt{z:T} \in (\Gamma,
+  \ttt{x:S})$. There are two subcases to consider, depending on
+  whether $\ttt{z}$ is $\ttt{x}$ or another variable. If $\ttt{z} =
+  \ttt{x}$, then $\ttt{[x$\mapsto$s]t} = \ttt{s}$. The required
+  result is then $\Gamma \vdash \ttt{s} : \ttt{S}$, which is among
+  the assumptions of the lemma. Otherwise, $\ttt{[x$\mapsto$s]t} =
+  \ttt{z}$, and the desired result is immediate.
+
+  Case \tsc{T-Abs}: $\ttt{t} =
+  \ttt{$\lambda$y:$\ttt{T}_2$.$\ttt{t}_1$}$, $\ttt{T} =
+  \ttt{$\ttt{T}_2$$\rightarrow$$\ttt{T}_1$}$, and $\Gamma,
+  \ttt{x:S}, \ttt{y:$\ttt{T}_2$} \vdash \ttt{t}_1 : \ttt{T}_1$. We
+  may assume $\ttt{x} \neq \ttt{y}$ and $\ttt{y} \notin FV(\ttt{s})$.
+  Using permutation on the given subderivation, we obtain $\Gamma,
+  \ttt{y:$\ttt{T}_2$}, \ttt{x:S} \vdash \ttt{t}_1 : \ttt{T}_1$. Using
+  weakening on the other given derivation ($\Gamma \vdash s : S$), we
+  obtain $\Gamma, \ttt{y:$\ttt{T}_2$} \vdash \ttt{s} : \ttt{S}$. Now,
+  by the induction hypothesis, we have $\Gamma, \ttt{y:$\ttt{T}_2$}
+  \vdash \ttt{[x$\mapsto$s]t}_1 : \ttt{T}_1$. Finally, we can apply
+  the rule \tsc{T-Abs} to conclude that $\Gamma \vdash
+  \ttt{$\lambda$y:$\ttt{T}_2$.$\ttt{[x$\mapsto$s]t}_1$} :
+  \ttt{$\ttt{T}_2$$\rightarrow$$\ttt{T}_1$}$, which is the desired
+  result since $\ttt{[x$\mapsto$s]t} =
+  \ttt{$\lambda$y:$\ttt{T}_2$.$\ttt{[x$\mapsto$s]t}_1$}$ and $\ttt{T}
+  = \ttt{$\ttt{T}_2$$\rightarrow$$\ttt{T}_1$}$.
+
+  Case \tsc{T-App}: $\ttt{t} = \ttt{$\ttt{t}_1$\,$\ttt{t}_2$}$, $\Gamma,
+  \ttt{x:S} \vdash \ttt{t}_1 :
+  \ttt{$\ttt{T}_2$$\rightarrow$$\ttt{T}_1$}$, $\Gamma, \ttt{x:S}
+  \vdash \ttt{t}_2 : \ttt{T}_2$, and $\ttt{T} = \ttt{T}_1$. By the
+  induction hypothesis, we have $\Gamma, \ttt{x:S} \vdash
+  \ttt{[x$\mapsto$s]t}_1 : \ttt{$\ttt{T}_2$$\rightarrow$$\ttt{T}_1$}$
+  and $\Gamma, \ttt{x:S} \vdash \ttt{[x$\mapsto$s]t}_2 : \ttt{T}_2$.
+  By the rule \tsc{T-App}, we can conclude that $\Gamma \vdash
+  \ttt{([x$\mapsto$s]$\ttt{t}_1$)\,([x$\mapsto$s]$\ttt{t}_2$)} :
+  \ttt{T}$. That is, $\Gamma \vdash
+  \ttt{[x$\mapsto$s]($\ttt{t}_1$\,$\ttt{t}_2$)} : \ttt{T}$, which is
+  the desired result.
+\end{proof}
+
+\begin{theorem}[Preservation]
+  If $\Gamma \vdash \ttt{t} : \ttt{T}$ and $\ttt{t} \rightarrow
+  \ttt{t}'$, then $\Gamma \vdash \ttt{t}' : \ttt{T}$.
+\end{theorem}
+
+\begin{proof}
+  By induction on a derivation of $\Gamma \vdash \ttt{t} : \ttt{T}$.
+  At each step of the induction, we assume that the desired property
+  holds for all subderivations (i.e. that if $\Gamma \vdash \ttt{s} :
+    \ttt{S}$ and $\ttt{s} \rightarrow \ttt{s}'$, then $\Gamma \vdash
+    \ttt{s}' : \ttt{S}$, whenever $\Gamma \vdash \ttt{s} : \ttt{S}$ is
+  proved by a subderivation of the present one) and proceed by case
+  analysis on the last rule used in the derivation.
+
+  Case \tsc{T-Var}: $\ttt{t} = \ttt{x}$ with $\ttt{x:T} \in \Gamma$.
+  Can't happen.
+
+  Case \tsc{T-Abs}: $\ttt{t} =
+  \ttt{$\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$}$. Can't happen.
+
+  Case \tsc{T-App}: $\ttt{t} = \ttt{$\ttt{t}_1$\,$\ttt{t}_2$}$, $\Gamma
+  \vdash \ttt{t}_1 :
+  \ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{T}_{12}$}$, $\Gamma \vdash
+  \ttt{t}_2 : \ttt{T}_{11}$, and $\ttt{T} = \ttt{T}_{12}$. There are
+  three rules by which $\ttt{t} \rightarrow \ttt{t}'$ can be derived:
+  \tsc{E-App1}, \tsc{E-App2}, and \tsc{E-AppAbs}. We consider each
+  case separately.
+  \begin{itemize}
+    \item Subcase \tsc{E-App1}: $\ttt{t}_1 \rightarrow \ttt{t}_1'$
+      and $\ttt{t}' = \ttt{$\ttt{t}_1'$\,$\ttt{t}_2$}$. From the assumptions of
+      the \tsc{T-App} case, we have a subderivation of the original
+      typing derivation whose conclusion is $\Gamma \vdash \ttt{t}_1
+      : \ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{T}_{12}$}$. We can
+      apply the induction hypothesis to this subderivation, obtaining
+      $\Gamma \vdash \ttt{t}_1' :
+      \ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{T}_{12}$}$. Combining
+      this with the facts (also from the assumptions of the
+      \tsc{T-App} case) that $\Gamma \vdash \ttt{t}_2 :
+      \ttt{T}_{11}$, we can apply rule \tsc{T-App} to conclude that
+      $\Gamma \vdash \ttt{t}' : \ttt{T}$.
+    \item Subcase \tsc{E-App2}: $\ttt{t}_1 = \ttt{v}_1$, $\ttt{t}_2
+      \rightarrow \ttt{t}_2'$, and $\ttt{t}' = \ttt{v}_1 \ttt{t}_2'$. Similar.
+    \item Subcase \tsc{E-AppAbs}: $\ttt{t}_1 =
+      \ttt{$\lambda$x:$\ttt{T}_{11}$.$\ttt{t}_{12}$}$, $\ttt{t}_2 =
+      \ttt{v}_2$, and $\ttt{t}' =
+      \ttt{[x$\mapsto$$\ttt{v}_2$]$\ttt{t}_{12}$}$. We can
+      deconstruct the typing derivation for
+      $\ttt{$\lambda$x:$\ttt{T}_{11}$.$\ttt{t}_{12}$}$, yielding
+      $\Gamma, \ttt{x:$\ttt{T}_{11}$} \vdash \ttt{t}_{12} :
+      \ttt{T}_{12}$. From this and the substitution lemma
+      (\lemref{substitution-lemma-for-simply-typed-lambda-calculus}), we
+      obtain $\Gamma \vdash \ttt{t}' : \ttt{T}_{12}$.
+  \end{itemize}
+\end{proof}
+
+\chapter{Simple Extensions}
+
+\section{Base Types}
+Every programming language provides a variety of \textit{base types}
+plus appropriate primitive operations to manipulate these values. For
+theoretical purposes, it is often useful to abstract away from the
+details of particular base types and their operations, and instead
+simply suppose that our language comes equipped with some set
+$\mathcal{A}$ of \textit{uninterpreted} base types, with no primitive
+operations at all. This is accomplished simply by including the
+elements of $\mathcal{A}$ in the set of types, as shown below.
+
+New syntactic forms:
+\begin{align*}
+  \ttt{T} ::= & \quad \dots && \text{type} \\
+  & \quad \ttt{A} && \text{base type}
+\end{align*}
+
+\section{The Unit Type}
+Another useful base type, found especially in languages in the ML
+family, is the singleton type $\ttt{Unit}$, described below.
+
+New syntactic forms:
+\begin{align*}
+  \ttt{t} ::= & \quad \dots && \text{term} \\
+  & \quad \ttt{unit} && \text{constant unit} \\
+  \\
+  \ttt{v} ::= & \quad \dots && \text{value} \\
+  & \quad \ttt{unit} && \text{constant unit} \\
+  \\
+  \ttt{T} ::= & \quad \dots && \text{type} \\
+  & \quad \ttt{Unit} && \text{unit type}
+\end{align*}
+
+New typing rules:
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash \ttt{unit} : \ttt{Unit}$ (\tsc{T-Unit})}
+\end{prooftree}
+
+In contrast to the uninterpreted base types, the unit type is
+interpreted in the simplest possible way: we explicitly introduce a
+single element, the term constant $\ttt{unit}$ and a typing rule
+making $\ttt{unit}$ an element of $\ttt{Unit}$. We also add
+$\ttt{unit}$ to the set of possible result values of computations.
+
+\section{Derived Forms: Sequencing and Wildcards}
+In languages with side effects, it is often useful to evaluate two or
+more expressions in sequence. The sequencing notation
+$\ttt{$\ttt{t}_1$;$\ttt{t}_2$}$ has the effect of evaluating
+$\ttt{t}_1$, throwing away its trivial result, and going on to
+evaluate $\ttt{t}_2$.
+
+There are actually two different ways to formalize sequencing. One is
+to follow the same pattern we haved used for syntactic forms: add
+$\ttt{$\ttt{t}_1$;$\ttt{t}_2$}$ as a new alternative in the syntax of
+terms, and then add two evaluation rules
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 \rightarrow \ttt{t}_1'$}
+  \RightLabel{(\tsc{E-Seq})}
+  \UnaryInfC{$\ttt{$\ttt{t}_1$;$\ttt{t}_2$} \rightarrow
+  \ttt{$\ttt{t}_1'$;$\ttt{t}_2$}$}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{unit;$\ttt{t}_2$} \rightarrow \ttt{t}_2$ (\tsc{E-SeqNext})}
+\end{prooftree}
+
+and a typing rule
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash \ttt{t}_1 : \ttt{Unit}$}
+  \AxiomC{$\Gamma \vdash \ttt{t}_2 : \ttt{T}_2$}
+  \RightLabel{(\tsc{T-Seq})}
+  \BinaryInfC{$\Gamma \vdash \ttt{$\ttt{t}_1$;$\ttt{t}_2$} : \ttt{T}_2$}
+\end{prooftree}
+
+capturing the intended behavior of $\ttt{;}$.
+
+An alternative way of formalizing sequencing is simply to regard
+$\ttt{$\ttt{t}_1$;$\ttt{t}_2$}$ as an abbreviation for the term
+$\ttt{($\lambda$x:Unit.$\ttt{t}_2$)$\ttt{t}_1$}$, where the variable
+$\ttt{x}$ is chosen fresh, i.e. different from all the free variables
+of $\ttt{t}_2$.
+
+It is intuitively fairly clear that these two presentations of
+sequencing add up to the same thing as far as the programmer is
+concerned: the high-level typing and evaluation rules for sequencing
+can be derived from the abbreviation of
+$\ttt{$\ttt{t}_1$;$\ttt{t}_2$}$ as
+$\ttt{($\lambda$x.Unit.$\ttt{t}_2$)$\ttt{t}_1$}$. This intuitive
+correspondence is captured more formally by arguing that typing and
+evaluation both ``commute'' with the expansion of the abbreviation.
+
+New derived forms:
+\begin{align*}
+  \ttt{$\ttt{t}_1$;$\ttt{t}_2$} \overset{\text{def}}{=}
+  \ttt{($\lambda$x:Unit.$\ttt{t}_2$)\,$\ttt{t}_1$} \text{ where
+  $\ttt{x} \notin FV(\ttt{t}_2)$}
+\end{align*}
+
+\section{Let Bindings}
+When writing a complex expression, it is often useful to give names
+to some of its subexpressions. Most languages provide one or more
+ways of doing this. In ML, for example, we write $\ttt{let
+x=$\ttt{t}_1$ in $\ttt{t}_2$}$ to mean ``evaluate expression
+$\ttt{t}_1$ and bind the name $\ttt{x}$ to the resulting value, while
+evaluating $\ttt{t}_2$.''
+
+New syntactic forms:
+\begin{align*}
+  \ttt{t} ::= & \quad \dots && \text{term} \\
+  & \quad \ttt{let x=t in t} && \text{let binding}
+\end{align*}
+
+New evaluation rules:
+\begin{prooftree}
+  \AxiomC{$\ttt{let x=$\ttt{v}_1$ in $\ttt{t}_2$} \rightarrow
+  \ttt{[x$\mapsto$$\ttt{v}_1$]}\ttt{t}_2$ (\tsc{E-LetV})}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 \rightarrow \ttt{t}_1'$}
+  \RightLabel{(\tsc{E-Let})}
+  \UnaryInfC{$\ttt{let x=$\ttt{t}_1$ in $\ttt{t}_2$} \rightarrow
+  \ttt{let x=$\ttt{t}_1'$ in $\ttt{t}_2$}$}
+\end{prooftree}
+
+New typing rules:
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash \ttt{t}_1 : \ttt{T}_1$}
+  \AxiomC{$\Gamma, \ttt{x:$\ttt{T}_1$} \vdash \ttt{t}_2 : \ttt{T}_2$}
+  \RightLabel{(\tsc{T-Let})}
+  \BinaryInfC{$\Gamma \vdash \ttt{let x=$\ttt{t}_1$ in $\ttt{t}_2$}
+  : \ttt{T}_2$}
+\end{prooftree}
+
+Our $\ttt{let}$-binder follows ML's in choosing a call-by-value
+evaluation order, where the $\ttt{let}$-bound term must be fully
+evaluated before evaluation of the $\ttt{let}$-body can begin. The
+typing rule $\tsc{T-Let}$ tells us that the type of a $\ttt{let}$ can
+be calculated the type of the $\ttt{let}$-bound term, extending the
+context with a binding with this type, and in this enriched context
+calculating the type of the body, which is then the type of the whole
+$\ttt{let}$ expression.
+
+Can $\ttt{let}$ also be defined as a derived form? Yes, as Landin
+showed, but the details are slightly more subtle than what we did for
+sequencing an ascripiton. Naively, it is clear that we use a
+combination of abstraction and application to achieve the effect of a
+$\ttt{let}$-binding:
+\[
+  \ttt{let x=$\ttt{t}_1$ in $\ttt{t}_2$} \overset{\text{def}}{=}
+  \ttt{($\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$)\,$\ttt{t}_1$}
+\]
+
+But notice that the right-hand side of this abbreviation includes the
+type annotation $\ttt{T}_1$, which does not appear on the left-hand
+side. That is, if we imagine a derived forms as being desugared
+during the parsing phase of some compiler, then we need to ask how
+the parser is supposed to know that it should generate $\ttt{T}_1$ as
+the type annotation on the $\lambda$ in the desugared internal language term.
+
+The answer, of course, is that this information comes from the
+typechecker! We discover the needed type annotation simply by
+calculating the type of $\ttt{t}_1$. More formally, what this tells
+us is that the $\ttt{let}$ constructor is a slightly different sort
+of derived form than the ones we have seen so far: we should regard
+it as a transformation on the \textit{typing derivations} that maps a
+derivation involving $\ttt{let}$:
+\begin{prooftree}
+  \AxiomC{$\vdots$}
+  \UnaryInfC{$\Gamma \vdash \ttt{t}_1 : \ttt{T}_1$}
+  \AxiomC{$\vdots$}
+  \UnaryInfC{$\Gamma, \ttt{x:$\ttt{T}_1$} \vdash \ttt{t}_2 : \ttt{T}_2$}
+  \RightLabel{(\tsc{T-Let})}
+  \BinaryInfC{$\Gamma \vdash \ttt{let x=$\ttt{t}_1$ in $\ttt{t}_2$}
+  : \ttt{T}_2$}
+\end{prooftree}
+to one using abstraction and application:
+\begin{prooftree}
+  \AxiomC{$\vdots$}
+  \UnaryInfC{$\Gamma, \ttt{x:$\ttt{T}_1$} \vdash \ttt{t}_2 : \ttt{T}_2$}
+  \RightLabel{(\tsc{T-Abs})}
+  \UnaryInfC{$\Gamma \vdash \ttt{$\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$}
+  : \ttt{$\ttt{T}_1$$\rightarrow$$\ttt{T}_2$}$}
+  \AxiomC{$\vdots$}
+  \UnaryInfC{$\Gamma \vdash \ttt{t}_1 : \ttt{T}_1$}
+  \RightLabel{(\tsc{T-App})}
+  \BinaryInfC{$\Gamma \vdash
+  \ttt{($\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$)\,$\ttt{t}_1$} : \ttt{T}_2$}
+\end{prooftree}
+Thus, $\ttt{let}$ is a little less derived than the other derived
+forms we have seen: we can derive its evalution behavior by
+desugaring it, but its typing behavior must be built into the internal language.
+
+\section{General Recursion}
+Another facility found in most programming languages is the ability
+to define recursive functions. Such functions can be defined with the
+aid of the \vocab{fixed-point combinator}:
+\[ \ttt{fix =
+  $\lambda$f.($\lambda$x.f($\lambda$y.x\,x\,y))\,($\lambda$x.f($\lambda$y.x\,x\,y))}
+\]
+
+Suppose we want to write a recursive function definition of the form
+$\ttt{h = $\langle$\textnormal{body containing }h$\rangle$}$. The
+intention is that the recursive definition should be ``unrolled'' at
+the point where it occurs; for example, the definition of
+$\ttt{factorial}$ would intuitively be:
+\begin{verbatim}
+  if n = 0 then 1
+  else n * (if (n-1)=0 then 1
+            else (n-1) * (if (n-2)=0 then 1
+                          else (n-2) * ...))
+\end{verbatim}
+This effect can be achieved using the $\ttt{fix}$ combinator by first
+defining $\ttt{g = $\lambda$f.$\langle$\textnormal{body containing
+}f$\rangle$}$ and then $\ttt{h = fix g}$. For example, we can define
+the factorial function by
+\begin{align*}
+  & \ttt{g = $\lambda$fct.($\lambda$n.(if n = 0 then 1 else n * (fct
+  (n-1))))} \\
+  & \ttt{factorial = fix g}
+\end{align*}
+
+Recursive functions can be defined in a typed setting in a similar
+way. However, there is one important difference: $\ttt{fix}$ itself
+cannot be defined in the simply typed lambda calculus. Indeed, we
+will see in \chpref{normalization} that expression that can lead to
+non-terminating computations cannot be typed using only simple types.
+So, instead of defining $\ttt{fix}$ as a term in the language, we
+simply add it as a new primitive, with evaluatiion rules mimicking
+the behavior of the untyped $\ttt{fix}$ combinator and a typing rule
+that captures its intended uses.
+
+New syntactic forms:
+\begin{align*}
+  \ttt{t} ::= & \quad \dots && \text{term} \\
+  & \quad \ttt{fix t} && \text{fixed point of \ttt{t}}
+\end{align*}
+
+New evaluation rules:
+\begin{prooftree}
+  \AxiomC{$\ttt{fix ($\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$)} \rightarrow
+    \ttt{[x$\mapsto$(fix
+  ($\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$))]$\ttt{t}_2$}$ (\tsc{E-FixBeta})}
+\end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$\ttt{t}_1 \rightarrow \ttt{t}_1'$}
+  \RightLabel{(\tsc{E-Fix})}
+  \UnaryInfC{$\ttt{fix $\ttt{t}_1$} \rightarrow \ttt{fix $\ttt{t}_1'$}$}
+\end{prooftree}
+
+New typing rules:
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash \ttt{t}_1 : \ttt{T}_1 \rightarrow \ttt{T}_1$}
+  \RightLabel{(\tsc{T-Fix})}
+  \UnaryInfC{$\Gamma \vdash \ttt{fix $\ttt{t}_1$} : \ttt{T}_1$}
+\end{prooftree}
+
+New derived forms:
+\begin{align*}
+  \ttt{letrec x:$\ttt{T}_1$=$\ttt{t}_1$ in $\ttt{t}_2$} \overset{\text{def}}{=}
+  \ttt{let x=fix($\lambda$x:$\ttt{T}_1$.$\ttt{t}_1$) in $\ttt{t}_2$}
+\end{align*}
+
+The simply typed lambda calculus with numbers and $\ttt{fix}$ has
+long been the favorite experimental subject of programming language
+researchers, since it is the simplest language in which a range of
+subtle semantics phenomena such as \textit{full abstraction} arise.
+It is often called PCF.
+
+\chapter{Normalization}
+\chplabel{normalization}
+In this chapter, we consider another fundamental property of the pure
+simply typed lambda calculus: the fact that the evaluation of a
+well-typed program is guaranteed to halt in a finite number of steps.
+That is, every well-typed term is \textit{normalizable}.
+
+\section{Normalization for Simple Types}
+The calculus we shall consider here is the simply typed lambda
+calculus over a single base type $\ttt{A}$. Normalization for this
+calculus is not entirely trivial to prove, since each reduction of a
+term can duplicate redexes in subterms.
+
+\begin{exercise}
+  Where do we fail if we attempt to prove normalization by a
+  straightforward induction on the size of a well-typed term?
+
+  We fail because of the substitution that occurs during
+  $\beta$-reduction (\tsc{E-AppAbs}). When an application of the
+  form $\ttt{($\lambda$x:$\ttt{T}_{11}$.$\ttt{t}_{12}$)\,$\ttt{v}_2$}$
+  reduces to $\ttt{[x$\mapsto$$\ttt{v}_2$]}\ttt{t}_{12}$, the
+  resulting term may be larger than the original term. Consider this example:
+  \begin{itemize}
+    \item Original term:
+      $\ttt{($\lambda$x:A.x\,x\,x)($\lambda$y:A.y\,y)}$ (11 nodes)
+    \item After reduction:
+      $\ttt{($\lambda$y:A.y\,y)($\lambda$y:A.y\,y)($\lambda$y:A.y\,y)}$
+      (14 nodes)
+  \end{itemize}
+\end{exercise}
+
+The key issue here (as in many proofs by induction) is finding a
+strong enough induction hypothesis.
+
+\begin{definition}
+  \deflabel{normalization-relation}
+  We define, for each type $\ttt{T}$, a set $\mathcal{R}_\ttt{T}$ of
+  closed terms of type $\ttt{T}$ as follows:
+  \begin{itemize}
+    \item For the base type $\ttt{A}$, $\mathcal{R}_\ttt{A}(\ttt{t})$
+      holds if and only if $\ttt{t}$ halts.
+    \item For function types, $\mathcal{R}_{\ttt{T}_1 \rightarrow
+      \ttt{T}_2}(\ttt{t})$ holds if and only if $\ttt{t}$ halts and
+      for every $\ttt{s}$ such that
+      $\mathcal{R}_{\ttt{T}_1}(\ttt{s})$ holds, we also have
+      $\mathcal{R}_{\ttt{T}_2}(\ttt{t\,s})$.
+  \end{itemize}
+\end{definition}
+
+This gives us the strengthened induction hypothesis that we need. Our
+primary goal is to show that all programs (i.e. all closed terms of
+base type) halt. But closed terms of base type can contain subterms
+of functional type, so we need to know something about these as well.
+Moreover, it is not enough to know that these subterms halt, because
+the application of a normalized function to a normalized argument
+involves a substitution, which may enable more evaluation steps. So
+we need a stronger condition for terms of functional type: not only
+should they halt themselves, but, when applied to halting arguments,
+they should yield halting results.
+
+The form of \defref{normalization-relation} is characteristic of the
+\textit{logical relations} proof technique. (Since we are just
+  dealing with unary relations here, we should more properly say
+\textit{logical predicates}.) If we want to prove some property
+$\mathcal{P}$ of all closed terms of type $\ttt{A}$, we proceed by
+proving, by induction on types, that all terms of type $\ttt{A}$
+\textit{possess} property $\mathcal{P}$, all terms of type
+$\ttt{A$\rightarrow$A}$ \textit{preserve} property $\mathcal{P}$, all
+terms of type $\ttt{(A$\rightarrow$A)$\rightarrow$(A$\rightarrow$A)}$
+\textit{preserve the property of preserving property} $\mathcal{P}$,
+and so on. We do this by defining a family of predicates, indexed by
+types. For the base type $\ttt{A}$, the predicate is just
+$\mathcal{P}$. For functional types, it says that the function should
+map values satisfying the predicate at the input type to values
+satisfying the predicate at the output type.
+
+We use this definition to carry out the proof the proof of
+normalization in two steps. First, we observe that every element of
+the set $\mathcal{R}_\ttt{T}$ is normalizable. Then we show that
+every well-typed term of type $\ttt{T}$ is an element of $\mathcal{R}_\ttt{T}$.
+
+The first step is immediate from the definition of $\mathcal{R}_\ttt{T}$.
+
+\begin{lemma}
+  \lemlabel{normalization-relation-implies-normalization}
+  If $\mathcal{R}_\ttt{T}(\ttt{t})$, then $\ttt{t}$ halts.
+\end{lemma}
+
+The second step is broken down into two lemmas. First, we remark that
+membership in $\mathcal{R}_\ttt{T}$ is invariant under evaluation.
+
+\begin{lemma}
+  \lemlabel{normalization-relation-invariance}
+  If $\ttt{t} : \ttt{T}$ and $\ttt{t} \rightarrow \ttt{t}'$, then
+  $\mathcal{R}_\ttt{T}(\ttt{t})$ if and only if
+  $\mathcal{R}_\ttt{T}(\ttt{t}')$.
+\end{lemma}
+
+\begin{proof}
+  By induction on the structure of the type $\ttt{T}$. Note, first,
+  that it is clear that $\ttt{t}$ halts if and only if $\ttt{t}'$ does.
+  \begin{itemize}
+    \item If $\ttt{T} = \ttt{A}$, then there is nothing more to show.
+    \item If $\ttt{T} = \ttt{$\ttt{T}_1$$\rightarrow$$\ttt{T}_2$}$ for
+      some $\ttt{T}_1$ and $\ttt{T}_2$. There are two directions:
+
+      ($\Rightarrow$) $\mathcal{R}_\ttt{T}(\ttt{t})$, i.e. $\ttt{t}$ halts
+      and $\mathcal{R}_{\ttt{T}_2}(\ttt{t\,s})$ whenever
+      $\mathcal{R}_{\ttt{T}_1}(\ttt{s})$ for some arbitrary $\vdash
+      \ttt{s} : \ttt{T}_1$. Inductive hypothesis: If $\vdash \ttt{t}
+      : \ttt{T}_2$ and $\ttt{t} \rightarrow \ttt{t}'$, then
+      $\mathcal{R}_{\ttt{T}_2}(\ttt{t})$ iff
+      $\mathcal{R}_{\ttt{T}_2}(\ttt{t}')$. Our premise tells us that
+      $\ttt{t} \rightarrow \ttt{t}'$, so we have $\ttt{t\,s}
+      \rightarrow \ttt{$\ttt{t}'$\,s}$. Applying the inductive
+      hypothesis gives us
+      $\mathcal{R}_{\ttt{T}_2}(\ttt{$\ttt{t}'$\,s})$. Since this
+      holds for arbitrary $\ttt{s}$, the definition of
+      $\mathcal{R}_\ttt{T}$ gives us $\mathcal{R}_\ttt{T}(\ttt{t}')$.
+
+      ($\Leftarrow$) Analogous.
+  \end{itemize}
+\end{proof}
+
+Next, we want to show that every term of type $\ttt{T}$ belongs to
+$\mathcal{R}_\ttt{T}$. Here, the induction will be on typing
+derivations (it would be surprising to see a proof about well-typed
+  terms that did not somewhere involve induction on typing
+derivations!). The only technical difficulty here is in dealing with
+the $\lambda$-abstraction case. Since we are arguing by induction,
+the demonstration that a term
+$\ttt{$\lambda$x:$\ttt{T}_1$.$\ttt{t}_2$}$ belongs to
+$\mathcal{R}_\ttt{$\ttt{T}_1$$\rightarrow$$\ttt{T}_2$}$ should
+involve applying the induction hypothesis to show that $\ttt{t}_2$
+belongs to $\mathcal{R}_{\ttt{T}_2}$. But $\mathcal{R}_{\ttt{T}_2}$
+is defined to be a set of \textit{closed} terms, while $\ttt{t}_2$
+may contain free $\ttt{x}$, so this does not make sense.
+
+This problem is resolved by using a standard trick to suitably
+generalize the induction hypothesis: instead of proving a statement
+involving a closed term, we generalize it to cover all closed
+\textit{instances} of an open term $\ttt{t}$.
+
+\begin{lemma}
+  \lemlabel{normalization-for-open-terms}
+  If $\ttt{$\ttt{x}_1$:$\ttt{T}_1$}, \dots, \ttt{$\ttt{x}_n$:$\ttt{T}_n$} \vdash
+  \ttt{t} : \ttt{T}$ and $\ttt{v}_1, \dots, \ttt{v}_n$ are closed
+  values of types $\ttt{T}_1, \dots, \ttt{T}_n$ with
+  $\mathcal{R}_{\ttt{T}_i}(\ttt{v}_i)$ for each $i$, then
+  $\mathcal{R}_\ttt{T}(\ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]t})$.
+\end{lemma}
+
+\begin{proof}
+  By induction on a derivation of $\ttt{$\ttt{x}_1$:$\ttt{T}_1$},
+  \dots, \ttt{$\ttt{x}_n$:$\ttt{T}_n$} \vdash \ttt{t} : \ttt{T}$.
+  (The most interesting case is the one for abstraction.)
+
+  Case \tsc{T-Var}: $\ttt{t} = \ttt{x}_i$ and $\ttt{T} = \ttt{T}_i$
+  for some $i$. Immediate.
+
+  Case \tsc{T-Abs}: $\ttt{t} =
+  \ttt{$\lambda$x:$\ttt{S}_1$.$\ttt{s}_2$}$, \quad
+  $\ttt{$\ttt{x}_1$:$\ttt{T}_1$}, \dots,
+  \ttt{$\ttt{x}_n$:$\ttt{T}_n$}, \ttt{$\ttt{x}$:$\ttt{S}_1$} \vdash
+  \ttt{s}_2 : \ttt{S}_2$, \quad $\ttt{T} =
+  \ttt{$\ttt{T}_1$$\rightarrow$$\ttt{T}_2$}$. Obviously,
+  $\ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]}t$
+  evaluates to a value, since it is a value already. What remains to
+  show is that
+  $\mathcal{R}_{\ttt{S}_2}(\ttt{([$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]t)\,s})$
+  for any $\ttt{s} : \ttt{S}_1$ such that
+  $\mathcal{R}_{\ttt{S}_1}(\ttt{s})$. Suppose $\ttt{s}$ is such a
+  term. By \lemref{normalization-relation-implies-normalization}, we
+  have $\ttt{s} \rightarrow^\ast \ttt{v}$ for some $\ttt{v}$. By
+  \lemref{normalization-relation-invariance},
+  $\mathcal{R}_{\ttt{S}_1}(v)$. Now, by the inductive hypothesis,
+  $\mathcal{R}_{\ttt{S}_2}(\ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$][x$\mapsto$v]$\ttt{s}_2$})$.
+  Applying the evaluation rule \tsc{E-AppAbs} gives us
+  \[
+    \ttt{($\lambda$x:$\ttt{S}_1$.[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$][x$\mapsto$v]$\ttt{s}_2$)\,s}
+    \rightarrow^\ast
+    \ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$][x$\mapsto$v]$\ttt{s}_2$}
+  \]
+  from which \lemref{normalization-relation-invariance} gives us
+  \[
+    \mathcal{R}_{\ttt{S}_2}(\ttt{($\lambda$x:$\ttt{S}_1$.[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$][x$\mapsto$v]$\ttt{s}_2$)\,s}).
+  \]
+  That is,
+  \[
+    \mathcal{R}_{\ttt{S}_2}(\ttt{([$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$][x$\mapsto$v]($\lambda$x:$\ttt{S}_1$.$\ttt{s}_2$))\,s}).
+  \]
+  Since $\ttt{s}$ was chosen arbitrarily, the definition of
+  $\mathcal{R}_{\ttt{$\ttt{S}_1$$\rightarrow$$\mathcal{S}_2$}}$ gives us
+  \[
+    \mathcal{R}_{\ttt{$\ttt{S}_1$$\rightarrow$$\ttt{S}_2$}}(\ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]($\lambda$x:$\ttt{S}_1$.$\ttt{s}_2$)}).
+  \]
+
+  Case \tsc{T-App}: $\ttt{t} = \ttt{t}_1\,\ttt{t}_2$, \quad
+  $\ttt{$\ttt{x}_1$:$\ttt{T}_1$}, \dots,
+  \ttt{$\ttt{x}_n$:$\ttt{T}_n$} \vdash \ttt{t}_1 :
+  \ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{T}_{12}$}$, \quad
+  $\ttt{$\ttt{x}_1$:$\ttt{T}_1$}, \dots,
+  \ttt{$\ttt{x}_n$:$\ttt{T}_n$} \vdash \ttt{t}_2 : \ttt{T}_{11}$,
+  \quad $\ttt{T} = \ttt{T}_{12}$. The inductive hypothesis gives us
+  $\mathcal{R}_{\ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{T}_{12}$}}(\ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]$\ttt{t}_1$})$
+  and
+  $\mathcal{R}_{\ttt{T}_{11}}(\ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]$\ttt{t}_2$})$.
+  By the definition of
+  $\mathcal{R}_{\ttt{$\ttt{T}_{11}$$\rightarrow$$\ttt{T}_{12}$}}$, we have
+  \[
+    \mathcal{R}_{\ttt{T}_{12}}(\ttt{([$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]$\ttt{t}_1$)([$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]$\ttt{t}_2$)}).
+  \]
+  That is,
+  \[
+    \mathcal{R}_{\ttt{T}_{12}}(\ttt{[$\ttt{x}_1$$\mapsto$$\ttt{v}_1$]$\cdots$[$\ttt{x}_n$$\mapsto$$\ttt{v}_n$]($\ttt{t}_1$\,$\ttt{t}_2$)}).
+  \]
+\end{proof}
+
+\begin{theorem}[Normalization]
+  If $\vdash \ttt{t} : \ttt{T}$, then $\ttt{t}$ is normalizable.
+\end{theorem}
+
+\begin{proof}
+  We obtain the normalization property as a corollary, simply by
+  taking the term $\ttt{t}$ to be closed in
+  \lemref{normalization-for-open-terms} and then recalling that all
+  elements of $\mathcal{R}_\ttt{T}$ are normalizable by
+  \lemref{normalization-relation-implies-normalization}.
+\end{proof}
+
+\end{document}
